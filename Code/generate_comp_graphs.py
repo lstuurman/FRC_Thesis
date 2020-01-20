@@ -10,7 +10,7 @@ def gen_equiv_random(N,ve_ratio):
     p = ER_p_value(N,ve_ratio)
     stats  = [] # list of tuples with (average_clustering,average_path) for every generated network. 
     count  = 0
-    while count < 10:
+    while count < 100:
         g = nx.erdos_renyi_graph(N,p)
         if nx.is_connected(g):
             # average clustering and path length : 
@@ -31,7 +31,7 @@ def save_random_graphs(N_list, VE_list):
             key = str(N) + 'N_' + str(ve) + 'V/E'
             data_dict[key] = stats
     
-    pickle.dump(data_dict,open('comparison_graphs/equivalent_random_stats.pkl','wb'))
+    pickle.dump(data_dict,open('../data/helper_data/equivalent_random_stats.pkl','wb'))
 
 def generate_lattice(N_list,VE_list):
     # generate one lattice per N/veratio
@@ -44,8 +44,7 @@ def generate_lattice(N_list,VE_list):
             key = str(N) + 'N_' + str(ve) + 'V/E'
             data_dict[key] = Cl
     
-    pickle.dump(data_dict,open('comparison_graphs/equivalent_lattice_stats.pkl','wb'))
-
+    pickle.dump(data_dict,open('../data/helper_data/equivalent_lattice_stats.pkl','wb'))
 
 
 if __name__ == "__main__":

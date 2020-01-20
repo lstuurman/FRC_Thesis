@@ -12,6 +12,7 @@ import pickle as pkl
 import scipy.optimize
 import time
 from find_EV_relation_geometric_graph import return_radius
+from numpy import linalg
 
 def get_metrics(g):
     # start with some quick and metrics
@@ -27,8 +28,12 @@ def get_metrics(g):
             if i != j:
                 path_lengths.append(len(paths_list[i][j]))
 
+    # betweennes centrality : 
+    centrality = nx.betweenness_centrality(g).values()
+    # eigenvalues : 
+    eigenvals = linalg.eig(nx.to_numpy_matrix(g))
     # to do : betweennes centrality - eigenvalues
-    return [degrees,clustering_coefs,path_lengths]
+    return [degrees,clustering_coefs,path_lengths,centrality,eigenvals]
 
 def ER_p_value(N,ve_ratio):
     # helper function to find p parameter resulting in certian V/E ratio
@@ -51,19 +56,13 @@ def gen_ER_graphs(ratios,N_nodes):
             data[data_key] = []
 
             count = 0
-            while count < 2:
+            while count < repetitions:
                 p = ER_p_value(N,r)
                 ER_g = nx.erdos_renyi_graph(N,p)
                 if nx.is_connected(ER_g):
                     stats = get_metrics(ER_g)
                     data[data_key].append(stats)
                     count += 1
-
-            # for iter in range(10):
-            #     p = ER_p_value(N,r)
-            #     ER_g = nx.erdos_renyi_graph(N,p)
-            #     stats = get_metrics(ER_g)
-            #     data[data_key].append(stats)
     return data
 
 # nextttt watts-Str0gatzz
@@ -86,7 +85,7 @@ def gen_WS_graphs(ratios,N_nodes):
                 data_key = str(N) + 'N_' + str(r) + 'V/E ' + str(p) + 'P'
                 data[data_key] = []
 
-                for iter in range(2):
+                for iter in range(repetitions):
                     K = WS_K_value(N,r)
                     WS_g = nx.watts_strogatz_graph(N,K,p)
                     stats = get_metrics(WS_g)
@@ -107,7 +106,7 @@ def generate_geometric_graphs(ratios,N_nodes):
             data_key = str(N) + 'N_' + str(r) + 'V/E '
             data[data_key] = []
 
-            for iter in range(2):
+            for iter in range(repetitions):
                 radius = radius_geoGraph(N,r)
                 geo_g = nx.random_geometric_graph(N,radius, dim=2, pos=None, p=2, seed=None)
                 stats = get_metrics(geo_g)
@@ -139,7 +138,7 @@ def gen_power_cluster_graphs(ratios,N_nodes):
                 data_key = str(N) + 'N_' + str(r) + 'V/E ' + str(p) + 'P'
                 data[data_key] = []
 
-                for iter in range(2):
+                for iter in range(repetitions):
                     M = M_power_cluster(N,r)
                     power_g = nx.powerlaw_cluster_graph(N,M,p)
                     stats = get_metrics(power_g)
@@ -147,25 +146,27 @@ def gen_power_cluster_graphs(ratios,N_nodes):
     return data
 
 if __name__ == "__main__":
+    global repetitions
+    repetitions = 10
     VE_ratios = np.linspace(.125,.375,5)
     N_nodes = [100,176,500]
-    # t = time.time()
-    # ER_data = gen_ER_graphs(VE_ratios,N_nodes)
-    # print(time.time() - t)
-    # WS_data = gen_WS_graphs(VE_ratios,N_nodes)
-    # print(time.time() - t)
-    # power_data = gen_power_cluster_graphs(VE_ratios,N_nodes)
-    # print(time.time() - t)
+    t = time.time()
+    ER_data = gen_ER_graphs(VE_ratios,N_nodes)
+    print(time.time() - t)
+    WS_data = gen_WS_graphs(VE_ratios,N_nodes)
+    print(time.time() - t)
+    power_data = gen_power_cluster_graphs(VE_ratios,N_nodes)
+    print(time.time() - t)
     geom_data = generate_geometric_graphs(VE_ratios,N_nodes)
     # write to separate files : 
-    # pkl.dump(ER_data,open('../data/exp1/exp1_ER.pkl','wb'))
-    # pkl.dump(WS_data,open('../data/exp1/exp1_WS.pkl','wb'))
-    # pkl.dump(power_data,open('../data/exp1/exp1_power.pkl','wb'))
+    pkl.dump(ER_data,open('../data/exp1/exp1_ER.pkl','wb'))
+    pkl.dump(WS_data,open('../data/exp1/exp1_WS.pkl','wb'))
+    pkl.dump(power_data,open('../data/exp1/exp1_power.pkl','wb'))
     pkl.dump(geom_data,open('../data/exp1/exp1_geom.pkl','wb'))
 
 
 
-
+#date = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})"
 
 
 

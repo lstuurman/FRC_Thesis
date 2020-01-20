@@ -63,6 +63,7 @@ def fit_polynomial(N,degr):
     plt.ylabel('Number of Edges')
     plt.xlabel('Radius')
     plt.legend()
+    plt.savefig('../data/helper_data/EV_relation_geometric' + str(N) + str(x[-1]) + '.png')
     plt.show()
 
 
@@ -70,6 +71,6 @@ if __name__ == '__main__':
     degree = 3
     N_list = [100,176,500,1000]
     for N in N_list:
-        r_list = np.linspace(0,.3,100)
+        r_list = np.linspace(0,1,100)
         Edges,radius = scatter_plot(N,r_list)
         fit_polynomial(N,degree)

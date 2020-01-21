@@ -32,7 +32,6 @@ def get_metrics(g):
     centrality = nx.betweenness_centrality(g).values()
     # eigenvalues : 
     eigenvals = linalg.eig(nx.to_numpy_matrix(g))
-    # to do : betweennes centrality - eigenvalues
     return [degrees,clustering_coefs,path_lengths,centrality,eigenvals]
 
 def ER_p_value(N,ve_ratio):
@@ -145,24 +144,43 @@ def gen_power_cluster_graphs(ratios,N_nodes):
                     data[data_key].append(stats)
     return data
 
+def gen_BA_graphs(ratios,N_nodes):
+    data = {}
+    for N in N_nodes:
+        for r in ratios:
+            # initialize field in dict 
+            data_key = str(N) + 'N_' + str(r) + 'V/E '
+            data[data_key] = []
+
+            for iter in range(repetitions):
+                #M = M_power_cluster(N,r) 
+                # r**-1 gives you the approximate value for M number of edges to add for every node
+                BA_g = nx.barabasi_albert_graph(N,int(r**-1))
+                #power_g = nx.powerlaw_cluster_graph(N,M,p)
+                stats = get_metrics(BA_g)
+                data[data_key].append(stats)
+    return data
+
 if __name__ == "__main__":
     global repetitions
     repetitions = 10
     VE_ratios = np.linspace(.125,.375,5)
     N_nodes = [100,176,500]
-    t = time.time()
-    ER_data = gen_ER_graphs(VE_ratios,N_nodes)
-    print(time.time() - t)
-    WS_data = gen_WS_graphs(VE_ratios,N_nodes)
-    print(time.time() - t)
-    power_data = gen_power_cluster_graphs(VE_ratios,N_nodes)
-    print(time.time() - t)
-    geom_data = generate_geometric_graphs(VE_ratios,N_nodes)
-    # write to separate files : 
-    pkl.dump(ER_data,open('../data/exp1/exp1_ER.pkl','wb'))
-    pkl.dump(WS_data,open('../data/exp1/exp1_WS.pkl','wb'))
-    pkl.dump(power_data,open('../data/exp1/exp1_power.pkl','wb'))
-    pkl.dump(geom_data,open('../data/exp1/exp1_geom.pkl','wb'))
+    # t = time.time()
+    # ER_data = gen_ER_graphs(VE_ratios,N_nodes)
+    # print(time.time() - t)
+    # WS_data = gen_WS_graphs(VE_ratios,N_nodes)
+    # print(time.time() - t)
+    # power_data = gen_power_cluster_graphs(VE_ratios,N_nodes)
+    # print(time.time() - t)
+    # geom_data = generate_geometric_graphs(VE_ratios,N_nodes)
+    # # write to separate files : 
+    # pkl.dump(ER_data,open('../data/exp1/exp1_ER.pkl','wb'))
+    # pkl.dump(WS_data,open('../data/exp1/exp1_WS.pkl','wb'))
+    # pkl.dump(power_data,open('../data/exp1/exp1_power.pkl','wb'))
+    # pkl.dump(geom_data,open('../data/exp1/exp1_geom.pkl','wb'))
+    BA_data = gen_BA_graphs(VE_ratios,N_nodes)
+    pkl.dump(BA_data,open('../data/exp1/exp1_BA.pkl','wb'))
 
 
 

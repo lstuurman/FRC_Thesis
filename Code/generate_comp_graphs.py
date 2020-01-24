@@ -10,7 +10,7 @@ def gen_equiv_random(N,ve_ratio):
     p = ER_p_value(N,ve_ratio)
     stats  = [] # list of tuples with (average_clustering,average_path) for every generated network. 
     count  = 0
-    while count < 100:
+    while count < 1000:
         g = nx.erdos_renyi_graph(N,p)
         if nx.is_connected(g):
             # average clustering and path length : 

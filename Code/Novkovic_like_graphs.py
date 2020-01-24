@@ -84,12 +84,11 @@ def plot_filtered_graphs(fname):
         # plot : 
         pos = nx.kamada_kawai_layout(g)
         # check if sigma and omega measures are correct : 
-        corr_stats = (nx.sigma(g,niter = 100),nx.omega(g,niter = 100))
         plt.figure(figsize=(15,15))
-        plt.title(str(graph[-1]) + str(corr_stats))
-        print(str(graph[-1]),str(corr_stats))
+        plt.title(str(graph[-1]))# + str(corr_stats)
+        print(str(graph[-1]))#,str(corr_stats)
         nx.draw(g,pos)
-        name = '../results/NOV_similar_graphs/' + name.replace("/","") + '.png'
+        name = '/home/lau/GIT/FRC_Thesis/results/NOV_similar_graphs/' + name.replace("/","") + '.png'
         print(name)
         plt.tight_layout()
         plt.savefig(name)

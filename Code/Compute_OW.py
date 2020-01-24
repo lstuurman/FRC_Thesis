@@ -38,7 +38,7 @@ def compute_sigma(data,random,lattice):#
         Pls_data = value[1]
 
         # iterate over all generated graphs with specific parameters : N/E
-        for i in range(len(value)):
+        for i in range(len(CLs_data)):
             #for i in range(len(Cl)):
             CL = CLs_data[i]
             Pl = Pls_data[i]
@@ -47,10 +47,14 @@ def compute_sigma(data,random,lattice):#
             # compute sigma for every equivalent graph : 
             for j in range(len(CL_rand)):
                 sigma_estimates.append((CL/CL_rand[j])/(Pl/Pl_rand[j]))
-                omega_estimates.append(Pl_rand/Pl - CL/CL_latt)
-        
+                omega_estimates.append(Pl_rand[j]/Pl - CL/CL_latt)
+
+            # # take average over all networks of this parameter : 
             sigma[key].append(np.average(sigma_estimates))
             omega[key].append(np.average(omega_estimates))
+            # or don't take average : 
+            # sigma[key].append(sigma_estimates)
+            # omega[key].append(omega_estimates)
         
     return sigma,omega
 
@@ -65,8 +69,18 @@ def OW_allgraphs():
     names = []
     for graph_file in graphs:
         print(graph_file)
+        # don't plot averages. but raw ow_stats of graphs : 
         graph = extract_averages(graph_file)
+        #print(pickle.load(open(graph_file,'rb')))
+        #print(graph)
+        #pass
         sigmas,omegas = compute_sigma(graph,random,lattice)
+
+        test_sigma = np.array(list(sigmas.values())).flatten()
+        test_omega = np.array(list(omegas.values())).flatten()
+        #print(len(list(sigmas.values())), len(list(omegas.values())))
+        print(len(test_omega))
+        print(len(test_sigma))
         # save raw sigmas and omegas : 
         graph_name = re.split("_",graph_file)[-1]
         names.append(graph_name[:-4])

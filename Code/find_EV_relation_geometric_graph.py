@@ -68,8 +68,8 @@ def fit_polynomial(N,degr):
 
 
 if __name__ == '__main__':
-    degree = 3
-    N_list = [100,176,500,1000]
+    degree = 4
+    N_list = [100,176,500]
     for N in N_list:
         r_list = np.linspace(0,1,100)
         Edges,radius = scatter_plot(N,r_list)

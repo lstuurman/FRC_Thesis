@@ -31,7 +31,7 @@ def save_random_graphs(N_list, VE_list):
             key = str(N) + 'N_' + str(ve) + 'V/E'
             data_dict[key] = stats
     
-    pickle.dump(data_dict,open('../data/helper_data/equivalent_random_stats.pkl','wb'))
+    pickle.dump(data_dict,open('/home/lau/GIT/FRC_Thesis/data/helper_data/equivalent_random_stats.pkl','wb'))
 
 def generate_lattice(N_list,VE_list):
     # generate one lattice per N/veratio
@@ -44,8 +44,8 @@ def generate_lattice(N_list,VE_list):
             key = str(N) + 'N_' + str(ve) + 'V/E'
             data_dict[key] = Cl
     
-    pickle.dump(data_dict,open('../data/helper_data/equivalent_lattice_stats.pkl','wb'))
-
+    pickle.dump(data_dict,open('/home/lau/GIT/FRC_Thesis/data/helper_data/equivalent_lattice_stats.pkl','wb'))
+# /home/lau/GIT/FRC_Thesis/data/helper_data
 
 if __name__ == "__main__":
     VE_ratios = np.linspace(.125,.375,5)

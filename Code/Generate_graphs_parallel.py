@@ -10,6 +10,9 @@ from numpy import linalg
 from Generate_graphs import *
 import multiprocessing
 
+global repetitions
+repetitions = 10
+
 # create functions for every type of graphs that saves the graph :
 
 def save_ER(VE_ratios,N_nodes):

@@ -15,6 +15,9 @@ from find_EV_relation_geometric_graph import return_radius
 from find_EV_relation_geometric_graph import polynomial
 from numpy import linalg
 
+global repetitions
+repetitions = 10
+
 def get_metrics(g):
     # start with some quick and metrics
     # degree per node : 
@@ -170,8 +173,6 @@ def gen_BA_graphs(ratios,N_nodes):
                 data[data_key].append(stats)
     return data
 
-global repetitions
-repetitions = 10
 
 if __name__ == "__main__":
     global repetitions

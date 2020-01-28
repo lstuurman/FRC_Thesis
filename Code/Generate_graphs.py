@@ -170,6 +170,9 @@ def gen_BA_graphs(ratios,N_nodes):
                 data[data_key].append(stats)
     return data
 
+global repetitions
+repetitions = 10
+
 if __name__ == "__main__":
     global repetitions
     repetitions = 10

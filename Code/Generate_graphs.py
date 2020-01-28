@@ -24,9 +24,10 @@ def get_metrics(g):
     paths = nx.shortest_path(g)
     #paths_list = [list(i.values()) for i in paths.values()] # convert weird dict to list countaining paths
     path_lengths = []
-    for val1 in paths.values():
-        for val2 in val1.values():
-            path_lengths.append(len(val2))
+    for key1,val1 in paths.items():
+        for key2,val2 in val1.items():
+            if key1 != key2:
+                path_lengths.append(len(val2))
     # for i in range(len(paths_list)):
     #     for j in range(len(paths_list[0])):
     #         if i != j:

@@ -21,6 +21,7 @@ def get_metrics(g):
     node_degree_pairs = list(g.degree())
     degrees = list(list(zip(*node_degree_pairs))[1]) # take only a list of degrees
     clustering_coefs  = list(nx.clustering(g).values())
+    av_clustering = nx.average_clustering(g)
     paths = nx.shortest_path(g)
     #paths_list = [list(i.values()) for i in paths.values()] # convert weird dict to list countaining paths
     path_lengths = []
@@ -39,7 +40,7 @@ def get_metrics(g):
     vals,vecs = linalg.eigh(nx.to_numpy_matrix(g))
     max_eig = max(vals)
     # also return adjacency matrix to regenerate graph
-    return [degrees,clustering_coefs,path_lengths,centrality,max_eig,nx.to_numpy_matrix(g)]
+    return [degrees,clustering_coefs,path_lengths,av_clustering,centrality,max_eig,nx.to_numpy_matrix(g)]
 
 def ER_p_value(N,ve_ratio):
     # helper function to find p parameter resulting in certian V/E ratio

@@ -35,6 +35,11 @@ def get_metrics(g):
     #         if i != j:
     #             path_lengths.append(len(paths_list[i][j]))
 
+    # check if we have correct number of paths ;
+    n = g.number_of_nodes()
+    expected = .5*(n*(n-1))
+    #print(len(paths) == expected)
+    print(len(path_lengths),expected)
     # betweennes centrality : 
     centrality = list(nx.betweenness_centrality(g).values())
     # eigenvalues : 

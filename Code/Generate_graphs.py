@@ -174,22 +174,29 @@ if __name__ == "__main__":
     repetitions = 10
     VE_ratios = np.linspace(.125,.375,5)
     N_nodes = [100,176,500,1000]
+
     t = time.time()
     ER_data = gen_ER_graphs(VE_ratios,N_nodes)
-    print(time.time() - t)
-    WS_data = gen_WS_graphs(VE_ratios,N_nodes)
-    print(time.time() - t)
-    power_data = gen_power_cluster_graphs(VE_ratios,N_nodes)
-    print(time.time() - t)
-    geom_data = generate_geometric_graphs(VE_ratios,N_nodes)
-    print(time.time() - t)
-    BA_data = gen_BA_graphs(VE_ratios,N_nodes)
-    #write to separate files : 
     pkl.dump(ER_data,open('../data/exp1/exp1_ER.pkl','wb'))
+    print('ER graphs generated in : ',time.time() - t)
+    WS_data = gen_WS_graphs(VE_ratios,N_nodes)
     pkl.dump(WS_data,open('../data/exp1/exp1_WS.pkl','wb'))
+    print('WS graphs generated after : ',time.time() - t)
+    power_data = gen_power_cluster_graphs(VE_ratios,N_nodes)
     pkl.dump(power_data,open('../data/exp1/exp1_power.pkl','wb'))
+    print('Clustered powerlaw graphs generated after : ',time.time() - t)
+    geom_data = generate_geometric_graphs(VE_ratios,N_nodes)
     pkl.dump(geom_data,open('../data/exp1/exp1_geom.pkl','wb'))
+    print('random geometric graphs generated after : ',time.time() - t)
+    BA_data = gen_BA_graphs(VE_ratios,N_nodes)
     pkl.dump(BA_data,open('../data/exp1/exp1_BA.pkl','wb'))
+    print('BA graphs generated after : ',time.time() - t)
+
+
+    
+    
+    
+    
 
 
 

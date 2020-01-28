@@ -12,6 +12,7 @@ import pickle as pkl
 import scipy.optimize
 import time
 from find_EV_relation_geometric_graph import return_radius
+from find_EV_relation_geometric_graph import polynomial
 from numpy import linalg
 
 def get_metrics(g):
@@ -21,12 +22,15 @@ def get_metrics(g):
     degrees = list(list(zip(*node_degree_pairs))[1]) # take only a list of degrees
     clustering_coefs  = list(nx.clustering(g).values())
     paths = nx.shortest_path(g)
-    paths_list = [list(i.values()) for i in paths.values()] # convert weird dict to  list countaining paths
+    #paths_list = [list(i.values()) for i in paths.values()] # convert weird dict to list countaining paths
     path_lengths = []
-    for i in range(len(paths_list)):
-        for j in range(len(paths_list[0])):
-            if i != j:
-                path_lengths.append(len(paths_list[i][j]))
+    for val1 in paths.values():
+        for val2 in val1.values():
+            path_lengths.append(len(val2))
+    # for i in range(len(paths_list)):
+    #     for j in range(len(paths_list[0])):
+    #         if i != j:
+    #             path_lengths.append(len(paths_list[i][j]))
 
     # betweennes centrality : 
     centrality = list(nx.betweenness_centrality(g).values())
@@ -109,7 +113,8 @@ def generate_geometric_graphs(ratios,N_nodes):
 
             for iter in range(repetitions*10):
                 radius = radius_geoGraph(N,r)
-                geo_g = nx.random_geometric_graph(N,radius, dim=2, pos=None, p=2, seed=None)
+                #print(radius)
+                geo_g = nx.random_geometric_graph(N,radius, dim=2, p=2)
                 stats = get_metrics(geo_g)
                 data[data_key].append(stats)
     return data
@@ -165,9 +170,9 @@ def gen_BA_graphs(ratios,N_nodes):
 
 if __name__ == "__main__":
     global repetitions
-    repetitions = 5
+    repetitions = 10
     VE_ratios = np.linspace(.125,.375,5)
-    N_nodes = [100,176,500]
+    N_nodes = [100,176,500,1000]
     t = time.time()
     ER_data = gen_ER_graphs(VE_ratios,N_nodes)
     print(time.time() - t)
@@ -178,7 +183,7 @@ if __name__ == "__main__":
     geom_data = generate_geometric_graphs(VE_ratios,N_nodes)
     print(time.time() - t)
     BA_data = gen_BA_graphs(VE_ratios,N_nodes)
-    # write to separate files : 
+    #write to separate files : 
     pkl.dump(ER_data,open('../data/exp1/exp1_ER.pkl','wb'))
     pkl.dump(WS_data,open('../data/exp1/exp1_WS.pkl','wb'))
     pkl.dump(power_data,open('../data/exp1/exp1_power.pkl','wb'))

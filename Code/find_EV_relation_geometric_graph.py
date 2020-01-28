@@ -36,39 +36,44 @@ def scatter_plot(N,r_list):
 
 def polynomial(coefs,x):
     d  = len(coefs)
-    return sum([x**(d - i) * coefs[i-1] for i in range(1,d)])
 
-def return_radius(N,E):
+    return sum([x**(d - i) * coefs[i-1] for i in range(1,d)])
+    #return sum([x**(i) * coefs[i] for i in range(len(coefs))])
+    #return sum(x**(i) * coefs[i] for i in range(len(coefs)))
+
+def return_radius(N,n_edges):
     f = pickle.load(open('../data/helper_data/' + str(N) + 'edge_data.pkl', 'rb'))
-    x = f[1]
-    y = f[0]
-    degr = 3
-    coefs = np.polyfit(x,y,degr)
-    return polynomial(coefs,E)
+    r = f[1]
+    E = f[0]
+    degr = 7
+    coefs = np.polyfit(E,r,degr)
+    return polynomial(coefs,n_edges)
 
 def fit_polynomial(N,degr):
     f = pickle.load(open('../data/helper_data/' + str(N) + 'edge_data.pkl', 'rb'))
-    x = f[1]
-    y = f[0]
-    coefs = np.polyfit(x,y,degr)
+    r = f[1]
+    E = f[0]
+    coefs = np.polyfit(E,r,degr)
     print(coefs)
     # plot found polynomial over data : 
-    x_fit = np.linspace(x[0],x[-1],100)
+    x_fit = np.linspace(min(E),max(E),100)
+    print(E[0],E[-1])
+    print(r[0],r[-1])
     y_fit = [polynomial(coefs,i) for i in x_fit]
-    
+    print(y_fit[0],y_fit[-1])
     plt.figure(figsize=(10,10))
-    plt.scatter(x,y, label = 'DATA')
+    plt.scatter(E,r, label = 'DATA')
     plt.plot(x_fit,y_fit,c = 'r',label = 'FIT')
     plt.title('Relation between radius and number of edges in \n random geometric graph')
-    plt.ylabel('Number of Edges')
-    plt.xlabel('Radius')
+    plt.xlabel('Number of Edges')
+    plt.ylabel('Radius')
     plt.legend()
-    plt.savefig('../data/helper_data/EV_relation_geometric' + str(N) + str(x[-1]) + '.png')
+    plt.savefig('../data/helper_data/EV_relation_geometric' + str(N) + str(r[-1]) + '.png')
     plt.show()
 
 
 if __name__ == '__main__':
-    degree = 4
+    degree = 7
     N_list = [100,176,500]
     for N in N_list:
         r_list = np.linspace(0,1,100)

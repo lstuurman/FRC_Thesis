@@ -15,8 +15,6 @@ from find_EV_relation_geometric_graph import return_radius
 from find_EV_relation_geometric_graph import polynomial
 from numpy import linalg
 
-global repetitions
-repetitions = 10
 
 def get_metrics(g):
     # start with some quick and metrics
@@ -51,7 +49,7 @@ def ER_p_value(N,ve_ratio):
     return 2*n_edges / (N * (N-1))
 
 
-def gen_ER_graphs(ratios,N_nodes):
+def gen_ER_graphs(ratios,N_nodes,repetitions):
     """
     Function to generate wide range of ER networks and gather statistics
     data : dictionary where keys are 'xN_yV/E' with x en y specific N and V/E ratio values
@@ -83,7 +81,7 @@ def WS_K_value(N,ve_ratio):
     n_edges = N * ve_ratio**-1
     return int(2*n_edges/N)
 
-def gen_WS_graphs(ratios,N_nodes):
+def gen_WS_graphs(ratios,N_nodes,repetitions):
     # Take p_values logaritmically spaced:
     p_vals = np.logspace(-2,0,10)
 
@@ -109,7 +107,7 @@ def radius_geoGraph(N,ve_ratio):
     n_edges = N * ve_ratio**-1
     return return_radius(N,n_edges)
     
-def generate_geometric_graphs(ratios,N_nodes):
+def generate_geometric_graphs(ratios,N_nodes,repetitions):
     data = {}
     for N in N_nodes:
         for r in ratios:
@@ -137,7 +135,7 @@ def M_power_cluster(N,ve_ratio):
     sol = scipy.optimize.root(E_M_relation,10,args = (N,n_edges))
     return int(sol.x)
 
-def gen_power_cluster_graphs(ratios,N_nodes):
+def gen_power_cluster_graphs(ratios,N_nodes,repetitions):
     # Take p_values between 0 and 1:
     p_vals = np.linspace(0,1,10)
 
@@ -156,7 +154,7 @@ def gen_power_cluster_graphs(ratios,N_nodes):
                     data[data_key].append(stats)
     return data
 
-def gen_BA_graphs(ratios,N_nodes):
+def gen_BA_graphs(ratios,N_nodes,repetitions):
     data = {}
     for N in N_nodes:
         for r in ratios:
@@ -181,19 +179,19 @@ if __name__ == "__main__":
     N_nodes = [100,176,500,1000]
 
     t = time.time()
-    ER_data = gen_ER_graphs(VE_ratios,N_nodes)
+    ER_data = gen_ER_graphs(VE_ratios,N_nodes,repetitions)
     pkl.dump(ER_data,open('../data/exp1/exp1_ER.pkl','wb'))
     print('ER graphs generated in : ',time.time() - t)
-    WS_data = gen_WS_graphs(VE_ratios,N_nodes)
+    WS_data = gen_WS_graphs(VE_ratios,N_nodes,repetitions)
     pkl.dump(WS_data,open('../data/exp1/exp1_WS.pkl','wb'))
     print('WS graphs generated after : ',time.time() - t)
-    power_data = gen_power_cluster_graphs(VE_ratios,N_nodes)
+    power_data = gen_power_cluster_graphs(VE_ratios,N_nodes,repetitions)
     pkl.dump(power_data,open('../data/exp1/exp1_power.pkl','wb'))
     print('Clustered powerlaw graphs generated after : ',time.time() - t)
-    geom_data = generate_geometric_graphs(VE_ratios,N_nodes)
+    geom_data = generate_geometric_graphs(VE_ratios,N_nodes,repetitions)
     pkl.dump(geom_data,open('../data/exp1/exp1_geom.pkl','wb'))
     print('random geometric graphs generated after : ',time.time() - t)
-    BA_data = gen_BA_graphs(VE_ratios,N_nodes)
+    BA_data = gen_BA_graphs(VE_ratios,N_nodes,repetitions)
     pkl.dump(BA_data,open('../data/exp1/exp1_BA.pkl','wb'))
     print('BA graphs generated after : ',time.time() - t)
 

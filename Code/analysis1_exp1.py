@@ -102,7 +102,7 @@ def plot_frc_like():
 if __name__ == "__main__":
     #plot3d()
     #scatter_plot()
-    plot_per_type((0,100),(-1,1))
+    plot_per_type((4,10),(-.4,-.15))
     #plot_averages()
     plot_frc_like()
 

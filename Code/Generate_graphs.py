@@ -38,15 +38,16 @@ def get_metrics(g):
     # check if we have correct number of paths ;
     n = g.number_of_nodes()
     expected = .5*(n*(n-1))
+    av_pl = nx.average_shortest_path_length(g)
     #print(len(paths) == expected)
-    print(len(path_lengths),expected)
+    #print(len(path_lengths),expected)
     # betweennes centrality : 
     centrality = list(nx.betweenness_centrality(g).values())
     # eigenvalues : 
     vals,vecs = linalg.eigh(nx.to_numpy_matrix(g))
     max_eig = max(vals)
     # also return adjacency matrix to regenerate graph
-    return [degrees,clustering_coefs,path_lengths,av_clustering,centrality,max_eig,nx.to_numpy_matrix(g)]
+    return [degrees,clustering_coefs,path_lengths,av_clustering,av_pl,centrality,max_eig,nx.to_numpy_matrix(g)]
 
 def ER_p_value(N,ve_ratio):
     # helper function to find p parameter resulting in certian V/E ratio
@@ -118,13 +119,16 @@ def generate_geometric_graphs(ratios,N_nodes,repetitions):
         for r in ratios:
             data_key = str(N) + 'N_' + str(r) + 'V/E '
             data[data_key] = []
-
-            for iter in range(repetitions*10):
+	    count = 0 
+            #for iter in range(repetitions*10):
+	    while count < repetitions*10:
                 radius = radius_geoGraph(N,r)
-                #print(radius)
+                print(radius)
                 geo_g = nx.random_geometric_graph(N,radius, dim=2, p=2)
-                stats = get_metrics(geo_g)
-                data[data_key].append(stats)
+		if nx.is_connected(geo_g):
+                   stats = get_metrics(geo_g)
+                   data[data_key].append(stats)
+		   count += 1
     return data
 
 
@@ -183,22 +187,22 @@ if __name__ == "__main__":
     VE_ratios = np.linspace(.125,.375,5)
     N_nodes = [100,176,500,1000]
 
-    t = time.time()
-    ER_data = gen_ER_graphs(VE_ratios,N_nodes,repetitions)
-    pkl.dump(ER_data,open('../data/exp1/exp1_ER.pkl','wb'))
-    print('ER graphs generated in : ',time.time() - t)
-    WS_data = gen_WS_graphs(VE_ratios,N_nodes,repetitions)
-    pkl.dump(WS_data,open('../data/exp1/exp1_WS.pkl','wb'))
-    print('WS graphs generated after : ',time.time() - t)
+    #t = time.time()
+    #ER_data = gen_ER_graphs(VE_ratios,N_nodes,repetitions)
+    #pkl.dump(ER_data,open('../data/exp1/exp1_ER.pkl','wb'))
+    #print('ER graphs generated in : ',time.time() - t)
+    #WS_data = gen_WS_graphs(VE_ratios,N_nodes,repetitions)
+    #pkl.dump(WS_data,open('../data/exp1/exp1_WS.pkl','wb'))
+    #print('WS graphs generated after : ',time.time() - t)
     power_data = gen_power_cluster_graphs(VE_ratios,N_nodes,repetitions)
     pkl.dump(power_data,open('../data/exp1/exp1_power.pkl','wb'))
     print('Clustered powerlaw graphs generated after : ',time.time() - t)
-    geom_data = generate_geometric_graphs(VE_ratios,N_nodes,repetitions)
-    pkl.dump(geom_data,open('../data/exp1/exp1_geom.pkl','wb'))
-    print('random geometric graphs generated after : ',time.time() - t)
-    BA_data = gen_BA_graphs(VE_ratios,N_nodes,repetitions)
-    pkl.dump(BA_data,open('../data/exp1/exp1_BA.pkl','wb'))
-    print('BA graphs generated after : ',time.time() - t)
+    #geom_data = generate_geometric_graphs(VE_ratios,N_nodes,repetitions)
+    #pkl.dump(geom_data,open('../data/exp1/exp1_geom.pkl','wb'))
+    #print('random geometric graphs generated after : ',time.time() - t)
+    #BA_data = gen_BA_graphs(VE_ratios,N_nodes,repetitions)
+    #pkl.dump(BA_data,open('../data/exp1/exp1_BA.pkl','wb'))
+    #print('BA graphs generated after : ',time.time() - t)
 
 
     

@@ -12,7 +12,7 @@ import pickle as pkl
 import scipy.optimize
 import time
 from find_EV_relation_geometric_graph import return_radius
-from find_EV_relation_geometric_graph import polynomial
+#from find_EV_relation_geometric_graph import polynomial
 from numpy import linalg
 
 

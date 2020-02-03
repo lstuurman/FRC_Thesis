@@ -39,11 +39,11 @@ if __name__ == "__main__":
     VE_ratios = np.linspace(.125,.375,5)
     N_nodes = [100,176,500,1000]
 
-    proces_1 = multiprocessing.Process(name = 'ER', target = save_ER,args = (VE_ratios,N_nodes,repetitions,target = 1))
-    proces_2 = multiprocessing.Process(name = 'WS', target = save_WS,args = (VE_ratios,N_nodes,repetitions,target = 2))
-    proces_3 = multiprocessing.Process(name = 'power', target = save_power,args = (VE_ratios,N_nodes,repetitions,target = 3))
-    proces_4 = multiprocessing.Process(name = 'geom', target = save_geom,args = (VE_ratios,N_nodes,repetitions,target = 4))
-    proces_5 = multiprocessing.Process(name = 'BA', target = save_BA,args = (VE_ratios,N_nodes,repetitions,target = 5))
+    proces_1 = multiprocessing.Process(name = 'ER', target = save_ER,args = (VE_ratios,N_nodes,repetitions))
+    proces_2 = multiprocessing.Process(name = 'WS', target = save_WS,args = (VE_ratios,N_nodes,repetitions))
+    proces_3 = multiprocessing.Process(name = 'power', target = save_power,args = (VE_ratios,N_nodes,repetitions))
+    proces_4 = multiprocessing.Process(name = 'geom', target = save_geom,args = (VE_ratios,N_nodes,repetitions))
+    proces_5 = multiprocessing.Process(name = 'BA', target = save_BA,args = (VE_ratios,N_nodes,repetitions))
 
     proces_1.start()
     proces_2.start()

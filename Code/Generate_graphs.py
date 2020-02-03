@@ -47,7 +47,7 @@ def get_metrics(g):
     vals,vecs = linalg.eigh(nx.to_numpy_matrix(g))
     max_eig = max(vals)
     # also return adjacency matrix to regenerate graph
-    return [degrees,clustering_coefs,path_lengths,av_clustering,av_pl,centrality,max_eig,nx.to_numpy_matrix(g)]
+    return [degrees,clustering_coefs,path_lengths,av_clustering,av_pl,centrality,max_eig,nx.to_numpy_matrix(g),g.number_of_edges()]
 
 def ER_p_value(N,ve_ratio):
     # helper function to find p parameter resulting in certian V/E ratio
@@ -119,16 +119,16 @@ def generate_geometric_graphs(ratios,N_nodes,repetitions):
         for r in ratios:
             data_key = str(N) + 'N_' + str(r) + 'V/E '
             data[data_key] = []
-	    count = 0 
+            count = 0 
             #for iter in range(repetitions*10):
-	    while count < repetitions*10:
+            while count < repetitions*10:
                 radius = radius_geoGraph(N,r)
                 print(radius)
                 geo_g = nx.random_geometric_graph(N,radius, dim=2, p=2)
-		if nx.is_connected(geo_g):
-                   stats = get_metrics(geo_g)
-                   data[data_key].append(stats)
-		   count += 1
+                if nx.is_connected(geo_g):
+                    stats = get_metrics(geo_g)
+                    data[data_key].append(stats)
+                    count += 1
     return data
 
 

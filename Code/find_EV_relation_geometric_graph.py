@@ -21,6 +21,7 @@ def scatter_plot(N,r_list):
         E = find_ER(N,r)
         data += E
         r_data += len(E)*[r]
+    print(r_data)
     
     # plt.figure(figsize=(10,10))
     # plt.scatter(r_data,data)
@@ -34,10 +35,11 @@ def scatter_plot(N,r_list):
 
     return data,r_data
 
-def polynomial(coefs,x):
-    d  = len(coefs)
-
-    return sum([x**(d - i) * coefs[i-1] for i in range(1,d)])
+# def polynomial(coefs,x):
+#     d  = len(coefs)
+#     p = np.poly1d(coefs)
+#     return p(x)
+    #return sum([x**(d - i) * coefs[i-1] for i in range(1,d)])
     #return sum([x**(i) * coefs[i] for i in range(len(coefs))])
     #return sum(x**(i) * coefs[i] for i in range(len(coefs)))
 
@@ -45,9 +47,10 @@ def return_radius(N,n_edges):
     f = pickle.load(open('../data/helper_data/' + str(N) + 'edge_data.pkl', 'rb'))
     r = f[1]
     E = f[0]
-    degr = 7
+    degr = 3
     coefs = np.polyfit(E,r,degr)
-    return polynomial(coefs,n_edges)
+    p = np.poly1d(coefs)
+    return p(n_edges)
 
 def fit_polynomial(N,degr):
     f = pickle.load(open('../data/helper_data/' + str(N) + 'edge_data.pkl', 'rb'))
@@ -59,7 +62,8 @@ def fit_polynomial(N,degr):
     x_fit = np.linspace(min(E),max(E),100)
     print(E[0],E[-1])
     print(r[0],r[-1])
-    y_fit = [polynomial(coefs,i) for i in x_fit]
+    polynomial = np.poly1d(coefs)
+    y_fit = [polynomial(i) for i in x_fit]
     print(y_fit[0],y_fit[-1])
     plt.figure(figsize=(10,10))
     plt.scatter(E,r, label = 'DATA')
@@ -73,9 +77,9 @@ def fit_polynomial(N,degr):
 
 
 if __name__ == '__main__':
-    degree = 7
-    N_list = [100,176,500]
+    degree = 3
+    N_list = [100,176,500,1000]
     for N in N_list:
-        r_list = np.linspace(0,1,100)
+        r_list = np.linspace(0.05,.4,100)
         Edges,radius = scatter_plot(N,r_list)
         fit_polynomial(N,degree)

@@ -151,7 +151,7 @@ def generate_geometric_graphs3d(ratios,N_nodes,repetitions):
             #for iter in range(repetitions*10):
             while count < repetitions*10:#repetitions*10
                 radius = radius_geoGraph3d(N,r)
-                geo_g = nx.random_geometric_graph(N,radius, dim=2, p=2)
+                geo_g = nx.random_geometric_graph(N,radius, dim=3, p=2)
                 if nx.is_connected(geo_g):
                     print(radius)
                     print(N)

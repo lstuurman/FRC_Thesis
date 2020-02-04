@@ -12,7 +12,7 @@ import pickle as pkl
 import scipy.optimize
 import time
 from find_EV_relation_geometric_graph import return_radius
-#from find_EV_relation_geometric_graph3d import return_radius3d
+from find_EV_relation_geometric_graph3d import return_radius3d
 #from find_EV_relation_geometric_graph import polynomial
 from numpy import linalg
 
@@ -225,10 +225,10 @@ if __name__ == "__main__":
     #power_data = gen_power_cluster_graphs(VE_ratios,N_nodes,repetitions)
     #pkl.dump(power_data,open('../data/exp1/exp1_power.pkl','wb'))
     #print('Clustered powerlaw graphs generated after : ',time.time() - t)
-    geom_data = generate_geometric_graphs(VE_ratios,N_nodes,repetitions)
-    pkl.dump(geom_data,open('../data/exp1/exp1_geom.pkl','wb'))
-    # geom_data = generate_geometric_graphs3d(VE_ratios,N_nodes,repetitions)
-    # pkl.dump(geom_data,open('../data/exp1/exp1_geom3d.pkl','wb'))
+    # geom_data = generate_geometric_graphs(VE_ratios,N_nodes,repetitions)
+    # pkl.dump(geom_data,open('../data/exp1/exp1_geom.pkl','wb'))
+    geom_data = generate_geometric_graphs3d(VE_ratios,N_nodes,repetitions)
+    pkl.dump(geom_data,open('../data/exp1/exp1_geom3d.pkl','wb'))
     #print('random geometric graphs generated after : ',time.time() - t)
     #BA_data = gen_BA_graphs(VE_ratios,N_nodes,repetitions)
     #pkl.dump(BA_data,open('../data/exp1/exp1_BA.pkl','wb'))

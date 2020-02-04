@@ -154,7 +154,7 @@ def generate_geometric_graphs3d(ratios,N_nodes,repetitions):
                 geo_g = nx.random_geometric_graph(N,radius, dim=2, p=2)
                 if nx.is_connected(geo_g):
                     print(radius)
-                    print(geo_g.number_of_edges())
+                    print(N)
                     stats = get_metrics(geo_g)
                     data[data_key].append(stats)
                     count += 1

@@ -47,7 +47,7 @@ def return_radius3d(N,n_edges):
     f = pickle.load(open('../data/helper_data/' + str(N) + 'edge_data3d.pkl', 'rb'))
     r = f[1]
     E = f[0]
-    degr = 3
+    degr = 10
     coefs = np.polyfit(E,r,degr)
     p = np.poly1d(coefs)
     return p(n_edges)
@@ -77,9 +77,9 @@ def fit_polynomial(N,degr):
 
 
 if __name__ == '__main__':
-    degree = 3
+    degree = 10
     N_list = [100,176,500,1000]
     for N in N_list:
-        r_list = np.linspace(0.05,.4,100)
+        r_list = np.linspace(0,1,100)
         Edges,radius = scatter_plot(N,r_list)
         fit_polynomial(N,degree)

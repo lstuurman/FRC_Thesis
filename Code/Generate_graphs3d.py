@@ -165,6 +165,7 @@ def generate_geometric_graphs3d(ratios,N_nodes,repetitions):
                     stats = get_metrics(Gc)
                     data[data_key].append(stats)
                     count +=1
+                tries += 1
     return data
 
 def E_M_relation(x,N,E):

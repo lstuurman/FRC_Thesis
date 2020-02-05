@@ -148,6 +148,7 @@ def generate_geometric_graphs3d(ratios,N_nodes,repetitions):
             data_key = str(N) + 'N_' + str(r) + 'V/E '
             data[data_key] = []
             count = 0 
+            tries = 0
             #for iter in range(repetitions*10):
             while count < repetitions*10:#repetitions*10
                 radius = radius_geoGraph3d(N,r)
@@ -158,6 +159,12 @@ def generate_geometric_graphs3d(ratios,N_nodes,repetitions):
                     stats = get_metrics(geo_g)
                     data[data_key].append(stats)
                     count += 1
+                elif tries > 50:
+                    largest_cc = max(nx.connected_components(geo_g), key=len)
+                    Gc = geo_g.subgraph(list(largest_cc))
+                    stats = get_metrics(Gc)
+                    data[data_key].append(stats)
+                    count +=1
     return data
 
 def E_M_relation(x,N,E):

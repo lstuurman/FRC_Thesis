@@ -64,6 +64,8 @@ if __name__ == "__main__":
     p.join()
     data_dict = {}
     for i in range(len(keys)):
+        print(keys[i])
+        print(outputs[i])
         data_dict[keys[i]] = outputs[i]
     
     pickle.dump(data_dict,open('../data/helper_data/equivalent_random_stats.pkl','wb'))

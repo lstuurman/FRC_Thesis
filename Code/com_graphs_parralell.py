@@ -55,7 +55,7 @@ def generate_lattice(N_list,VE_list):
 if __name__ == "__main__":
     VE_ratios = np.linspace(.125,.375,5)
     N_nodes = [100,176,500,1000]
-    product = list(product(N_nodes[:1],VE_ratios[:1]))
+    product = list(product(N_nodes,VE_ratios))
     keys = [str(x[0]) + 'N_' + str(x[1]) + 'V/E' for x in product]
     inputs = [(x[0],x[1]) for x in product]
     p = Pool(8)

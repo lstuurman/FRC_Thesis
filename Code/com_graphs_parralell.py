@@ -58,8 +58,10 @@ if __name__ == "__main__":
     keys = [str(x[0]) + 'N_' + str(x[1]) + 'V/E' for x in product]
     inputs = [(x[0],x[1]) for x in product]
 
-    p = Pool(20)
+    p = Pool(5)
     outputs  = p.map(gen_equiv_random,inputs)
+    p.close()
+    p.join()
     data_dict = {}
     for i in range(len(keys)):
         data_dict[keys[i]] = outputs[i]

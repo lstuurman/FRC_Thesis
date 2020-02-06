@@ -9,7 +9,7 @@ def extract_averages(path):
     data = pickle.load(open(path,'rb'))
     av_dict = {}
     for key,value in data.items():
-        av_dict[key] = [[x[3] for x in value],[np.average(x[2]) for x in value]]
+        av_dict[key] = [[x[3] for x in value],[x[4] for x in value]]
         #av_dict[key] = [[np.average(x[1]) for x in value],[np.average(x[2]) for x in value]]
     return av_dict
 

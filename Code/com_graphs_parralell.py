@@ -7,7 +7,8 @@ import networkx as nx
 import numpy as np
 from itertools import product
 
-def gen_equiv_random(N,ve_ratio):
+def gen_equiv_random(tup):
+    N,ve_ratio = tup
     # generate 1000 random graphs, equivalent to the ones used in the experiments
     p = ER_p_value(N,ve_ratio)
     stats  = [] # list of tuples with (average_clustering,average_path) for every generated network. 
@@ -54,18 +55,15 @@ def generate_lattice(N_list,VE_list):
 if __name__ == "__main__":
     VE_ratios = np.linspace(.125,.375,5)
     N_nodes = [100,176,500,1000]
-    product = product(N_nodes,VE_ratios)
+    product = list(product(N_nodes[:1],VE_ratios[:1]))
     keys = [str(x[0]) + 'N_' + str(x[1]) + 'V/E' for x in product]
     inputs = [(x[0],x[1]) for x in product]
-
-    p = Pool(5)
+    p = Pool(8)
     outputs  = p.map(gen_equiv_random,inputs)
     p.close()
     p.join()
     data_dict = {}
     for i in range(len(keys)):
-        print(keys[i])
-        print(outputs[i])
         data_dict[keys[i]] = outputs[i]
     
     pickle.dump(data_dict,open('../data/helper_data/equivalent_random_stats.pkl','wb'))

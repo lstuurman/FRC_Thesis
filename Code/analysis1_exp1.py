@@ -46,7 +46,7 @@ def plot_per_type(xwindow,ywindow):
         omega = np.array(list(pickle.load(open(om_files[i], 'rb')).values())).flatten()
         sigma = np.array(list(pickle.load(open(sig_files[i], 'rb')).values())).flatten()
         name = re.split(("sigma"),sig_files[i])[-1][:-4]
-        plt.scatter(sigma,omega,c = colors[i], s = 40,alpha = .3, label = name)
+        plt.scatter(sigma,omega,c = colors[i], s = 30,alpha = .3, label = name)
         all_sigmas = np.append(all_sigmas,sigma)
         all_omegas = np.append(all_omegas,omega)
 
@@ -68,7 +68,6 @@ def plot_per_type(xwindow,ywindow):
     plt.ylim(ywindow)
     plt.ylabel('$\omega$')
     plt.xlabel('$\sigma$')
-    plt.title("Omega and Sigma values for all created graphs - ZOOM")
     plt.legend()
     plt.show()
 
@@ -108,7 +107,7 @@ def plot_frc_like():
 if __name__ == "__main__":
     #plot3d()
     #scatter_plot()
-    plot_per_type((0,150),(-1,1))
+    plot_per_type((0,150),(-1.2,1.2))
     #plot_averages()
     #plot_frc_like()
 

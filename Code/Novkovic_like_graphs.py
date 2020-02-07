@@ -95,12 +95,15 @@ def plot_filtered_graphs(fname):
 
 
 if __name__ == "__main__":
-    graphs = similar_graphs(1,.05)
+    graphs = similar_graphs(3.2411635878713985,0.16109547662293414)
     # save graphs 
     fname = '../data/exp1/filtered_graphs/graphs_data.pkl'
     fname = '/home/lau/GIT/FRC_Thesis/data/exp1/filtered_graphs/graphs_data.pkl'
     pickle.dump(graphs,open(fname,'wb'))
     plot_filtered_graphs(fname)
+
+
+#3.2411635878713985 0.16109547662293414
 
 
 

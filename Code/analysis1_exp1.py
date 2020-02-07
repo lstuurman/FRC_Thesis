@@ -75,7 +75,7 @@ def plot_per_type(xwindow,ywindow):
 
 
 def plot_frc_like():
-    colors = ['c','g','y','0.2','b']
+    colors = ['c','g','y','0.2','b','chocolate']
     sig_files = glob.glob('../data/exp1/sigma*')
     om_files = glob.glob('../data/exp1/omega*')
     sig_files.sort()
@@ -102,7 +102,7 @@ def plot_frc_like():
 
     plt.ylabel('$\omega$')
     plt.xlabel('$\sigma$')
-    plt.title("Omega and Sigma values for graphs with FRC like sizes")
+    plt.title("Omega and Sigma values for graphs with N = 176 and E +- 685")
     plt.legend()
     plt.show()
 

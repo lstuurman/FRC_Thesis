@@ -49,14 +49,10 @@ def plot_per_type(xwindow,ywindow):
         plt.scatter(sigma,omega,c = colors[i], s = 40,alpha = .3, label = name)
         all_sigmas = np.append(all_sigmas,sigma)
         all_omegas = np.append(all_omegas,omega)
-    #plt.show()
+
     # plot Novkovic with circle around
     plt.scatter(6.7,-.27, c = 'r' , s = 80, alpha = .5, label = 'Novkovic')
     x_nov,y_nov = 6.7,-.27
-    # circle : 
-    # theta = np.linspace(0,2*np.pi,100)
-    # xr = xwindow[-1] - xwindow[0]
-    # yr = ywindow[-1] - ywindow[0]
     print(all_omegas.shape,all_sigmas.shape)
 
     xr =  .25 * np.std(all_sigmas) 
@@ -67,12 +63,7 @@ def plot_per_type(xwindow,ywindow):
     plt.plot([x_nov - xr,x_nov+xr],[y_nov+yr,y_nov+yr],c = 'r')
     plt.plot([x_nov - xr,x_nov - xr],[y_nov+yr,y_nov-yr],c = 'r')
     plt.plot([x_nov + xr,x_nov+xr],[y_nov-yr,y_nov+yr],c = 'r')
-    #plt.show()
-
-
-    # x =  .05*xr * np.cos(theta) + 6.7 #1/ywindow[-1] *
-    # y = .05*yr * np.sin(theta) - .27
-    # plt.plot(x,y, c = 'r')
+    # legend en sstuff
     plt.xlim(xwindow)
     plt.ylim(ywindow)
     plt.ylabel('$\omega$')

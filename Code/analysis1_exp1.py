@@ -38,6 +38,8 @@ def plot_per_type(xwindow,ywindow):
     om_files = glob.glob('../data/exp1/omega*')
     sig_files.sort()
     om_files.sort()
+    all_sigmas = np.array([])
+    all_omegas = np.array([])
     plt.figure(figsize=(15,15))
     for i in range(len(sig_files)):
         # extract values from dict and then reshape into flat list : 
@@ -45,19 +47,30 @@ def plot_per_type(xwindow,ywindow):
         sigma = np.array(list(pickle.load(open(sig_files[i], 'rb')).values())).flatten()
         name = re.split(("sigma"),sig_files[i])[-1][:-4]
         plt.scatter(sigma,omega,c = colors[i], s = 40,alpha = .3, label = name)
+        np.append(all_sigmas,sigma)
+        np.append(all_omegas,omega)
 
     # plot Novkovic with circle around
     plt.scatter(6.7,-.27, c = 'r' , s = 80, alpha = .5, label = 'Novkovic')
+    x_nov,y_nov = 6.7,-.27
     # circle : 
-    theta = np.linspace(0,2*np.pi,100)
-    xr = xwindow[-1] - xwindow[0]
-    yr = ywindow[-1] - ywindow[0]
-    #xr = np.std(all_sigs) 
-    #yr = np.std(all_oms)
+    # theta = np.linspace(0,2*np.pi,100)
+    # xr = xwindow[-1] - xwindow[0]
+    # yr = ywindow[-1] - ywindow[0]
+    print(all_omegas.shape,all_sigmas.shape)
+    xr = np.std(all_sigmas) 
+    yr = np.std(all_omegas)
+    # PLOT SQUARE :
+    plt.plot([x_nov - xr,x_nov+xr],[y_nov-yr,y_nov-yr],c = 'r')
+    plt.plot([x_nov - xr,x_nov+xr],[y_nov+yr,y_nov+yr],c = 'r')
+    plt.plot([x_nov - xr,x_nov - xr],[y_nov+yr,y_nov-yr],c = 'r')
+    plt.plot([x_nov + xr,x_nov+xr],[y_nov-yr,y_nov+yr],c = 'r')
+    plt.show()
 
-    x =  .05*xr * np.cos(theta) + 6.7 #1/ywindow[-1] *
-    y = .05*yr * np.sin(theta) - .27
-    plt.plot(x,y, c = 'r')
+
+    # x =  .05*xr * np.cos(theta) + 6.7 #1/ywindow[-1] *
+    # y = .05*yr * np.sin(theta) - .27
+    # plt.plot(x,y, c = 'r')
     plt.xlim(xwindow)
     plt.ylim(ywindow)
     plt.ylabel('$\omega$')
@@ -80,7 +93,7 @@ def plot_frc_like():
         omega = pickle.load(open(om_files[i], 'rb'))
         sigma = pickle.load(open(sig_files[i], 'rb'))
         for key in sigma.keys():
-            print(key)
+            #print(key)
             # check for keys with 176N and .25 V/E
             if '176N_0.25V/E' in key:
                 sig = np.array(sigma[key]).flatten()

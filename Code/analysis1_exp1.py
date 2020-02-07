@@ -8,6 +8,8 @@ import numpy as np
 import re
 import seaborn as sns
 from matplotlib.patches import Ellipse
+import matplotlib
+matplotlib.rcParams.update({'font.size': 16})
 sns.set_style('darkgrid')
 
 def load_data():

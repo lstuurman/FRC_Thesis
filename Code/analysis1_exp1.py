@@ -33,7 +33,7 @@ def scatter_plot():
     plt.show()
 
 def plot_per_type(xwindow,ywindow):
-    colors = ['c','g','y','0.2','b']
+    colors = ['c','g','y','0.2','b','chocolate']
     sig_files = glob.glob('../data/exp1/sigma*')
     om_files = glob.glob('../data/exp1/omega*')
     sig_files.sort()
@@ -102,9 +102,9 @@ def plot_frc_like():
 if __name__ == "__main__":
     #plot3d()
     #scatter_plot()
-    plot_per_type((4,10),(-.4,-.15))
+    plot_per_type((0,150),(-1,1))
     #plot_averages()
-    plot_frc_like()
+    #plot_frc_like()
 
 
 

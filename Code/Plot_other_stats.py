@@ -24,6 +24,7 @@ def to_df():
     path = []
     std_clustering = []
     std_path = []
+    n_edges = []
     param_set = []
     graph_type = []
     for f in files:

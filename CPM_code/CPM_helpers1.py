@@ -19,8 +19,8 @@ def single_cell_setup1():
 
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 2,target_area = 1800, lambda_area=25)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 1, target_perimeter = 8600)
+    simulation.set_constraints(cell_type = 2,target_area = 1800, lambda_area=250)
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 100, target_perimeter = 1000)
     simulation.set_constraints(cell_type = 2, lambda_act = 200, max_act = 42) # 160,40
     # adhesion ; 
     simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = 150)

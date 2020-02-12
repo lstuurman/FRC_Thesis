@@ -8,6 +8,8 @@ __pycache__/
 
 # data folder
 data/**
+env/**
+speedy-cpm/**
 
 # Distribution / packaging
 .Python

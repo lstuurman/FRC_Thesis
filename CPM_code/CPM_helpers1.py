@@ -3,6 +3,7 @@ from Bresenheim import *
 import cpm
 import matplotlib.pyplot as plt
 from scipy.ndimage.measurements import center_of_mass
+from scipy.ndimage import label
 from scipy.spatial.distance import euclidean
 from numpy.linalg import norm
 from mpl_toolkits import mplot3d
@@ -11,6 +12,7 @@ def single_cell_setup1():
     ### SET UP CPM ###
     # params from Inge: multiplicated the adhesion engergies by 10
     # and because lambda of .1 not possible here. 
+    # params suitable for single cell in empty space
     dimension = 256
     number_of_types = 3
     temperature = 7
@@ -20,50 +22,96 @@ def single_cell_setup1():
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 1800, lambda_area=250)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 100, target_perimeter = 1000)
-    simulation.set_constraints(cell_type = 2, lambda_act = 200, max_act = 42) # 160,40
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 1, target_perimeter = 8600)
+    simulation.set_constraints(cell_type = 2, lambda_act = 2500, max_act = 42) # 160,40
     # adhesion ; 
     simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = 150)
     simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 150)
     simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 50)
     #simulation.initialize_from_array(cube_with_type,1)
 
-    simulation.add_cell(128,128,128,2)
+    # simulation.add_cell(128,128,128,2)
+    simulation.add_cell(0,0,0,2)
     return simulation
 
-def run_sim(simulation,steps):
+def real_cofmass(cell):
+    """ cell = simulation.get_state() % 2**24 == id """
+    labels, num_features = label(cell)
+    if num_features == 1:
+        return center_of_mass(cell)
+        print('1 feature')
+    else:
+        # take biggest blob :
+        sizes = [np.count_nonzero(labels == i) for i in range(1,num_features + 1)]
+        max_indeces = np.where(sizes == np.amax(sizes))[0]
+        index = np.random.choice(max_indeces,1,replace = False)
+        # set smaller patches to zero : 
+        labels[labels != index+1] = 0
+        return center_of_mass(labels)
+
+def run_sim_1cell(simulation,steps):
     cell_state = simulation.get_state()
     act_state = simulation.get_act_state()
     dimension = cell_state.shape[0]
 
+    iters = int(steps/10) # /10
     volume_track = np.zeros(tuple([dimension] * 3))
-    cofmass_track = []
-
-    iters = int(steps/10)
+    cofmass_track = np.empty((iters,3))
     for i in range(iters):
         simulation.run(10)
-        cofmass_track.append(center_of_mass(cell_state))
-        if i%10 == 0:
+        #print(real_cofmass(cell_state % 2**24 == 1))
+        cofmass_track[i] = np.array((real_cofmass(cell_state % 2**24 == 1)))
+        print(cofmass_track[i])
+        if i%100 == 0:
             volume_track = volume_track + act_state
-
+    print(cofmass_track.shape)
     return volume_track,cofmass_track
 
 def scanned_volume(volume_track):
     dim = volume_track.shape[0]
     return len(np.where(volume_track != 0.)[0]) / dim**3
 
+def handle_boundaries(cell_track):
+    # look for boundary crossings in any
+    # of the coordinates
+    for i in range(len(cell_track) - 1):
+        dif = np.subtract(cell_track[i],cell_track[i+1])
+        for j,coordinate in enumerate(dif):
+            if coordinate > 200:
+                # went over boundary from 256 -> 0
+                
+                print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
+                print('Adding ',cell_track[i,j], ' to rest of cell track')
+                print('changed axis : ',j)
+                cell_track[i+1:,j] += 256#cell_track[i,j]
+            elif coordinate < -200:
+                # form 0 -> 256
+                
+                print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
+                print('Adding ',cell_track[i+1,j], ' to previous of cell track')
+                print('Old coordinat : ',cell_track[i])
+                # cell_track[i+1:,j] -= cell_track[i,j]
+                cell_track[:i+1,j] += 256#cell_track[i+1,j]
+                #cell_track[:i+1,j] += abs(coordinate)
+                #cell_track[:i,j] += cell_track[i,j]
+                print('New coordinate : ',cell_track[i])
+                # print('changed axis : ',j)
+                print(i,j)
+    return cell_track
+            
+
 def analyse_track(cell_track):
     # total displacement : 
-    tot_displ = 0
+    disp_per_t = []
     # angles : 
     angles= []
     for i in range(len(cell_track) - 1):
-        point1 = np.array(cell_track[i])
-        point2 = np.array(cell_track[i + 1])
-        tot_displ += euclidean(point1,point2)
+        point1 = cell_track[i]
+        point2 = cell_track[i + 1]
+        disp_per_t.append(euclidean(point1,point2))
 
         if i != len(cell_track) - 2:
-            point3 = np.array(cell_track[i + 2])
+            point3 = cell_track[i + 2]
             v1 = point2 - point1
             v2 = point3 - point2
             cos = np.dot(v1,v2)/(norm(v1) * norm(v2))
@@ -73,7 +121,7 @@ def analyse_track(cell_track):
     # corr = np.correlate(cell_track, cell_track, mode='full')
     # auto_correlation =  corr[corr.size/2:]
 
-    return tot_displ,angles#,auto_correlation
+    return disp_per_t,angles#,auto_correlation
 
 def plot_celltrack(cell_track):
     # plot path of center of mass  :
@@ -81,17 +129,19 @@ def plot_celltrack(cell_track):
     y = [c[1] for c in cell_track]
     z = [c[2] for c in cell_track]
 
-    fig = plt.figure()
+    #fig = plt.figure()
     ax = plt.axes(projection='3d')
     ax.plot3D(x,y,z)
     ax.scatter3D(x[0],y[0],z[0],label = 'start')
     ax.scatter3D(x[-1],y[-1],z[-1],label = 'end')
     ax.legend()
-    fig.show()
+    plt.show()
 
 if __name__ == "__main__":
     simulation = single_cell_setup1()
-    volume_track,cell_track = run_sim(simulation,1000)
-    percentage_scanned = scanned_volume(volume_track)
-    displ, angles = analyse_track(cell_track)
+    volume_track,cell_track = run_sim_1cell(simulation,500)
+    # percentage_scanned = scanned_volume(volume_track)
+    # displ, angles = analyse_track(cell_track)
+    plot_celltrack(cell_track)
+    cell_track = handle_boundaries(cell_track)
     plot_celltrack(cell_track)

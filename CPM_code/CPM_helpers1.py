@@ -8,6 +8,8 @@ from scipy.spatial.distance import euclidean
 from numpy.linalg import norm
 from mpl_toolkits import mplot3d
 
+#source activate env/bin/activate
+
 def single_cell_setup1():
     ### SET UP CPM ###
     # params from Inge: multiplicated the adhesion engergies by 10

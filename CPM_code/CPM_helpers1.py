@@ -140,7 +140,7 @@ def run_sim_1cell(simulation,steps):
             if d > 10.:
                 real_cofmass(simulation.get_state() % 2**24 == 1, pr = True)
                 mlab.clf()
-                mlab.contour3d(simulation.get_state() % 2**24 == 1)
+                mlab.contour3d(simulation.get_state())
                 mlab.show()
 
 

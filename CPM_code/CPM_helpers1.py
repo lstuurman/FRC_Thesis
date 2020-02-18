@@ -22,7 +22,7 @@ def single_cell_setup1():
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 1800, lambda_area=250)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 1, target_perimeter = 8600)
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 10, target_perimeter = 8600)
     simulation.set_constraints(cell_type = 2, lambda_act = 2500, max_act = 42) # 160,40
     # adhesion ; 
     simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = 150)
@@ -30,24 +30,95 @@ def single_cell_setup1():
     simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 50)
     #simulation.initialize_from_array(cube_with_type,1)
 
-    # simulation.add_cell(128,128,128,2)
+    #simulation.add_cell(128,128,128,2)
     simulation.add_cell(0,0,0,2)
+    
+    # run untill cell has approx target area : 
+    s = simulation.get_state()
+    cell = s % 2**24 == 1
+    
+    while np.sum(cell) < 1700:
+        cell = s % 2**24 == 1
+        simulation.run(1)
     return simulation
 
-def real_cofmass(cell):
+def dist_to_axis(x,ref):
+    # return distance between point x and reference
+    distances = []
+    for i,x in enumerate(x):
+        #distances.append(min([coord - 256, coord],key = abs))
+        d = ref[i] - x
+        if d < 128 and d > -128:
+            distances.append(d)
+        elif d < 0:
+            # other patch on the other side of box
+            distances.append(d + 256)
+        else : 
+            distances.append(d - 256)
+        # print(coord)
+        # print(min([coord - 256, coord],key = abs))
+    return distances
+
+
+
+def real_cofmass(cell,pr = False):
     """ cell = simulation.get_state() % 2**24 == id """
     labels, num_features = label(cell)
-    if num_features == 1:
-        return center_of_mass(cell)
-        print('1 feature')
-    else:
-        # take biggest blob :
-        sizes = [np.count_nonzero(labels == i) for i in range(1,num_features + 1)]
-        max_indeces = np.where(sizes == np.amax(sizes))[0]
-        index = np.random.choice(max_indeces,1,replace = False)
-        # set smaller patches to zero : 
-        labels[labels != index+1] = 0
-        return center_of_mass(labels)
+    total_size = np.sum(cell)
+    # compute sizes of patches:
+    sizes = [(np.count_nonzero(labels == i),i) for i in range(1,num_features + 1)] #  if np.count_nonzero(labels == i) > 1
+    sorted_sizes = sorted(sizes,key = lambda x: x[0])[::-1]
+    big_labels = [x[1] for x in sorted_sizes]
+    masses = center_of_mass(cell,labels = labels, index = big_labels)
+    biggest_patch = np.array(masses[0]) * (sorted_sizes[0][0] / total_size)
+    biggest_size = sorted_sizes[0][0]
+
+    if pr:
+        print(sorted_sizes)
+        print(masses)
+    # take distances between boundaries of every axis : 
+    dists = list(map(dist_to_axis,masses[1:],[biggest_patch for i in range(len(masses) - 1)]))
+    # loop over distances and add or destract from main blob :
+    #print('Biggest patch at : ', biggest_patch)
+    for i,d in enumerate(dists):
+        biggest_size += sorted_sizes[i + 1][0]
+        if pr:
+            print('Biggest patch at : ', biggest_patch)
+            print('Added coordate :', masses[i + 1])
+            print('With difference : ',  np.array(d))
+            print('with weight : ', (sorted_sizes[i + 1][0] / biggest_size))
+            print(np.array(d) * (sorted_sizes[i + 1][0] / biggest_size))
+        
+        
+        biggest_patch -= np.array(d) * (sorted_sizes[i + 1][0] / biggest_size)# + biggest_size
+        
+        
+        # correct negative values : 
+        for i in range(3):
+            if biggest_patch[i] < 0:
+                biggest_patch[i] += 256
+            elif biggest_patch[i] > 256.:
+                biggest_patch[i] -= 256
+        if pr:
+            print('NEW biggest patch : ', biggest_patch)
+    #biggest_patch = [x if x>0 and x < 256. elif x < 0 + 256 else x - 256 for x in biggest_patch]
+    return biggest_patch
+
+# def coffmass2(cell):
+#     total_size = np.sum(cell)
+#     labels,num_features = label(cell)
+#     sizes = [(np.count_nonzero(labels == i),i) for i in range(1,num_features + 1)]
+#     masses = center_of_mass(cell,labels = labels)
+#     # take distances between boundaries of every axis : 
+#     dists = list(map(dist_to_axis,masses))
+
+#     # go over patches : 
+#     cofmass = []
+#     for i in sizes:
+#         label = i[0]
+#         size = i[0]
+#         centroid = center_of_mass(cell,labels = labels, index = big_labels)
+
 
 def run_sim_1cell(simulation,steps):
     cell_state = simulation.get_state()
@@ -60,7 +131,12 @@ def run_sim_1cell(simulation,steps):
     for i in range(iters):
         simulation.run(10)
         #print(real_cofmass(cell_state % 2**24 == 1))
-        cofmass_track[i] = np.array((real_cofmass(cell_state % 2**24 == 1)))
+        cofmass_track[i] = np.array((real_cofmass(simulation.get_state() % 2**24 == 1)))
+        if i > 0:
+            d = euclidean(cofmass_track[i],cofmass_track[i - 1])
+            if d > 10.:
+                real_cofmass(simulation.get_state() % 2**24 == 1, pr = True)
+
         print(cofmass_track[i])
         if i%100 == 0:
             volume_track = volume_track + act_state
@@ -77,7 +153,7 @@ def handle_boundaries(cell_track):
     for i in range(len(cell_track) - 1):
         dif = np.subtract(cell_track[i],cell_track[i+1])
         for j,coordinate in enumerate(dif):
-            if coordinate > 200:
+            if coordinate > 128:
                 # went over boundary from 256 -> 0
                 
                 print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
@@ -145,3 +221,13 @@ if __name__ == "__main__":
     plot_celltrack(cell_track)
     cell_track = handle_boundaries(cell_track)
     plot_celltrack(cell_track)
+
+
+    # if any(c < 250 and c > 10 for c in center_of_mass(labels)): #el
+    #     # cell not near boundary -> can be regarded as one cell
+    #     #sizes = [np.count_nonzero(labels == i) for i in range(1,num_features + 1)]
+    #     max_indeces = np.where(sizes == np.amax(sizes))[0]
+    #     index = np.random.choice(max_indeces,1,replace = False)
+    #     # set smaller patches to zero :
+    #     labels[labels != index+1] = 0
+    #     return center_of_mass(labels)

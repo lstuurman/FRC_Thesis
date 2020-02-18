@@ -35,6 +35,7 @@ def single_cell_setup1():
 
     #simulation.add_cell(128,128,128,2)
     simulation.add_cell(0,0,0,2)
+    #simulation.add_cell(256,256,256,2)
     
     # run untill cell has approx target area : 
     s = simulation.get_state()
@@ -48,9 +49,10 @@ def single_cell_setup1():
 def dist_to_axis(x,ref):
     # return distance between point x and reference
     distances = []
-    for i,x in enumerate(x):
+    for i,axis in enumerate(x):
         #distances.append(min([coord - 256, coord],key = abs))
-        d = ref[i] - x
+        #d = ref[i] - x
+        d = axis - ref[i]
         if d < 128 and d > -128:
             distances.append(d)
         elif d < 0:
@@ -67,13 +69,14 @@ def dist_to_axis(x,ref):
 def real_cofmass(cell,pr = False):
     """ cell = simulation.get_state() % 2**24 == id """
     labels, num_features = label(cell)
-    total_size = np.sum(cell)
+    #total_size = np.sum(cell)
+    #print(total_size)
     # compute sizes of patches:
     sizes = [(np.count_nonzero(labels == i),i) for i in range(1,num_features + 1)] #  if np.count_nonzero(labels == i) > 1
     sorted_sizes = sorted(sizes,key = lambda x: x[0])[::-1]
     big_labels = [x[1] for x in sorted_sizes]
     masses = center_of_mass(cell,labels = labels, index = big_labels)
-    biggest_patch = np.array(masses[0]) * (sorted_sizes[0][0] / total_size)
+    biggest_patch = np.array(masses[0]) #* (sorted_sizes[0][0] / total_size)
     biggest_size = sorted_sizes[0][0]
 
     if pr:
@@ -89,11 +92,11 @@ def real_cofmass(cell,pr = False):
             print('Biggest patch at : ', biggest_patch)
             print('Added coordate :', masses[i + 1])
             print('With difference : ',  np.array(d))
-            print('with weight : ', (sorted_sizes[i + 1][0] / biggest_size))
-            print(np.array(d) * (sorted_sizes[i + 1][0] / biggest_size))
+            print('with weight : ', (sorted_sizes[i + 1][0] / biggest_size)) #biggest_size
+            print(np.array(d) * (sorted_sizes[i + 1][0] / biggest_size))# biggest_size
         
         
-        biggest_patch -= np.array(d) * (sorted_sizes[i + 1][0] / biggest_size)# + biggest_size
+        biggest_patch += np.array(d) * (sorted_sizes[i + 1][0] / biggest_size)# + biggest_size +
         
         
         # correct negative values : 
@@ -135,13 +138,13 @@ def run_sim_1cell(simulation,steps):
         simulation.run(10)
         #print(real_cofmass(cell_state % 2**24 == 1))
         cofmass_track[i] = np.array((real_cofmass(simulation.get_state() % 2**24 == 1)))
-        if i > 0:
-            d = euclidean(cofmass_track[i],cofmass_track[i - 1])
-            if d > 10.:
-                real_cofmass(simulation.get_state() % 2**24 == 1, pr = True)
-                mlab.clf()
-                mlab.contour3d(simulation.get_state())
-                mlab.show()
+        # if i > 0:
+            #d = euclidean(cofmass_track[i],cofmass_track[i - 1])
+            # if d > 10.:
+            #     real_cofmass(simulation.get_state() % 2**24 == 1, pr = True)
+            #     mlab.clf()
+            #     mlab.contour3d(simulation.get_state())
+            #     mlab.show()
 
 
         print(cofmass_track[i])
@@ -157,6 +160,7 @@ def scanned_volume(volume_track):
 def handle_boundaries(cell_track):
     # look for boundary crossings in any
     # of the coordinates
+    cell_track2 = cell_track.copy()
     for i in range(len(cell_track) - 1):
         dif = np.subtract(cell_track[i],cell_track[i+1])
         for j,coordinate in enumerate(dif):
@@ -164,23 +168,28 @@ def handle_boundaries(cell_track):
                 # went over boundary from 256 -> 0
                 
                 print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
-                print('Adding ',cell_track[i,j], ' to rest of cell track')
+                print('Adding ',256, ' to rest of cell track') #cell_track[i,j]
                 print('changed axis : ',j)
-                cell_track[i+1:,j] += 256#cell_track[i,j]
-            elif coordinate < -200:
+                print('Old coordinat : ',cell_track[i])
+                cell_track2[:i + 1,j] -= 256#cell_track[i,j
+                print('New coordinate : ',cell_track[i])
+                print(i,j)
+                
+            elif coordinate < -128:
                 # form 0 -> 256
                 
                 print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
-                print('Adding ',cell_track[i+1,j], ' to previous of cell track')
+                print('Adding ', 256, ' to previous of cell track') #cell_track[i+1,j]
                 print('Old coordinat : ',cell_track[i])
                 # cell_track[i+1:,j] -= cell_track[i,j]
-                cell_track[:i+1,j] += 256#cell_track[i+1,j]
+                cell_track2[:i + 1,j] += 256#cell_track[i+1,j]
                 #cell_track[:i+1,j] += abs(coordinate)
                 #cell_track[:i,j] += cell_track[i,j]
                 print('New coordinate : ',cell_track[i])
                 # print('changed axis : ',j)
                 print(i,j)
-    return cell_track
+            #cell_track2.append(cell_track[i])
+    return cell_track2
             
 
 def analyse_track(cell_track):

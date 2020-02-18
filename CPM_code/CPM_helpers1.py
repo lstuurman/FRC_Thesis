@@ -7,6 +7,7 @@ from scipy.ndimage import label
 from scipy.spatial.distance import euclidean
 from numpy.linalg import norm
 from mpl_toolkits import mplot3d
+from mayavi import mlab
 
 #source env/bin/activate
 
@@ -138,6 +139,10 @@ def run_sim_1cell(simulation,steps):
             d = euclidean(cofmass_track[i],cofmass_track[i - 1])
             if d > 10.:
                 real_cofmass(simulation.get_state() % 2**24 == 1, pr = True)
+                mlab.clf()
+                mlab.contour3d(simulation.get_state() % 2**24 == 1)
+                mlab.show()
+
 
         print(cofmass_track[i])
         if i%100 == 0:

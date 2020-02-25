@@ -90,7 +90,7 @@ def MSD_lonelycell():
     # setup : 
     begin_pos = [128,128,128]
     begin_pos = np.random.randint(0,256,size=3)
-    simulation = single_cell_setup1(256,begin_pos,1000,5000,FRC=False)
+    simulation = single_cell_setup1(256,begin_pos,2500,100,FRC=False)
     # run : 
     volume_track,cell_track = run_sim_1cell(simulation,2000)
     cell_track = handle_boundaries(cell_track,pr = False)

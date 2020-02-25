@@ -16,7 +16,7 @@ def run_sim(params):
     # data to return : 
     data = []
     print(params)
-    for i in range(10):
+    for i in range(3):
         simulation = single_cell_setup1(256,begin_pos,lambda_act,max_act,FRC=False)
         # run : 
         volume_track,cell_track = run_sim_1cell(simulation,2000)

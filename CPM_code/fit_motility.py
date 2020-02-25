@@ -50,7 +50,7 @@ def gridsearch():
     p.close()
     p.join()
     # save data :
-    pickle.dump(output,open('test_dat/raw_nofrc.pkl'))
+    pickle.dump(output,open('testdat/raw_nofrc.pkl'))
 
     data = {'Motility':[],'Persistance':[],'Lambda_act':[],'Max_act':[]}
     for i,tup in enumerate(inputs):
@@ -62,5 +62,5 @@ def gridsearch():
 	
 	# save data as csv :
 	df = pd.DataFrame(data)
-	df.to_csv('test_dat/no_frc1.csv')
+	df.to_csv('testdat/no_frc1.csv')
 

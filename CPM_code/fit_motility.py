@@ -8,7 +8,8 @@ import os
 import pickle
 import pandas as pd
 
-def run_sim(lambda_act,max_act):
+def run_sim(params):
+    lambda_act,max_act = params
     # setup : 
     #begin_pos = np.random.randint(0,256,size=3)
     begin_pos = [128,128,128]

@@ -3,7 +3,7 @@ from Bresenheim import *
 import cpm
 import matplotlib.pyplot as plt
 from scipy.ndimage.measurements import center_of_mass
-from scipy.ndimage import label
+from scipy.ndimage import label , generate_binary_structure
 from scipy.spatial.distance import euclidean
 from numpy.linalg import norm
 from mpl_toolkits import mplot3d
@@ -11,12 +11,12 @@ from mayavi import mlab
 
 #source env/bin/activate
 
-def single_cell_setup1():
+def single_cell_setup1(dim,position,l_act,m_act,FRC = False):
     ### SET UP CPM ###
     # params from Inge: multiplicated the adhesion engergies by 10
     # and because lambda of .1 not possible here. 
     # params suitable for single cell in empty space
-    dimension = 256
+    dimension = dim
     number_of_types = 3
     temperature = 7
 
@@ -24,34 +24,41 @@ def single_cell_setup1():
 
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 2,target_area = 1800, lambda_area=250)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 10, target_perimeter = 8600)
-    simulation.set_constraints(cell_type = 2, lambda_act = 2500, max_act = 42) # 160,40
+    simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=250)
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 1500)#8600
+    simulation.set_constraints(cell_type = 2, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
     # adhesion ; 
-    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = 150)
+    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = 1)
     simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 150)
-    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 50)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 5)
     #simulation.initialize_from_array(cube_with_type,1)
+    if FRC:
+        print('Creating FRC')
+        frc_in_cube = test(dimension,plotly=False,mayavi=False)
+        print('Loading into simulation : ')
+        simulation.initialize_from_array(frc_in_cube,1)
+        print('Done')
 
     #simulation.add_cell(128,128,128,2)
-    simulation.add_cell(0,0,0,2)
+    simulation.add_cell(position[0],position[1],position[2],2)
     #simulation.add_cell(256,256,256,2)
     
     # run untill cell has approx target area : 
     s = simulation.get_state()
-    cell = s % 2**24 == 1
+    celltypes = s // 2**24
+    t = celltypes == 2
     
-    while np.sum(cell) < 1700:
-        cell = s % 2**24 == 1
+    while np.sum(t) < 140:
+        celltypes = s // 2**24
+        t = celltypes == 2
         simulation.run(1)
+        print(np.sum(t))
     return simulation
 
 def dist_to_axis(x,ref):
     # return distance between point x and reference
     distances = []
     for i,axis in enumerate(x):
-        #distances.append(min([coord - 256, coord],key = abs))
-        #d = ref[i] - x
         d = axis - ref[i]
         if d < 128 and d > -128:
             distances.append(d)
@@ -60,19 +67,21 @@ def dist_to_axis(x,ref):
             distances.append(d + 256)
         else : 
             distances.append(d - 256)
-        # print(coord)
-        # print(min([coord - 256, coord],key = abs))
     return distances
 
 
 
 def real_cofmass(cell,pr = False):
     """ cell = simulation.get_state() % 2**24 == id """
-    labels, num_features = label(cell)
-    #total_size = np.sum(cell)
-    #print(total_size)
-    # compute sizes of patches:
-    sizes = [(np.count_nonzero(labels == i),i) for i in range(1,num_features + 1)] #  if np.count_nonzero(labels == i) > 1
+    neighborhood =  generate_binary_structure(3,4)
+    labels, num_features = label(cell, structure=neighborhood)
+     # compute sizes of pieces of cell: (bigger then 1)
+    sizes = [(np.count_nonzero(labels == i),i) for i in range(1,num_features + 1) if np.count_nonzero(labels == i) > 1]
+    # Just one patch : 
+    if len(sizes) == 1:
+        return center_of_mass(cell)
+
+    # multiple patches : 
     sorted_sizes = sorted(sizes,key = lambda x: x[0])[::-1]
     big_labels = [x[1] for x in sorted_sizes]
     masses = center_of_mass(cell,labels = labels, index = big_labels)
@@ -85,8 +94,9 @@ def real_cofmass(cell,pr = False):
     # take distances between boundaries of every axis : 
     dists = list(map(dist_to_axis,masses[1:],[biggest_patch for i in range(len(masses) - 1)]))
     # loop over distances and add or destract from main blob :
-    #print('Biggest patch at : ', biggest_patch)
+
     for i,d in enumerate(dists):
+        print('boundary')
         biggest_size += sorted_sizes[i + 1][0]
         if pr:
             print('Biggest patch at : ', biggest_patch)
@@ -95,9 +105,7 @@ def real_cofmass(cell,pr = False):
             print('with weight : ', (sorted_sizes[i + 1][0] / biggest_size)) #biggest_size
             print(np.array(d) * (sorted_sizes[i + 1][0] / biggest_size))# biggest_size
         
-        
         biggest_patch += np.array(d) * (sorted_sizes[i + 1][0] / biggest_size)# + biggest_size +
-        
         
         # correct negative values : 
         for i in range(3):
@@ -110,42 +118,22 @@ def real_cofmass(cell,pr = False):
     #biggest_patch = [x if x>0 and x < 256. elif x < 0 + 256 else x - 256 for x in biggest_patch]
     return biggest_patch
 
-# def coffmass2(cell):
-#     total_size = np.sum(cell)
-#     labels,num_features = label(cell)
-#     sizes = [(np.count_nonzero(labels == i),i) for i in range(1,num_features + 1)]
-#     masses = center_of_mass(cell,labels = labels)
-#     # take distances between boundaries of every axis : 
-#     dists = list(map(dist_to_axis,masses))
-
-#     # go over patches : 
-#     cofmass = []
-#     for i in sizes:
-#         label = i[0]
-#         size = i[0]
-#         centroid = center_of_mass(cell,labels = labels, index = big_labels)
-
-
 def run_sim_1cell(simulation,steps):
-    cell_state = simulation.get_state()
+    state = simulation.get_state() 
     act_state = simulation.get_act_state()
-    dimension = cell_state.shape[0]
+    dimension = state.shape[0]
 
     iters = int(steps/10) # /10
     volume_track = np.zeros(tuple([dimension] * 3))
     cofmass_track = np.empty((iters,3))
     for i in range(iters):
         simulation.run(10)
-        #print(real_cofmass(cell_state % 2**24 == 1))
-        cofmass_track[i] = np.array((real_cofmass(simulation.get_state() % 2**24 == 1)))
-        # if i > 0:
-            #d = euclidean(cofmass_track[i],cofmass_track[i - 1])
-            # if d > 10.:
-            #     real_cofmass(simulation.get_state() % 2**24 == 1, pr = True)
-            #     mlab.clf()
-            #     mlab.contour3d(simulation.get_state())
-            #     mlab.show()
-
+        cell = state // 2**24 == 2
+        ids = state % 2**24 == 2
+        n_cells = np.unique(ids)
+        if len(n_cells) > 2:
+            print('cell split up..')
+        cofmass_track[i] = np.array(real_cofmass(cell, pr = False))
 
         print(cofmass_track[i])
         if i%100 == 0:
@@ -157,7 +145,7 @@ def scanned_volume(volume_track):
     dim = volume_track.shape[0]
     return len(np.where(volume_track != 0.)[0]) / dim**3
 
-def handle_boundaries(cell_track):
+def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
     # of the coordinates
     cell_track2 = cell_track.copy()
@@ -166,29 +154,30 @@ def handle_boundaries(cell_track):
         for j,coordinate in enumerate(dif):
             if coordinate > 128:
                 # went over boundary from 256 -> 0
-                
-                print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
-                print('Adding ',256, ' to rest of cell track') #cell_track[i,j]
-                print('changed axis : ',j)
-                print('Old coordinat : ',cell_track[i])
-                cell_track2[:i + 1,j] -= 256#cell_track[i,j
-                print('New coordinate : ',cell_track[i])
-                print(i,j)
+                if pr:
+                    print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
+                    print('Adding ',256, ' to rest of cell track') #cell_track[i,j]
+                    print('changed axis : ',j)
+                    print('Old coordinat : ',cell_track[i])
+
+                cell_track2[:i + 1,j] -= 256
+
+                if pr:
+                    print('New coordinate : ',cell_track[i])
+                    print(i,j)
                 
             elif coordinate < -128:
                 # form 0 -> 256
-                
-                print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
-                print('Adding ', 256, ' to previous of cell track') #cell_track[i+1,j]
-                print('Old coordinat : ',cell_track[i])
-                # cell_track[i+1:,j] -= cell_track[i,j]
-                cell_track2[:i + 1,j] += 256#cell_track[i+1,j]
-                #cell_track[:i+1,j] += abs(coordinate)
-                #cell_track[:i,j] += cell_track[i,j]
-                print('New coordinate : ',cell_track[i])
-                # print('changed axis : ',j)
-                print(i,j)
-            #cell_track2.append(cell_track[i])
+                if pr:
+                    print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
+                    print('Adding ', 256, ' to previous of cell track') 
+                    print('Old coordinat : ',cell_track[i])
+
+                cell_track2[:i + 1,j] += 256
+
+                if pr:
+                    print('New coordinate : ',cell_track[i])
+                    print(i,j)
     return cell_track2
             
 
@@ -206,8 +195,11 @@ def analyse_track(cell_track):
             point3 = cell_track[i + 2]
             v1 = point2 - point1
             v2 = point3 - point2
-            cos = np.dot(v1,v2)/(norm(v1) * norm(v2))
-            angles.append(np.arccos(np.clip(cos,-1,1)))
+            cos = np.clip(np.dot(v1,v2)/(norm(v1) * norm(v2)),-1,1)
+            #angles.append(np.arccos(np.clip(cos,-1,1)))
+            print(cos)
+            #if np.isfinite(cos):
+            angles.append(cos)
 
     # # autocorrelation : 
     # corr = np.correlate(cell_track, cell_track, mode='full')
@@ -230,7 +222,7 @@ def plot_celltrack(cell_track):
     plt.show()
 
 if __name__ == "__main__":
-    simulation = single_cell_setup1()
+    simulation = single_cell_setup1(256,2500,42,FRC=False)
     volume_track,cell_track = run_sim_1cell(simulation,500)
     # percentage_scanned = scanned_volume(volume_track)
     # displ, angles = analyse_track(cell_track)
@@ -247,3 +239,28 @@ if __name__ == "__main__":
     #     # set smaller patches to zero :
     #     labels[labels != index+1] = 0
     #     return center_of_mass(labels)
+
+
+# def coffmass2(cell):
+#     total_size = np.sum(cell)
+#     labels,num_features = label(cell)
+#     sizes = [(np.count_nonzero(labels == i),i) for i in range(1,num_features + 1)]
+#     masses = center_of_mass(cell,labels = labels)
+#     # take distances between boundaries of every axis : 
+#     dists = list(map(dist_to_axis,masses))
+
+#     # go over patches : 
+#     cofmass = []
+#     for i in sizes:
+#         label = i[0]
+#         size = i[0]
+#         centroid = center_of_mass(cell,labels = labels, index = big_labels)
+
+
+        # if i > 0:
+            #d = euclidean(cofmass_track[i],cofmass_track[i - 1])
+            # if d > 10.:
+            #     real_cofmass(simulation.get_state() % 2**24 == 1, pr = True)
+            #     mlab.clf()
+            #     mlab.contour3d(simulation.get_state())
+            #     mlab.show()

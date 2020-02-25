@@ -1,0 +1,9 @@
+celltrack 1 frc : 
+Percentage scanned volume :  0.0002620220184326172
+Motility coefficient :  2.949090166115258
+Persistance parameter :  508.5341104481435
+
+celltrack 2 no frc : 
+Percentage scanned volume :  0.00023257732391357422
+Motility coefficient :  0.9990047313803022
+Persistance parameter :  130.0615305061307

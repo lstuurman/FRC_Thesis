@@ -129,12 +129,13 @@ def adjust_thickness(cube,t):
     cube = pad[:cube.shape[0],:cube.shape[1],:cube.shape[2]]
     return cube
 
-def test(D,plotly = True,mayavi = False):
+def test(D,plotly = False,mayavi = False):
     # show how code works : 
     # set dimension for grid : 
     D = 256
+    r = 20/256# 20microns
     # create graphs with positions : 
-    g = nx.random_geometric_graph(280,.32,dim = 3)
+    g = nx.random_geometric_graph(4500,r,dim = 3)
     # nice 3d visualazition in plotly : 
     matrix = nx.to_numpy_matrix(g)
     positions = []
@@ -149,11 +150,13 @@ def test(D,plotly = True,mayavi = False):
     #adjust thickness so that it fills +- 17% of cube : 
     thicckk = adjust_thickness(c,2)
     if mayavi:
-        mlab.clf()
+        #mlab.clf()
+        mlab.options.offscreen = True
         mlab.contour3d(thicckk)
-        mlab.show()
+        #mlab.show()
+        mlab.savefig('test.png')
     print('percentage of volume occupied by frc',(np.sum(thicckk)/D**3)*100)
     return thicckk
 
 if __name__ == "__main__":
-    test()
+    test(256,mayavi=True)

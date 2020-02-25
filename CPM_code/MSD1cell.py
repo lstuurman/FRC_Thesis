@@ -5,6 +5,7 @@ from CPM_helpers1 import *
 import math
 from scipy.optimize import curve_fit
 from scipy.stats import pearsonr
+import time
 
 def compute_MSD(displacement):
     # range of sliding windows from 1 to steps - 100
@@ -51,7 +52,7 @@ def compute_AutoCorr_WRONG(angles):
     cos_cor = []
     #print(angles)
     angles = [x for x in angles if np.isfinite(x)]
-    delta_t = np.arange(1,len(angles) - 10)
+    delta_t = np.arange(1,len(angles) - 100)
     #angles = angles[np.isfinite(angles)]
     #print(len(angles))
     for dt in delta_t:
@@ -106,5 +107,7 @@ def MSD_lonelycell():
 
 
 if __name__ == "__main__":
+    t1 = time.time()
     MSD_lonelycell()
+    print('computing time : ', time.time - t1)
 

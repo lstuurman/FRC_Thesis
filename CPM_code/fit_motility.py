@@ -32,7 +32,7 @@ def run_sim(params):
         t,new_angles = compute_autocorrelaton(displ)
         
         popt = fit_Motilty(delta_t,MSD)
-        data.append([popt[0],popt[1],vol,volume_track,cell_track])
+        data.append([popt[0],popt[1],vol,volume_track,cell_track,auto_corr,p_values,new_angles])
 
     return data
 

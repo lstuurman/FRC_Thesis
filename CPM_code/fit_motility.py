@@ -66,3 +66,5 @@ def gridsearch():
     df = pd.DataFrame(data)
     df.to_csv('testdat/no_frc1.csv')
 
+if __name__ == "__main__":
+    gridsearch()

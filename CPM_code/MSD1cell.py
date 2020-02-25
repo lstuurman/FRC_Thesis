@@ -49,11 +49,11 @@ def compute_AutoCorr_WRONG(angles):
     r_vals = []
     p_vals = []
     cos_cor = []
-    print(angles)
+    #print(angles)
     angles = [x for x in angles if np.isfinite(x)]
     delta_t = np.arange(1,len(angles) - 10)
     #angles = angles[np.isfinite(angles)]
-    print(len(angles))
+    #print(len(angles))
     for dt in delta_t:
         corrs = pearsonr(angles[:len(angles) - dt], angles[dt:])
         corrs2= [np.dot(angles[i],angles[i + dt]) for i in range(len(angles) - dt)]
@@ -61,8 +61,8 @@ def compute_AutoCorr_WRONG(angles):
         p_vals.append(corrs[1])
         cos_cor.append(np.average(corrs2))
         #print(corrs)
-    print(r_vals)
-    print(p_vals)
+    #print(r_vals)
+    #print(p_vals)
     plt.plot(delta_t,r_vals,label = "R value")
     plt.plot(delta_t,p_vals,'--',label = "p-value")
     #plt.plot(delta_t,cos_cor, label = 'Cosine Angles')

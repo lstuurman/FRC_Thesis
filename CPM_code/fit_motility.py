@@ -15,7 +15,7 @@ def run_sim(params):
     begin_pos = [128,128,128]
     # data to return : 
     data = []
-
+    print(params)
     for i in range(10):
         simulation = single_cell_setup1(256,begin_pos,lambda_act,max_act,FRC=False)
         # run : 

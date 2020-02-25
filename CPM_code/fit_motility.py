@@ -32,7 +32,7 @@ def run_sim(params):
         t,new_angles = compute_autocorrelaton(displ)
         
         popt = fit_Motilty(delta_t,MSD)
-        data.append([popt[0],popt[1],vol,volume_track,cell_track,auto_corr,p_values,new_angles])
+        data.append([popt[0],popt[1],vol,volume_track,cell_track,auto_corr,pvalues,new_angles])
 
     return data
 
@@ -44,7 +44,7 @@ def gridsearch():
     max_act = np.geomspace(10,5000,num = 10,dtype=int)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
-    cpus = os.cpu_count()
+    cpus = os.cpu_count() - 1
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_sim,inputs))

@@ -109,5 +109,5 @@ def MSD_lonelycell():
 if __name__ == "__main__":
     t1 = time.time()
     MSD_lonelycell()
-    print('computing time : ', time.time - t1)
+    print('computing time : ', time.time() - t1)
 

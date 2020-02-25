@@ -52,16 +52,17 @@ def gridsearch():
     # save data :
     pickle.dump(output,open('testdat/raw_nofrc.pkl'))
 
-    data = {'Motility':[],'Persistance':[],'Scanned-volume':[],'Lambda_act':[],'Max_act':[]}
+    data = {'Motility':[],'Persistance':[],'Scanned_volume':[],'Lambda_act':[],'Max_act':[]}
     for i,tup in enumerate(inputs):
         data = output[i]
+        data['Scanned_volume'].append(np.average(data[:,2]))
         data['Motility'].append(np.average(data[:,0]))
         data['Persistance'].append(np.average(data[:,1]))
-		data['Scanned-volume'].append(np.average(data[:,2]))
         data['Lambda_act'].append(tup[0])
         data['Max_act'].append(tup[1])
+		
 	
 	# save data as csv :
-	df = pd.DataFrame(data)
-	df.to_csv('testdat/no_frc1.csv')
+    df = pd.DataFrame(data)
+    df.to_csv('testdat/no_frc1.csv')
 

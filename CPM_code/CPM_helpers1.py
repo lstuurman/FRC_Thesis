@@ -52,7 +52,7 @@ def single_cell_setup1(dim,position,l_act,m_act,FRC = False):
         celltypes = s // 2**24
         t = celltypes == 2
         simulation.run(1)
-        print(np.sum(t))
+        #print(np.sum(t))
     return simulation
 
 def dist_to_axis(x,ref):
@@ -96,7 +96,7 @@ def real_cofmass(cell,pr = False):
     # loop over distances and add or destract from main blob :
 
     for i,d in enumerate(dists):
-        print('boundary')
+        #print('boundary')
         biggest_size += sorted_sizes[i + 1][0]
         if pr:
             print('Biggest patch at : ', biggest_patch)
@@ -135,10 +135,10 @@ def run_sim_1cell(simulation,steps):
             print('cell split up..')
         cofmass_track[i] = np.array(real_cofmass(cell, pr = False))
 
-        print(cofmass_track[i])
+        #print(cofmass_track[i])
         if i%100 == 0:
             volume_track = volume_track + act_state
-    print(cofmass_track.shape)
+    #print(cofmass_track.shape)
     return volume_track,cofmass_track
 
 def scanned_volume(volume_track):
@@ -197,7 +197,7 @@ def analyse_track(cell_track):
             v2 = point3 - point2
             cos = np.clip(np.dot(v1,v2)/(norm(v1) * norm(v2)),-1,1)
             #angles.append(np.arccos(np.clip(cos,-1,1)))
-            print(cos)
+            #print(cos)
             #if np.isfinite(cos):
             angles.append(cos)
 

@@ -16,7 +16,7 @@ def find_sigmas(dist):
         data = pickle.load(open(f,'rb'))
         # go over param_keys : 
         for key,value in data.items():
-            if '176N_0.25V/E' in key:
+            if '1000N_0.25V/E' in key:
                 for i in range(len(value)):
                     if abs(NOV_sigma - value[i]) < dist:
                         name = re.split(("sigma"),f)[-1][:-4]
@@ -35,7 +35,7 @@ def find_omegas(dist):
         data = pickle.load(open(f,'rb'))
         # go over param_keys : 
         for key,value in data.items():
-            if '176N_0.25V/E' in key:
+            if '1000N_0.25V/E' in key:
                 for i in range(len(value)):
                     if abs(NOV_omega - value[i]) < dist:
                         name = re.split(("omega"),f)[-1][:-4]
@@ -90,16 +90,16 @@ def plot_filtered_graphs(fname):
         plt.title(str(graph[-1]))# + str(corr_stats)
         print(str(graph[-1]))#,str(corr_stats)
         nx.draw(g,pos)
-        name = '../results/NOV_similar_graphs/' + name.replace("/","") + '.png'
+        name = '../results/BIG_graphs/' + name.replace("/","") + '.png'
         print(name)
         plt.tight_layout()
         plt.savefig(name)
-
+        plt.close()
 
 if __name__ == "__main__":
-    graphs = similar_graphs(3.2411635878713985,0.16109547662293414)
+    graphs = similar_graphs(4*3.2411635878713985,4*0.16109547662293414)
     # save graphs 
-    fname = '../data/exp1/filtered_graphs/graphs_data.pkl'
+    fname = '../data/exp1/filtered_graphs/big_graphs_data.pkl'
     #fname = '../data/exp1/filtered_graphs/graphs_data.pkl'
     pickle.dump(graphs,open(fname,'wb'))
     plot_filtered_graphs(fname)

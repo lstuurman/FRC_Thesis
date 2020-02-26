@@ -18,7 +18,7 @@ def to_df():
     #   5 subplots with points that are paremeter sets
     #   size of points would be variance
     # per type :
-    files = glob.glob('/home/lau/GIT/FRC_Thesis/data/exp1/exp1_*.pkl')
+    files = glob.glob('../data/exp1/exp1_*.pkl')
     # lists as blue print for dataframe : 
     clustering = []
     path = []
@@ -49,7 +49,7 @@ def to_df():
     norm_pl = ((df['std_path'] - df['std_path'].min())/(df['std_path'].max() - df['std_path'].min()))
     df['CUMUL_STD'] = norm_clust + norm_pl
 
-    df.to_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
+    df.to_csv('../data/exp1/CL_P.csv')
 
 def to_df1():
     # plot of clustering coeffient and path length
@@ -91,10 +91,10 @@ def to_df1():
     norm_pl = ((df['std_path'] - df['std_path'].min())/(df['std_path'].max() - df['std_path'].min()))
     df['CUMUL_STD'] = norm_clust + norm_pl
 
-    df.to_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
+    df.to_csv('../data/exp1/CL_P.csv')
 
 def scatter():
-    data = pd.read_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
+    data = pd.read_csv('../data/exp1/CL_P.csv')
     #g = sns.FacetGrid(data, col="type", hue="type",sharey = False, sharex = False)
     #g.map(sns.relplot,x = "path_length", y = "clustering",size = "std_clustring", data = data,alpha=.5)
     #g.add_legend()
@@ -109,7 +109,7 @@ def scatter():
     plt.show()
 
 def histogram():
-    data = pd.read_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
+    data = pd.read_csv('../data/exp1/CL_P.csv')
     g = sns.FacetGrid(data, col="type", hue="type",sharey = False, sharex = False)
     g.map(plt.hist,"clustering",alpha = .5,bins = 20)
     g.add_legend()

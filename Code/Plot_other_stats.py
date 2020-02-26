@@ -49,7 +49,7 @@ def to_df():
     norm_pl = ((df['std_path'] - df['std_path'].min())/(df['std_path'].max() - df['std_path'].min()))
     df['CUMUL_STD'] = norm_clust + norm_pl
 
-    df.to_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
+    df.to_csv('../data/exp1/CL_P.csv')
 
 def to_df1():
     # plot of clustering coeffient and path length
@@ -62,36 +62,36 @@ def to_df1():
     sig_files.sort()
     og_files.sort()
     # lists as blue print for dataframe : 
-    clustering = []
-    path = []
-    std_clustering = []
-    std_path = []
-    n_edges = []
-    param_set = []
+    sigmas = []
+    omegas = []
+    std_sigmas = []
+    std_omegas = []
+    param_set []
     graph_type = []
     for i in range(len(files)):
-        data = extract_averages()
-        for key,value in data.items():
+        sig_data = extract_averages(sig_files[i])
+        om_data = extract_averages(og_files[i])
+        for key,value in sig_data.items():
             end = key.find('V/E')
             short_key = key[:end + 3]
             graph_name = re.split("_",f)[-1][:-4]
 
-            clustering.append(np.average(value[0]))
-            path.append(np.average(value[1]))
-            std_clustering.append(np.std(value[0]))
-            std_path.append(np.std(value[1]))
+            sigmas.append(np.average[value])
+            omegas.append(np.average(om_data[key]))
+            std_sigmas.append(np.std[value])
+            std_omegas.append(np.std(om_data[key]))
             param_set.append(short_key)
             graph_type.append(graph_name)
 
-    df = pd.DataFrame.from_records([clustering,path,std_clustering,std_path,param_set,graph_type])
+    df = pd.DataFrame.from_records([sigmas,omegas,std_sigmas,std_omegas,param_set,graph_type])
     df = df.T
-    df.columns = ['clustering','path_length','std_clustering','std_path','params','type']
+    df.columns = ['sigma','omega','std_sigma','std_sigma','params','type']
     # add cumulative variance :
-    norm_clust =  ((df['std_clustering'] - df['std_clustering'].min())/(df['std_clustering'].max() - df['std_clustering'].min()))
-    norm_pl = ((df['std_path'] - df['std_path'].min())/(df['std_path'].max() - df['std_path'].min()))
+    norm_clust =  ((df['std_sigma'] - df['std_sigma'].min())/(df['std_sigma'].max() - df['std_sigma'].min()))
+    norm_pl = ((df['std_omega'] - df['std_omega'].min())/(df['std_omega'].max() - df['std_omega'].min()))
     df['CUMUL_STD'] = norm_clust + norm_pl
 
-    df.to_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
+    df.to_csv('../data/exp1/CL_P.csv')
 
 def scatter():
     data = pd.read_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
@@ -120,6 +120,9 @@ def histogram():
     g2.add_legend()
     plt.show()
 
-#to_df()
-scatter()
-histogram()
+if __name__ == "__main__":
+    to_df()
+    to_df1()
+    # #to_df()
+    # scatter()
+    # histogram()

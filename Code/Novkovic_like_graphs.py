@@ -16,11 +16,12 @@ def find_sigmas(dist):
         data = pickle.load(open(f,'rb'))
         # go over param_keys : 
         for key,value in data.items():
-            for i in range(len(value)):
-                if abs(NOV_sigma - value[i]) < dist:
-                    name = re.split(("sigma"),f)[-1][:-4]
-                    points_list.append((name,key,i))
-                    sigmas.append(value[i])
+            if '176N_0.25V/E' in key:
+                for i in range(len(value)):
+                    if abs(NOV_sigma - value[i]) < dist:
+                        name = re.split(("sigma"),f)[-1][:-4]
+                        points_list.append((name,key,i))
+                        sigmas.append(value[i])
     return sigmas,points_list
 
 
@@ -34,11 +35,12 @@ def find_omegas(dist):
         data = pickle.load(open(f,'rb'))
         # go over param_keys : 
         for key,value in data.items():
-            for i in range(len(value)):
-                if abs(NOV_omega - value[i]) < dist:
-                    name = re.split(("omega"),f)[-1][:-4]
-                    points_list.append((name,key,i))
-                    omegas.append(value[i])
+            if '176N_0.25V/E' in key:
+                for i in range(len(value)):
+                    if abs(NOV_omega - value[i]) < dist:
+                        name = re.split(("omega"),f)[-1][:-4]
+                        points_list.append((name,key,i))
+                        omegas.append(value[i])
     return omegas,points_list
 
 

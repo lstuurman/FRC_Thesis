@@ -55,11 +55,11 @@ def plot_per_type(xwindow,ywindow):
     # plot Novkovic with circle around
     plt.scatter(6.7,-.27, c = 'r' , s = 80, alpha = .5, label = 'Novkovic')
     x_nov,y_nov = 6.7,-.27
-    print(all_omegas.shape,all_sigmas.shape)
+    #print(all_omegas.shape,all_sigmas.shape)
 
     xr =  .25 * np.std(all_sigmas) 
     yr =  .25 * np.std(all_omegas)
-    print(xr,yr)
+    print(4*xr,4*yr)
     # PLOT SQUARE :
     #plt.plot([x_nov - xr,x_nov+xr],[y_nov-yr,y_nov-yr],c = 'r')
     #plt.plot([x_nov - xr,x_nov+xr],[y_nov+yr,y_nov+yr],c = 'r')
@@ -71,7 +71,7 @@ def plot_per_type(xwindow,ywindow):
     plt.ylabel('$\omega$')
     plt.xlabel('$\sigma$')
     plt.legend()
-    plt.show()
+    #plt.show()
 
 
 def plot_frc_like():

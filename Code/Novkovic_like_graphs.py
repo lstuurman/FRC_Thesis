@@ -88,7 +88,7 @@ def plot_filtered_graphs(fname):
         plt.title(str(graph[-1]))# + str(corr_stats)
         print(str(graph[-1]))#,str(corr_stats)
         nx.draw(g,pos)
-        name = '/home/lau/GIT/FRC_Thesis/results/NOV_similar_graphs/' + name.replace("/","") + '.png'
+        name = '../results/NOV_similar_graphs/' + name.replace("/","") + '.png'
         print(name)
         plt.tight_layout()
         plt.savefig(name)
@@ -98,12 +98,14 @@ if __name__ == "__main__":
     graphs = similar_graphs(3.2411635878713985,0.16109547662293414)
     # save graphs 
     fname = '../data/exp1/filtered_graphs/graphs_data.pkl'
-    fname = '/home/lau/GIT/FRC_Thesis/data/exp1/filtered_graphs/graphs_data.pkl'
+    #fname = '../data/exp1/filtered_graphs/graphs_data.pkl'
     pickle.dump(graphs,open(fname,'wb'))
     plot_filtered_graphs(fname)
 
-
+# 25% OF STD
 #3.2411635878713985 0.16109547662293414
+# STD :
+#12.964654351485594 0.6443819064917365
 
 
 

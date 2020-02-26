@@ -39,7 +39,50 @@ def to_df():
             std_path.append(np.std(value[1]))
             param_set.append(short_key)
             graph_type.append(graph_name)
+            n_edges.append(value[-1])
     
+    df = pd.DataFrame.from_records([clustering,path,std_clustering,std_path,n_edges,param_set,graph_type])
+    df = df.T
+    df.columns = ['clustering','path_length','std_clustering','std_path','n_edges','params','type']
+    # add cumulative variance :
+    norm_clust =  ((df['std_clustering'] - df['std_clustering'].min())/(df['std_clustering'].max() - df['std_clustering'].min()))
+    norm_pl = ((df['std_path'] - df['std_path'].min())/(df['std_path'].max() - df['std_path'].min()))
+    df['CUMUL_STD'] = norm_clust + norm_pl
+
+    df.to_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
+
+def to_df1():
+    # plot of clustering coeffient and path length
+    # 2 figures 
+    #   5 subplots with points that are paremeter sets
+    #   size of points would be variance
+    # per type :
+    sig_files = glob.glob('../data/exp1/sigma_*.pkl')
+    og_files = glob.glob('../data/exp1/omega_*.pkl')
+    sig_files.sort()
+    og_files.sort()
+    # lists as blue print for dataframe : 
+    clustering = []
+    path = []
+    std_clustering = []
+    std_path = []
+    n_edges = []
+    param_set = []
+    graph_type = []
+    for i in range(len(files)):
+        data = extract_averages()
+        for key,value in data.items():
+            end = key.find('V/E')
+            short_key = key[:end + 3]
+            graph_name = re.split("_",f)[-1][:-4]
+
+            clustering.append(np.average(value[0]))
+            path.append(np.average(value[1]))
+            std_clustering.append(np.std(value[0]))
+            std_path.append(np.std(value[1]))
+            param_set.append(short_key)
+            graph_type.append(graph_name)
+
     df = pd.DataFrame.from_records([clustering,path,std_clustering,std_path,param_set,graph_type])
     df = df.T
     df.columns = ['clustering','path_length','std_clustering','std_path','params','type']
@@ -49,7 +92,6 @@ def to_df():
     df['CUMUL_STD'] = norm_clust + norm_pl
 
     df.to_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
-
 
 def scatter():
     data = pd.read_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')

@@ -81,7 +81,7 @@ def plot_filtered_graphs(fname):
         stats = graph[1]
 
         # use saved adj matrix to regenerate graph : 
-        matrix = stats[-1]
+        matrix = stats[-2]
         g = nx.from_numpy_matrix(matrix)
         # plot : 
         pos = nx.kamada_kawai_layout(g)

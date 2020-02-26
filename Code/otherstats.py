@@ -18,7 +18,7 @@ def to_df():
     #   5 subplots with points that are paremeter sets
     #   size of points would be variance
     # per type :
-    files = glob.glob('/home/lau/GIT/FRC_Thesis/data/exp1/exp1_*.pkl')
+    files = glob.glob('../data/exp1/exp1_*.pkl')
     # lists as blue print for dataframe : 
     clustering = []
     path = []
@@ -66,16 +66,16 @@ def to_df1():
     omegas = []
     std_sigmas = []
     std_omegas = []
-    param_set []
+    param_set = []
     graph_type = []
-    for i in range(len(files)):
+    for i in range(len(sig_files)):
         sig_data = extract_averages(sig_files[i])
         om_data = extract_averages(og_files[i])
         for key,value in sig_data.items():
             end = key.find('V/E')
             short_key = key[:end + 3]
             graph_name = re.split("_",f)[-1][:-4]
-
+            print(value)
             sigmas.append(np.average[value])
             omegas.append(np.average(om_data[key]))
             std_sigmas.append(np.std[value])
@@ -85,6 +85,7 @@ def to_df1():
 
     df = pd.DataFrame.from_records([sigmas,omegas,std_sigmas,std_omegas,param_set,graph_type])
     df = df.T
+    print(df.head())
     df.columns = ['sigma','omega','std_sigma','std_sigma','params','type']
     # add cumulative variance :
     norm_clust =  ((df['std_sigma'] - df['std_sigma'].min())/(df['std_sigma'].max() - df['std_sigma'].min()))
@@ -94,7 +95,7 @@ def to_df1():
     df.to_csv('../data/exp1/CL_P.csv')
 
 def scatter():
-    data = pd.read_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
+    data = pd.read_csv('../data/exp1/CL_P.csv')
     #g = sns.FacetGrid(data, col="type", hue="type",sharey = False, sharex = False)
     #g.map(sns.relplot,x = "path_length", y = "clustering",size = "std_clustring", data = data,alpha=.5)
     #g.add_legend()
@@ -109,7 +110,7 @@ def scatter():
     plt.show()
 
 def histogram():
-    data = pd.read_csv('/home/lau/GIT/FRC_Thesis/data/exp1/CL_P.csv')
+    data = pd.read_csv('../data/exp1/CL_P.csv')
     g = sns.FacetGrid(data, col="type", hue="type",sharey = False, sharex = False)
     g.map(plt.hist,"clustering",alpha = .5,bins = 20)
     g.add_legend()
@@ -121,7 +122,7 @@ def histogram():
     plt.show()
 
 if __name__ == "__main__":
-    to_df()
+    #to_df()
     to_df1()
     # #to_df()
     # scatter()

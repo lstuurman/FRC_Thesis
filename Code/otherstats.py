@@ -95,7 +95,7 @@ def to_df1():
     norm_pl = ((df['std_omega'] - df['std_omega'].min())/(df['std_omega'].max() - df['std_omega'].min()))
     df['CUMUL_STD'] = norm_clust + norm_pl
 
-    df.to_csv('../data/exp1/CL_P.csv')
+    df.to_csv('../data/exp1/omega_sigma.csv')
 
 def scatter():
     data = pd.read_csv('../data/exp1/CL_P.csv')
@@ -125,7 +125,7 @@ def histogram():
     plt.show()
 
 if __name__ == "__main__":
-    #to_df()
+    to_df()
     to_df1()
     # #to_df()
     # scatter()

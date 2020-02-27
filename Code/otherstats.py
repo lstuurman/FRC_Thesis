@@ -57,8 +57,8 @@ def to_df1():
     #   5 subplots with points that are paremeter sets
     #   size of points would be variance
     # per type :
-    sig_files = glob.glob('../data/exp1/sigma_*.pkl')
-    og_files = glob.glob('../data/exp1/omega_*.pkl')
+    sig_files = glob.glob('../data/exp1/sigma*.pkl')
+    og_files = glob.glob('../data/exp1/omega*.pkl')
     sig_files.sort()
     og_files.sort()
     # lists as blue print for dataframe : 
@@ -69,16 +69,19 @@ def to_df1():
     param_set = []
     graph_type = []
     for i in range(len(sig_files)):
-        sig_data = extract_averages(sig_files[i])
-        om_data = extract_averages(og_files[i])
+        #print(sig_files[i])
+        sig_data = pickle.load(open(sig_files[i],'rb'))
+        #print(data)
+        #sig_data = extract_averages(sig_files[i])
+        om_data = pickle.load(open(og_files[i],'rb'))
         for key,value in sig_data.items():
             end = key.find('V/E')
             short_key = key[:end + 3]
-            graph_name = re.split("_",f)[-1][:-4]
-            print(value)
-            sigmas.append(np.average[value])
+            graph_name = re.split("sigma",sig_files[i])[-1][:-4]
+            #print(np.average[value])
+            sigmas.append(np.average(value))
             omegas.append(np.average(om_data[key]))
-            std_sigmas.append(np.std[value])
+            std_sigmas.append(np.std(value))
             std_omegas.append(np.std(om_data[key]))
             param_set.append(short_key)
             graph_type.append(graph_name)
@@ -86,7 +89,7 @@ def to_df1():
     df = pd.DataFrame.from_records([sigmas,omegas,std_sigmas,std_omegas,param_set,graph_type])
     df = df.T
     print(df.head())
-    df.columns = ['sigma','omega','std_sigma','std_sigma','params','type']
+    df.columns = ['sigma','omega','std_sigma','std_omega','params','type']
     # add cumulative variance :
     norm_clust =  ((df['std_sigma'] - df['std_sigma'].min())/(df['std_sigma'].max() - df['std_sigma'].min()))
     norm_pl = ((df['std_omega'] - df['std_omega'].min())/(df['std_omega'].max() - df['std_omega'].min()))

@@ -9,8 +9,8 @@ __pycache__/
 # data folder
 data/**
 env/**
-speedy-cpm/**
-speedy-cpm/
+#speedy-cpm/**
+#speedy-cpm/
 
 # Distribution / packaging
 .Python

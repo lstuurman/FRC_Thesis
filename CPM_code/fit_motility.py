@@ -7,8 +7,10 @@ from multiprocessing import Pool
 import os
 import pickle
 import pandas as pd
+import time
 
 def run_sim(params):
+    t1 = time.time()
     lambda_act,max_act = params
     # setup : 
     #begin_pos = np.random.randint(0,256,size=3)
@@ -18,7 +20,7 @@ def run_sim(params):
     for i in range(3):
         simulation = single_cell_setup1(256,begin_pos,lambda_act,max_act,FRC=False)
         # run : 
-        volume_track,cell_track = run_sim_1cell(simulation,2000)
+        volume_track,cell_track = run_sim_1cell(simulation,5000)
         cell_track = handle_boundaries(cell_track,pr = False)
         # # scanned volume : 
         # vol = scanned_volume(volume_track)
@@ -32,7 +34,7 @@ def run_sim(params):
         
         # popt = fit_Motilty(delta_t,MSD)
         data.append([volume_track,cell_track])#popt[0],popt[1],vol,,auto_corr,pvalues,new_angles
-        print(params)
+    print('computed : ',params, 'in ',time.time() - t1)
 
     return data
 
@@ -51,7 +53,7 @@ def gridsearch():
     p.close()
     p.join()
     # save data :
-    pickle.dump(output,open('testdat/raw_nofrc.pkl','rb'))
+    pickle.dump(output,open('testdat/raw_nofrc.pkl','wb'))
 
     # data = {'Motility':[],'Persistance':[],'Scanned_volume':[],'Lambda_act':[],'Max_act':[]}
     # for i,tup in enumerate(inputs):

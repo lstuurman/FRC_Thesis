@@ -16,7 +16,7 @@ def run_sim(params):
     #begin_pos = np.random.randint(0,256,size=3)
     begin_pos = [128,128,128]
     # data to return : 
-    data = []
+    #data = []
     for i in range(3):
         simulation = single_cell_setup1(256,begin_pos,lambda_act,max_act,FRC=False)
         # run : 
@@ -31,12 +31,16 @@ def run_sim(params):
         # # autocorr : 
         # t,auto_corr,pvalues = compute_AutoCorr_WRONG(angles)
         # t,new_angles = compute_autocorrelaton(displ)
-        
+
         # popt = fit_Motilty(delta_t,MSD)
-        data.append([volume_track,cell_track])#popt[0],popt[1],vol,,auto_corr,pvalues,new_angles
+        fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+str(i)
+        np.savetxt('testdat/nofrc/CELL'+fname+'.txt',cell_track)
+        pickle.dump(volume_track,open('testdat/nofrc/VOL'+fname+'.pkl','wb'))
+        #data.append([volume_track,cell_track])#popt[0],popt[1],vol,,auto_corr,pvalues,new_angles
     print('computed : ',params, 'in ',time.time() - t1)
 
-    return data
+    #return data
+
 
 def gridsearch():
     ### runn single T-cell simulations for with different combinations of params

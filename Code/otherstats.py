@@ -98,18 +98,18 @@ def to_df1():
     df.to_csv('../data/exp1/omega_sigma.csv')
 
 def scatter():
-    data = pd.read_csv('../data/exp1/CL_P.csv')
-    #g = sns.FacetGrid(data, col="type", hue="type",sharey = False, sharex = False)
-    #g.map(sns.relplot,x = "path_length", y = "clustering",size = "std_clustring", data = data,alpha=.5)
-    #g.add_legend()
+    data = pd.read_csv('../results/omega_sigma.csv')
+    g = sns.FacetGrid(data, col="type",col_wrap=3, hue="type",sharey = False, sharex = False)#,size = "CUMUL_STD"
+    g.map(sns.regplot,"sigma", "omega",fit_reg = False, scatter_kws={'s': data["CUMUL_STD"] * 100,'alpha':.5})#,size = "CUMUL_STD"
+    g.add_legend()
     # g = sns.relplot(x="total_bill", y="tip",hue="day", col="time", data=tips)
-    g = sns.relplot(x = "path_length", y = "clustering",size = "CUMUL_STD", data = data,col = "type",sizes = (15,200),hue = "type",alpha=.5,facet_kws={'sharey': False, 'sharex': False})
-    leg = g._legend
+    #g = sns.relplot(x = "sigma", y = "omega",size = "CUMUL_STD", data = data,col = "type",sizes = (15,200),hue = "type",alpha=.5,facet_kws={'sharey': False, 'sharex': False})
+    #leg = g._legend
     # truncate legend texts:
-    for t in leg.texts:
-        if len(t.get_text()) > 9:
-            t.set_text(t.get_text()[:4])
-    leg.set_bbox_to_anchor([1., 0.7])  # coordinates of lower left of bounding box
+    # for t in leg.texts:
+    #     if len(t.get_text()) > 9:
+    #         t.set_text(t.get_text()[:4])
+    # leg.set_bbox_to_anchor([1., 0.7])  # coordinates of lower left of bounding box
     plt.show()
 
 def histogram():
@@ -125,8 +125,8 @@ def histogram():
     plt.show()
 
 if __name__ == "__main__":
-    to_df()
-    to_df1()
+    #to_df()
+    #to_df1()
     # #to_df()
-    # scatter()
+    scatter()
     # histogram()

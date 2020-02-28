@@ -101,7 +101,7 @@ def plot_filtered_graphs(fname):
         plt.close()
 
 if __name__ == "__main__":
-    similar_graphs(4*3.2411635878713985,4*0.16109547662293414)
+    similar_graphs(3.2411635878713985,0.16109547662293414)
     # graphs = similar_graphs(4*3.2411635878713985,4*0.16109547662293414)
     # # save graphs 
     # fname = '../data/exp1/filtered_graphs/big_graphs_data.pkl'

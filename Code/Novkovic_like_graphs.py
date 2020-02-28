@@ -67,10 +67,12 @@ def similar_graphs(dist_sig,dist_om):
 
         # open file : 
         data = pickle.load(open(file_name, 'rb'))
-        graph_data.append((hit[0] + key + str(index), data[key][index],(sigma,omega)))
+        #graph_data.append((hit[0] + key + str(index), data[key][index],(sigma,omega)))
+        graph_data.append(hit[0] + key)
         print(hit)
-
-    return graph_data
+    graph_data = np.array(graph_data)
+    np.savetxt('../data/exp1/not_geom.txt',graph_data)
+    #return graph_data
 
 def plot_filtered_graphs(fname):
     # set fontsize for plots : 
@@ -99,12 +101,13 @@ def plot_filtered_graphs(fname):
         plt.close()
 
 if __name__ == "__main__":
-    graphs = similar_graphs(4*3.2411635878713985,4*0.16109547662293414)
-    # save graphs 
-    fname = '../data/exp1/filtered_graphs/big_graphs_data.pkl'
-    #fname = '../data/exp1/filtered_graphs/graphs_data.pkl'
-    pickle.dump(graphs,open(fname,'wb'))
-    plot_filtered_graphs(fname)
+    similar_graphs(4*3.2411635878713985,4*0.16109547662293414)
+    # graphs = similar_graphs(4*3.2411635878713985,4*0.16109547662293414)
+    # # save graphs 
+    # fname = '../data/exp1/filtered_graphs/big_graphs_data.pkl'
+    # #fname = '../data/exp1/filtered_graphs/graphs_data.pkl'
+    # pickle.dump(graphs,open(fname,'wb'))
+    # plot_filtered_graphs(fname)
 
 # 25% OF STD
 #3.2411635878713985 0.16109547662293414

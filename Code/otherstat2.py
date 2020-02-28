@@ -42,3 +42,6 @@ def edges_to_df():
     df.columns = ['n_edges','std_edges','params','type']
 
     df.to_csv('../results/edges.csv')
+
+
+edges_to_df()

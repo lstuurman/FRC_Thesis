@@ -71,7 +71,7 @@ def similar_graphs(dist_sig,dist_om):
         graph_data.append(hit[0] + key)
         print(hit)
     graph_data = np.array(graph_data)
-    np.savetxt('../data/exp1/not_geom.txt',graph_data)
+    np.savetxt('../data/exp1/not_geom.txt',graph_data,fmt = '%s')
     #return graph_data
 
 def plot_filtered_graphs(fname):

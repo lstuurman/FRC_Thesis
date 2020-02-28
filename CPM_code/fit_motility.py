@@ -20,7 +20,7 @@ def run_sim(params):
     for i in range(3):
         simulation = single_cell_setup1(256,begin_pos,lambda_act,max_act,FRC=False)
         # run : 
-        volume_track,cell_track = run_sim_1cell(simulation,2000)
+        volume_track,cell_track = run_sim_1cell(simulation,5000)
         cell_track = handle_boundaries(cell_track,pr = False)
         # # scanned volume : 
         # vol = scanned_volume(volume_track)

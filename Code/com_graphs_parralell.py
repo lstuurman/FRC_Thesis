@@ -13,6 +13,7 @@ def gen_equiv_random(tup):
     p = ER_p_value(N,ve_ratio)
     stats  = [] # list of tuples with (average_clustering,average_path) for every generated network. 
     count  = 0
+    edges = []
     while count < 100:
         g = nx.erdos_renyi_graph(N,p)
         if nx.is_connected(g):
@@ -22,7 +23,10 @@ def gen_equiv_random(tup):
             stats.append((Cl,L))
             count += 1
             #print(count)
-    print(N,g.number_of_edges())
+            edges.append(g.number_of_edges)
+    #print(N,g.number_of_edges())
+    f = str(N)+'N_'+str(ve_ratio)+'V/E.txt'
+    np.savetxt(f,edges)
     
     return stats
 

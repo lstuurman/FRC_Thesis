@@ -99,11 +99,11 @@ def to_df1():
 
 def scatter():
     data = pd.read_csv('../results/omega_sigma.csv')
-    g = sns.FacetGrid(data, col="type",col_wrap=3, hue="type",sharey = False, sharex = False)#,size = "CUMUL_STD"
-    g.map(sns.regplot,"sigma", "omega",fit_reg = False, scatter_kws={'s': data["CUMUL_STD"] * 100,'alpha':.5})#,size = "CUMUL_STD"
-    g.add_legend()
+    #g = sns.FacetGrid(data, col="type",col_wrap=3, hue="type",sharey = False, sharex = False)#,size = "CUMUL_STD"
+    # g.map(sns.regplot,"sigma", "omega",fit_reg = False, scatter_kws={'s': data["CUMUL_STD"] * 100,'alpha':.5})#,size = "CUMUL_STD"
+    # g.add_legend()
     # g = sns.relplot(x="total_bill", y="tip",hue="day", col="time", data=tips)
-    #g = sns.relplot(x = "sigma", y = "omega",size = "CUMUL_STD", data = data,col = "type",sizes = (15,200),hue = "type",alpha=.5,facet_kws={'sharey': False, 'sharex': False})
+    g = sns.relplot(x = "sigma", y = "omega",size = "CUMUL_STD", data = data,sizes = (15,200),hue = "type",alpha=.5,facet_kws={'sharey': False, 'sharex': False})
     #leg = g._legend
     # truncate legend texts:
     # for t in leg.texts:

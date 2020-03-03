@@ -23,11 +23,11 @@ def gen_equiv_random(tup):
             stats.append((Cl,L))
             count += 1
             #print(count)
-            edges.append(g.number_of_edges)
+            edges.append(g.number_of_edges())
     #print(N,g.number_of_edges())
-    f = '../data/helper_data/'+str(N)+'N_'+str(ve_ratio)+'V/E.txt'
+    f = '../data/helper_data/'+str(N)+'N_'+str(ve_ratio)+'VE.txt'
     np.savetxt(f,edges)
-    
+    print(N,g.number_of_edges())
     return stats
 
 

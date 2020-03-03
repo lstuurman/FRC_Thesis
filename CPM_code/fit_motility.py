@@ -18,7 +18,7 @@ def run_sim(params):
     # data to return : 
     #data = []
     for i in range(3):
-        simulation = single_cell_setup1(256,begin_pos,lambda_act,max_act,FRC=False)
+        simulation = single_cell_setup1(256,begin_pos,lambda_act,max_act,FRC=True)
         # run : 
         volume_track,cell_track = run_sim_1cell(simulation,5000)
         cell_track = handle_boundaries(cell_track,pr = False)
@@ -34,8 +34,8 @@ def run_sim(params):
 
         # popt = fit_Motilty(delta_t,MSD)
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+str(i)
-        np.savetxt('testdat/nofrc/CELL'+fname+'.txt',cell_track)
-        pickle.dump(volume_track,open('testdat/nofrc/VOL'+fname+'.pkl','wb'))
+        np.savetxt('testdat/frc/CELL'+fname+'.txt',cell_track)
+        pickle.dump(volume_track,open('testdat/frc/VOL'+fname+'.pkl','wb'))
         #data.append([volume_track,cell_track])#popt[0],popt[1],vol,,auto_corr,pvalues,new_angles
     print('computed : ',params, 'in ',time.time() - t1)
 
@@ -50,7 +50,7 @@ def gridsearch():
     max_act = np.geomspace(10,5000,num = 10,dtype=int)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
-    cpus = os.cpu_count() - 1
+    cpus = os.cpu_count() - 2
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_sim,inputs))

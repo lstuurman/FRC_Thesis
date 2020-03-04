@@ -4,16 +4,20 @@ from CPM_helpers1 import *
 from MSD1cell import *
 import pandas as pd
 import re 
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
 
-def get_motility(track):
+
+def get_motility(track,plot = False):
     # cell track is list of 3d coordinates.
-
+    if plot:
+        plot_celltrack(track)
     #vol = scanned_volume(volume_track)
     displ, angles = analyse_track(track)
     # MSD
-    delta_t,MSD = compute_MSD(displ)
+    delta_t,MSD = compute_MSD(displ,plot = plot)
     # autocorr : 
-    _,_,_,slope,p = compute_AutoCorr_WRONG(angles)
+    _,_,_,slope,p = compute_AutoCorr_WRONG(angles,plot = plot)
     #t,new_angles = compute_autocorrelaton(displ)
     
     popt = fit_Motilty(delta_t,MSD)
@@ -40,4 +44,7 @@ def build_df(files):
 
 if __name__ == "__main__":
     files = glob.glob('../results/first_cpm/*.txt')
-    build_df(files)
+    #build_df(files)
+    # test
+    track = np.loadtxt(files[-1])
+    get_motility(track,plot = True)

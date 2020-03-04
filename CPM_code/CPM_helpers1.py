@@ -123,11 +123,11 @@ def run_sim_1cell(simulation,steps):
     act_state = simulation.get_act_state()
     dimension = state.shape[0]
 
-    iters = int(steps/10) # /10
+    iters = int(steps) # /10
     volume_track = np.zeros(tuple([dimension] * 3))
     cofmass_track = np.empty((iters,3))
     for i in range(iters):
-        simulation.run(10)
+        simulation.run(1)
         cell = state // 2**24 == 2
         ids = state % 2**24 == 2
         n_cells = np.unique(ids)

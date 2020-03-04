@@ -1,5 +1,5 @@
 ### Come up with some drawing functions : 
-import igraph
+#import igraph
 import plotly.express as px
 import plotly as py
 import plotly.graph_objs as go

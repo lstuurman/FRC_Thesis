@@ -24,6 +24,8 @@ def get_motility(track,plot = False):
 
     return popt[0],popt[1],slope,p
 
+def roseplot(track):
+
 def build_df(files):
     data_dict = {'Motility':[],'Persistance':[],'AutoSlope':[],'P-val':[]
     ,'Lambda':[],'Max_act':[]}

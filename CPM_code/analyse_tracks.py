@@ -37,14 +37,16 @@ def build_df(files):
         data_dict['P-val'].append(p_val)
         l,Max = f.split('MAX')
         data_dict['Lambda'].append(int(re.findall(numbers,l)[0]))
-        data_dict['Max_act'].append(int(re.findall(numbers,Max)[0]))
+        data_dict['Max_act'].append(int(re.findall(numbers,Max)[0][:-1]))
     
     df = pd.DataFrame(data_dict)
     df.to_csv('../results/CPM_nofrc1.csv')
 
 if __name__ == "__main__":
     files = glob.glob('../results/first_cpm/*.txt')
+    files.sort()
     #build_df(files)
     # test
-    track = np.loadtxt(files[-1])
-    get_motility(track,plot = True)
+    f = files[40]
+    track = np.loadtxt(f)
+    print(get_motility(track,plot = True))

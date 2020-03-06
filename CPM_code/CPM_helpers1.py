@@ -195,11 +195,12 @@ def analyse_track(cell_track):
             point3 = cell_track[i + 2]
             v1 = point2 - point1
             v2 = point3 - point2
-            cos = np.clip(np.dot(v1,v2)/(norm(v1) * norm(v2)),-1,1)
-            #angles.append(np.arccos(np.clip(cos,-1,1)))
+            #cos = np.clip(np.dot(v1,v2)/(norm(v1) * norm(v2)),-1,1)
+            cos = np.dot(v1,v2)/(norm(v1) * norm(v2))
+            angles.append(np.arccos(np.clip(cos,-1,1)))
             #print(cos)
             #if np.isfinite(cos):
-            angles.append(cos)
+            #angles.append(cos)
 
     # # autocorrelation : 
     # corr = np.correlate(cell_track, cell_track, mode='full')

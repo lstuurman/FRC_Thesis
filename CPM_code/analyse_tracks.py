@@ -173,12 +173,13 @@ def build_df(files):
     df.to_csv('../results/CPM_nofrc1.csv')
 
 if __name__ == "__main__":
-    # path = '../data/CPM_data/nofrc2/'
+    path = '../testdat/nofrc/'
+    get_volume(path)
     # all_autos(path)
 
-    files = glob.glob('../data/CPM_data/nofrc2/*.txt')
-    files.sort()
-    build_df(files)
+    #files = glob.glob('../data/CPM_data/nofrc2/*.txt')
+    #files.sort()
+    #build_df(files)
 
     #scanned = get_volume(path)
     # test

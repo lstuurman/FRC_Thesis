@@ -137,21 +137,23 @@ def get_volume(path):
     files = glob.glob(path+'*.pkl')
     files.sort()
     print(files)
-    volumes_dict = {}
+    volumes_dict = {'FILE':[],'VOLUME':[]}
     for f in files:
         try: 
             track = pickle.load(open(f,'rb'))
             #print(np.where(track != 0.))
             vol = scanned_volume(track)
             print(vol)
-            volumes_dict[f] = vol
-            #visualize_frc(track)
+            volumes_dict['FILE'].append(f[14:])
+            volumes_dict['VOLUME'].append(vol)
+            #break #visualize_frc(track)
         except:
             pass
-
-    volume_df = pd.DataFrame(data = volumes_dict,columns = ['file','volume'])
+    
+    volume_df = pd.DataFrame.from_dict(volumes_dict)
+    print(volume_df.head())
     volume_df.to_csv('../results/volume_nofrc1.csv')
-
+    
 def build_df(files):
     data_dict = {'Motility':[],'Persistance':[],'AutoSlope':[],'P-val':[]
     ,'Lambda':[],'Max_act':[],'Speed':[]}

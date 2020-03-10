@@ -136,6 +136,7 @@ def get_volume(path):
     # test 
     files = glob.glob(path+'*.pkl')
     files.sort()
+    print(files)
     volumes_dict = {}
     for f in files:
         try: 
@@ -173,7 +174,7 @@ def build_df(files):
     df.to_csv('../results/CPM_nofrc1.csv')
 
 if __name__ == "__main__":
-    path = '../testdat/nofrc/'
+    path = 'testdat/nofrc/'
     get_volume(path)
     # all_autos(path)
 

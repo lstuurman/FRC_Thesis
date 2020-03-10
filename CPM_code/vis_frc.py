@@ -17,8 +17,8 @@ def visualize_frc(cube):
         isomin = .2,
         isomax = .7,
         opacity = .1,
-        surface_count = 25))
-    plot(fig,auto_open = False,filename = 'testdat/frc1.html')
+        surface_count = 10))
+    plot(fig)#,auto_open = False,filename = 'testdat/nofrc1.html'
 
 if __name__ == '__main__':
     cube = test(256)

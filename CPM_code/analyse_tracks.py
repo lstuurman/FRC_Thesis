@@ -6,6 +6,10 @@ import pandas as pd
 import re 
 from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
+import seaborn as sns
+import pickle
+from vis_frc import visualize_frc
+sns.set_style('darkgrid')
 
 
 def get_motility(track,plot = False):
@@ -64,13 +68,67 @@ def new_auto(cell_track):
             averages.append(np.average(cosines))
     return averages
 
+def all_autos(path):
+    files = glob.glob(path+'*.txt')
+    print(len(files))
+    files.sort()
+    num_pattern = '[-+]?\d*\.\d+|\d+'
+    #uniq_names = set([name[:-5] for name in files])
+    rows = []
+    for id,name in enumerate(files):
+        #f_names = glob.glob(name + '*.txt')
+        # params : 
+        l,Max = name.split('MAX')
+        _lambda = int(re.findall(num_pattern,l)[1])
+        _max = int(re.findall(num_pattern,Max)[0][:-1])
+        track = np.loadtxt(name)
+        correlations = new_auto(track)
+        #tracks = [np.loadtxt(f) for f in f_names]
+        #correlations = [new_auto(t) for t in tracks]
+        #min_l = min([len(x) for x in correlations])
+        # truncate on smallest track :
+        #correlations = [x[:min_l] for x in correlations]
+        # average all 3 correlations: 
+        #av_cors = np.average(correlations,axis = 0)
+
+        # append rows to create nice dataframe
+        for i,x in enumerate(correlations):
+            rows.append([id,i,x,_lambda,_max])
+        print(name)
+
+    df = pd.DataFrame(data = rows,columns = ['id','dt','auto correlation','lambda','max act'])
+    df.to_csv('../results/autocorrelation_nofrc1.csv')
+    # plot :::
+    sns.lineplot(x = 'dt', y = 'auto correlation', hue = 'lambda', data = df)#, style = 'max act' ,
+    plt.show()
+
+def get_volume(path):
+    # test 
+    files = glob.glob(path+'*.pkl')
+    percentages = []
+    for f in files:
+        try: 
+            track = pickle.load(open(f,'rb'))
+            print(np.sum(track))
+            #print(np.where(track != 0.))
+            vol = scanned_volume(track)
+            print(vol)
+            percentages.append(vol)
+            visualize_frc(track)
+        except:
+            pass
+
+    return percentages
 
 def build_df(files):
     data_dict = {'Motility':[],'Persistance':[],'AutoSlope':[],'P-val':[]
-    ,'Lambda':[],'Max_act':[]}
+    ,'Lambda':[],'Max_act':[],'Speed':[]}
     numbers = '[-+]?\d*\.\d+|\d+'
     for f in files:
         track = np.loadtxt(f)
+        displ,_ = analyse_track(track)
+        print(displ)
+        data_dict['Speed'] = sum(displ)/len(displ)
         m,p,slope,p_val = get_motility(track)
         data_dict['Motility'].append(m)
         data_dict['Persistance'].append(p)
@@ -84,15 +142,20 @@ def build_df(files):
     df.to_csv('../results/CPM_nofrc2.csv')
 
 if __name__ == "__main__":
-    files = glob.glob('../results/nofrc2/*.txt')
-    files.sort()
+    path = '../data/CPM_data/nofrc1/'
+    all_autos(path)
+
+    # files = glob.glob('../results/nofrc2/*.txt')
+    # files.sort()
     # build_df(files)
+
+    #scanned = get_volume(path)
     # test
-    f = files[18]
-    track = np.loadtxt(f)
-    roseplot(track)
-    auto_cor = new_auto(track)
-    plt.clf()
-    plt.plot(auto_cor)
-    plt.show()
+    # f = files[18]
+    # track = np.loadtxt(f)
+    # roseplot(track)
+    # auto_cor = new_auto(track)
+    # plt.clf()
+    # plt.plot(auto_cor)
+    # plt.show()
     #print(get_motility(track,plot = True))

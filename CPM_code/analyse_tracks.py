@@ -97,28 +97,59 @@ def all_autos(path):
         print(name)
 
     df = pd.DataFrame(data = rows,columns = ['id','dt','auto correlation','lambda','max act'])
-    df.to_csv('../results/autocorrelation_nofrc1.csv')
+    df.to_csv('../results/autocorrelation_nofrc2.csv')
     # plot :::
     sns.lineplot(x = 'dt', y = 'auto correlation', hue = 'lambda', data = df)#, style = 'max act' ,
     plt.show()
 
+def all_autos_average(path):
+    files = glob.glob(path+'*.txt')
+    print(len(files))
+    files.sort()
+    num_pattern = '[-+]?\d*\.\d+|\d+'
+    uniq_names = set([name[:-5] for name in files])
+    rows = []
+    for id,name in enumerate(uniq_names):
+        f_names = glob.glob(name + '*.txt')
+        # params : 
+        l,Max = name.split('MAX')
+        _lambda = int(re.findall(num_pattern,l)[1])
+        _max = int(re.findall(num_pattern,Max)[0][:-1])
+        # other data ; 
+        tracks = [np.loadtxt(f) for f in f_names]
+        correlations = [new_auto(t) for t in tracks]
+        min_l = min([len(x) for x in correlations])
+        # truncate on smallest track :
+        correlations = [x[:min_l] for x in correlations]
+        # average all 3 correlations: 
+        av_cors = np.average(correlations,axis = 0)
+
+        # append rows to create nice dataframe
+        for i,x in enumerate(av_cors):
+            rows.append([id,i,x,_lambda,_max])
+        print(name)
+
+    df = pd.DataFrame(data = rows,columns = ['id','dt','auto correlation','lambda','max act'])
+    df.to_csv('../results/autocorrelation_average_nofrc1.csv')
+
 def get_volume(path):
     # test 
     files = glob.glob(path+'*.pkl')
-    percentages = []
+    files.sort()
+    volumes_dict = {}
     for f in files:
         try: 
             track = pickle.load(open(f,'rb'))
-            print(np.sum(track))
             #print(np.where(track != 0.))
             vol = scanned_volume(track)
             print(vol)
-            percentages.append(vol)
-            visualize_frc(track)
+            volumes_dict[f] = vol
+            #visualize_frc(track)
         except:
             pass
 
-    return percentages
+    volume_df = pd.DataFrame(data = volumes_dict,columns = ['file','volume'])
+    volume_df.to_csv('../results/volume_nofrc1.csv')
 
 def build_df(files):
     data_dict = {'Motility':[],'Persistance':[],'AutoSlope':[],'P-val':[]
@@ -127,8 +158,7 @@ def build_df(files):
     for f in files:
         track = np.loadtxt(f)
         displ,_ = analyse_track(track)
-        print(displ)
-        data_dict['Speed'] = sum(displ)/len(displ)
+        data_dict['Speed'].append(sum(displ)/len(displ))
         m,p,slope,p_val = get_motility(track)
         data_dict['Motility'].append(m)
         data_dict['Persistance'].append(p)
@@ -137,17 +167,18 @@ def build_df(files):
         l,Max = f.split('MAX')
         data_dict['Lambda'].append(int(re.findall(numbers,l)[1]))
         data_dict['Max_act'].append(int(re.findall(numbers,Max)[0][:-1]))
+        print(f)
     
     df = pd.DataFrame(data_dict)
-    df.to_csv('../results/CPM_nofrc2.csv')
+    df.to_csv('../results/CPM_nofrc1.csv')
 
 if __name__ == "__main__":
-    path = '../data/CPM_data/nofrc1/'
-    all_autos(path)
+    # path = '../data/CPM_data/nofrc2/'
+    # all_autos(path)
 
-    # files = glob.glob('../results/nofrc2/*.txt')
-    # files.sort()
-    # build_df(files)
+    files = glob.glob('../data/CPM_data/nofrc2/*.txt')
+    files.sort()
+    build_df(files)
 
     #scanned = get_volume(path)
     # test

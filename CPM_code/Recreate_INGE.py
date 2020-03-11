@@ -55,3 +55,7 @@ def run_inge(simulation,steps = 1000):
     # save : 
     np.savetxt('testdat/INGE_track.txt',cofmass_track)
     pickle.dump(volume_track,open('INGE_volume.pkl','wb'))
+
+if __name__ == "__main__":
+    sim = INGE_setup()
+    run_inge(sim)

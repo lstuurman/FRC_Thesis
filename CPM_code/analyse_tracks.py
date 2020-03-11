@@ -152,7 +152,10 @@ def get_volume(path):
     
     volume_df = pd.DataFrame.from_dict(volumes_dict)
     print(volume_df.head())
-    volume_df.to_csv('../results/volume_nofrc1.csv')
+    # to text file also :
+    volume_df.to_csv('../results/volume_frc1.csv')
+    np.savetext('../results/vulume_frc1.txt',volume_df.values,fm = '%d')
+    #volume_df.to_csv('../results/volume_frc1.csv')
     
 def build_df(files):
     data_dict = {'Motility':[],'Persistance':[],'AutoSlope':[],'P-val':[]
@@ -176,9 +179,9 @@ def build_df(files):
     df.to_csv('../results/CPM_nofrc1.csv')
 
 if __name__ == "__main__":
-    path = '../data/CPM_data/nofrc1/'
-    all_autos_average(path)
-    #get_volume(path)
+    path = 'testdat/frc/'
+    #all_autos_average(path)
+    get_volume(path)
     # all_autos(path)
 
     #files = glob.glob('../data/CPM_data/nofrc2/*.txt')

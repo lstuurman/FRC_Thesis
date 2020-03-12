@@ -17,17 +17,18 @@ def INGE_setup(dim = 1028,position = (512,512,512),l_act = 40,m_act = 50):
 
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 2,target_area = 1800, lambda_area=25)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 0.01, target_perimeter = 8600)#8600
-    simulation.set_constraints(cell_type = 2, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 2,target_area = 1800, lambda_area=2500)
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 1, target_perimeter = 8600)#8600
+    simulation.set_constraints(cell_type = 2, lambda_act = l_act*100, max_act = m_act) # 2500, max_act = 42
     # adhesion ; 
-    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 15)
-    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 5)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 1500)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 500)
 
     # add cell :
     simulation.add_cell(position[0],position[1],position[2],2)
 
     # burnin time of 500 stpes : 
+    print('500 burnin MCS')
     simulation.run(500)
 
     return simulation
@@ -49,8 +50,9 @@ def run_inge(simulation,steps = 1000):
             print('cell split up..')
         cofmass_track[i] = np.array(real_cofmass(cell, pr = False))
 
-        if i%100 == 0:
+        if i%10 == 0:
             volume_track = volume_track + act_state
+            print(i)
 
     # save : 
     np.savetxt('testdat/INGE_track.txt',cofmass_track)

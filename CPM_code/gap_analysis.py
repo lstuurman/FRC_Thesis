@@ -139,6 +139,7 @@ def main():
             radii_data.append(radii)
             plt.imshow(M)
             plt.savefig('../data/cube/' + gtype + str(i) + '.png')
+            print('finished gap analysis : ',gtype,' ' + str(i))
         dfile = '../data/cube/radii' + gtpye + '.txt'
         np.savetxt(dfile,np.array(radii_data))
 

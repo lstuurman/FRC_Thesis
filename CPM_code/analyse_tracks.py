@@ -95,12 +95,13 @@ def all_autos(path):
         for i,x in enumerate(correlations):
             rows.append([id,i,x,_lambda,_max])
         print(name)
+        print(_lambda, ':',_max)
 
     df = pd.DataFrame(data = rows,columns = ['id','dt','auto correlation','lambda','max act'])
-    df.to_csv('../results/autocorrelation_nofrc2.csv')
-    # plot :::
-    sns.lineplot(x = 'dt', y = 'auto correlation', hue = 'lambda', data = df)#, style = 'max act' ,
-    plt.show()
+    df.to_csv('../results/autocorrelation_frc1.csv')
+    # # plot :::
+    # sns.lineplot(x = 'dt', y = 'auto correlation', hue = 'lambda', data = df)#, style = 'max act' ,
+    # plt.show()
 
 def all_autos_average(path):
     files = glob.glob(path+'*.txt')
@@ -176,17 +177,17 @@ def build_df(files):
         print(f)
     
     df = pd.DataFrame(data_dict)
-    df.to_csv('../results/CPM_nofrc1.csv')
+    df.to_csv('../results/CPM_frc1.csv')
 
 if __name__ == "__main__":
-    path = 'testdat/frc/'
+    path = '../data/CPM_data/frc1/'
     #all_autos_average(path)
-    get_volume(path)
-    # all_autos(path)
+    #get_volume(path)
+    all_autos(path)
 
-    #files = glob.glob('../data/CPM_data/nofrc2/*.txt')
-    #files.sort()
-    #build_df(files)
+    # files = glob.glob(path)
+    # files.sort()
+    # build_df(files)
 
     #scanned = get_volume(path)
     # test

@@ -2,7 +2,9 @@ import plotly.graph_objects as go
 import numpy as np
 import networkx as nx
 import sys
+import pickle
 sys.path.insert(0,'../Code')
+from mayavi import mlab
 from ThreeDdraw import draw_plotly
 from Bresenheim import *
 from CPM_helpers1 import *
@@ -30,7 +32,11 @@ def visualize_frc(frc):
 
 if __name__ == '__main__':
     #cube = test(256)
-    sim = single_cell_setup1(256,(128,128,128),5000,500,FRC = True)
-    state = sim.get_state()
-    frc = np.where(state // 2**24 == 1)
-    visualize_frc(frc)
+    # sim = single_cell_setup1(256,(128,128,128),5000,500,FRC = True)
+    # state = sim.get_state()
+    # frc = np.where(state // 2**24 == 1)
+    frc = pickle.load(open('../results/VOLLAMBDA_1893MAX6290.pkl','rb'))
+    print(len(np.where(frc !=0)[0]))
+    mlab.contour3d(frc)
+    mlab.show()
+    #visualize_frc(frc)

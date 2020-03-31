@@ -13,6 +13,7 @@ from ThreeDdraw import draw_plotly
 
 def nodesInCube(g,positions,dim):
     # input is 3d list of [x,y,z] postitions
+    dim = dim - 1
     xyz = np.array(positions)
     positions = xyz * dim
     positions = positions.astype(int)

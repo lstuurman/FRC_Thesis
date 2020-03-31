@@ -2,12 +2,14 @@ import numpy as np
 import networkx as nx 
 import pickle
 import matplotlib.pyplot as plt 
+import glob
+from scipy import ndimage
 
 import sys
 sys.path.insert(0,'../Code')
 from Generate_graphs import ER_p_value,WS_K_value,M_power_cluster,E_M_relation
 from graph_drawing_algs import fruchterman_reingold
-from Bresenheim import nodesInCube,fill_cube
+from Bresenheim import nodesInCube,fill_cube,adjust_thickness
 
 
 ##script for gap analysis of multiple networks
@@ -15,8 +17,9 @@ from Bresenheim import nodesInCube,fill_cube
 # generate networks in cube : 
 def net_to_cube(g_type = 'ER',dim = 256):
     # generate graph of given type:
+    print('Generating graph')
     if g_type == 'ER':
-        p = ER_p_value(4500,.25)
+        p = ER_p_value(100,.25)
         g = nx.erdos_renyi_graph(4500,p)
         g = fruchterman_reingold(g,15)
     elif g_type == 'BA':
@@ -28,7 +31,7 @@ def net_to_cube(g_type = 'ER',dim = 256):
         g = nx.watts_strogatz_graph(4500,k,p)
         g = fruchterman_reingold(g,15)
     elif g_type == 'PW':
-        m = M_power_cluster(4500,.25)
+        m = M_power_cluster(100,.25)
         p = 0.666666666666666
         g = nx.powerlaw_cluster_graph(4500,m,p)
         g = fruchterman_reingold(g,15)
@@ -41,7 +44,8 @@ def net_to_cube(g_type = 'ER',dim = 256):
     for n,data in g.nodes(data = True):
         positions.append(data['pos'])
 
-    # bin possitions and place in grid : 
+    # bin possitions and place in grid :
+    print('Filling cube with graph') 
     g,_ = nodesInCube(g,positions,dim)
     c = fill_cube(dim,g)
     # adjust thickness so that it fills +- 17% of cube : 
@@ -132,15 +136,15 @@ def main():
     for f in files:
         cube = pickle.load(open(f,'rb'))
         radii_data = []
-        gtype = f[-7:-5]
-        for i in range(10):
+        gtype = f[-6:-4]
+        for i in range(5):
             M = take_random_slices(cube)
             M,radii = fill_circles(M)
             radii_data.append(radii)
             plt.imshow(M)
-            plt.savefig('../data/cube/' + gtype + str(i) + '.png')
+            plt.savefig('../data/cubes' + gtype + str(i) + '.png')
             print('finished gap analysis : ',gtype,' ' + str(i))
-        dfile = '../data/cube/radii' + gtpye + '.txt'
+        dfile = '../data/cubes/radii' + gtype + '.txt'
         np.savetxt(dfile,np.array(radii_data))
 
 

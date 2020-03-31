@@ -18,21 +18,21 @@ def net_to_cube(g_type = 'ER',dim = 256):
     if g_type == 'ER':
         p = ER_p_value(4500,.25)
         g = nx.erdos_renyi_graph(4500,p)
-        g = fruchterman_reingold(g,30)
-    elif g_type = 'BA':
+        g = fruchterman_reingold(g,15)
+    elif g_type == 'BA':
         g = nx.barabasi_albert_graph(4500,4)
-        g = fruchterman_reingold(g,30)
-    elif g_type = 'WS':
+        g = fruchterman_reingold(g,15)
+    elif g_type == 'WS':
         k = WS_K_value(4500,.25)
         p = 0.027825594022071243
         g = nx.watts_strogatz_graph(4500,k,p)
-        g = fruchterman_reingold(g,30)
-    elif g_type = 'PW':
+        g = fruchterman_reingold(g,15)
+    elif g_type == 'PW':
         m = M_power_cluster(4500,.25)
         p = 0.666666666666666
         g = nx.powerlaw_cluster_graph(4500,m,p)
-        g = fruchterman_reingold(g,30)
-    elif g_type = 'GM':
+        g = fruchterman_reingold(g,15)
+    elif g_type == 'GM':
         r = 20/256 # 20microns
         g = nx.random_geometric_graph(4500,r,dim = 3)
 
@@ -51,12 +51,12 @@ def net_to_cube(g_type = 'ER',dim = 256):
 def save_cubes():
     g_types = ['ER', 'BA', 'WS', 'PW', 'GM']
     for graph_type in g_types: 
-        cube = net_to_cube(g_type = graph_type,dim = 256):
+        cube = net_to_cube(g_type = graph_type,dim = 256)
         fname = '../data/cubes/' + graph_type + '.pkl'
         pickle.dump(cube,open(fname,'wb'))
         print('created cube with ',graph_type, ' graph')
 
-def take_random_slices(cube,scaling_f = 4)):
+def take_random_slices(cube,scaling_f = 4):
     # random position for slice 
     index = np.random.randint(0,252)
     axes = np.random.randint(3)
@@ -127,7 +127,7 @@ def fill_circles(M):
     return M,radii_list
 
 def main():
-    save cubes()
+    save_cubes()
     files = glob.glob('../data/cubes/*.pkl')
     for f in files:
         cube = pickle.load(open(f,'rb'))

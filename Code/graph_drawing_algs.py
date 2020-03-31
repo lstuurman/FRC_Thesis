@@ -4,7 +4,7 @@ from numpy.linalg import norm
 import pickle
 import matplotlib.pyplot as plt
 from ThreeDdraw import draw_plotly
-
+import time
 ### FRUCHTERMAN & REINGOLD ###
 
 # HELPER FUNCTIONS : 
@@ -29,6 +29,7 @@ def fruchterman_reingold(g,num_iters):
     """ g = networkx graph 
         assume network to be drawn in 3d unit cube
     """
+    t1 = time.time()
     opt_dist = optimal_dist(.5,g.number_of_nodes())
 
     #opt_dist = np.array([optim_dist] * 3)
@@ -73,7 +74,8 @@ def fruchterman_reingold(g,num_iters):
 
         temp += - 1/(10*num_iters)
         #print(temp)
-        print(i)
+        t2 = time.time()
+        print(i,' iterations in ',t2-t1)
     return g
 
 ### TEST ###
@@ -108,5 +110,5 @@ def test_3d():
     draw_plotly(positions,matrix)
 
 
-test_3d()
+#test_3d()
             

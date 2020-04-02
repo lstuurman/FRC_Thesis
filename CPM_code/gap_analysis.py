@@ -19,7 +19,7 @@ def net_to_cube(g_type = 'ER',dim = 256):
     # generate graph of given type:
     print('Generating graph')
     if g_type == 'ER':
-        p = ER_p_value(100,.25)
+        p = ER_p_value(4500,.25)
         g = nx.erdos_renyi_graph(4500,p)
         g = fruchterman_reingold(g,15)
     elif g_type == 'BA':
@@ -31,7 +31,7 @@ def net_to_cube(g_type = 'ER',dim = 256):
         g = nx.watts_strogatz_graph(4500,k,p)
         g = fruchterman_reingold(g,15)
     elif g_type == 'PW':
-        m = M_power_cluster(100,.25)
+        m = M_power_cluster(4500,.25)
         p = 0.666666666666666
         g = nx.powerlaw_cluster_graph(4500,m,p)
         g = fruchterman_reingold(g,15)
@@ -142,6 +142,7 @@ def main():
             M,radii = fill_circles(M)
             radii_data.append(radii)
             plt.imshow(M)
+            plt.show()
             plt.savefig('../data/cubes' + gtype + str(i) + '.png')
             print('finished gap analysis : ',gtype,' ' + str(i))
         dfile = '../data/cubes/radii' + gtype + '.txt'

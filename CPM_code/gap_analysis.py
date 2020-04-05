@@ -38,7 +38,7 @@ def net_to_cube(g_type = 'ER',dim = 256):
     elif g_type == 'GM':
         r = 20/256 # 20microns
         g = nx.random_geometric_graph(4500,r,dim = 3)
-
+hl 
     # extract positions from nx graph object : 
     positions = []
     for n,data in g.nodes(data = True):

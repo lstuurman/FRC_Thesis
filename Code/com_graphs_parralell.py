@@ -5,6 +5,7 @@ from multiprocessing import Process,Manager,Pool
 import pickle
 import networkx as nx
 import numpy as np
+import time
 from itertools import product
 
 def gen_equiv_random(tup):
@@ -14,7 +15,7 @@ def gen_equiv_random(tup):
     stats  = [] # list of tuples with (average_clustering,average_path) for every generated network. 
     count  = 0
     edges = []
-    while count < 100:
+    while count < 5:
         g = nx.erdos_renyi_graph(N,p)
         if nx.is_connected(g):
             # average clustering and path length : 
@@ -57,19 +58,22 @@ def generate_lattice(N_list,VE_list):
 # /home/lau/GIT/FRC_Thesis/data/helper_data
 
 if __name__ == "__main__":
-    VE_ratios = np.linspace(.125,.375,5)
-    N_nodes = [100,176,500,1000]
-    product = list(product(N_nodes,VE_ratios))
+    #VE_ratios = np.linspace(.125,.375,5)
+    #N_nodes = [100,176,500,1000]
+    #product = list(product(N_nodes,VE_ratios))
+    product = np.loadtxt('../results/Graphs_stuff/unique_NEtupes')
     keys = [str(x[0]) + 'N_' + str(x[1]) + 'V/E' for x in product]
-    inputs = [(x[0],x[1]) for x in product]
+    #inputs = [(x[0],x[1]) for x in product]
+    t0 = time.time()
     p = Pool(8)
     outputs  = p.map(gen_equiv_random,inputs)
     p.close()
     p.join()
     data_dict = {}
+    print('Generated random graphs in : ', time.time() - t0)
     for i in range(len(keys)):
         data_dict[keys[i]] = outputs[i]
-    
+
     pickle.dump(data_dict,open('../data/helper_data/equivalent_random_stats.pkl','wb'))
 
     # for key in keys:

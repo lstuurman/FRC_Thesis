@@ -8,15 +8,29 @@ import numpy as np
 import time
 from itertools import product
 
+def ER_p_value2(N,E):
+    # helper function to find p parameter resulting in certian V/E ratio
+    n_edges = N * (N/E)**-1
+    return 2*n_edges / (N * (N-1))
+
 def gen_equiv_random(tup):
-    N,ve_ratio = tup
+    E,N = tup
     # generate 1000 random graphs, equivalent to the ones used in the experiments
-    p = ER_p_value(N,ve_ratio)
+    p = ER_p_value2(N,E)
+    p2 = ER_p_value(N,N/E)
     stats  = [] # list of tuples with (average_clustering,average_path) for every generated network. 
     count  = 0
     edges = []
-    while count < 5:
-        g = nx.erdos_renyi_graph(N,p)
+    print(tup)
+    print(p2,p)
+    while count < 1:
+        #print(tup)
+        #print(p)
+        #print(p2)
+        g = nx.fast_gnp_random_graph(N,p)
+        #print(nx.is_connected(g))
+        #print(g.number_of_edges())
+        #exit()
         if nx.is_connected(g):
             # average clustering and path length : 
             Cl = nx.average_clustering(g)
@@ -25,10 +39,12 @@ def gen_equiv_random(tup):
             count += 1
             #print(count)
             edges.append(g.number_of_edges())
+            print('HIT')
     #print(N,g.number_of_edges())
-    f = '../data/helper_data/'+str(N)+'N_'+str(ve_ratio)+'VE.txt'
+    f = '../data/helper_data/'+str(N)+'N_'+str(E)+'E.txt'
     np.savetxt(f,edges)
-    print(N,g.number_of_edges())
+    #print(tup)
+    #print(N,g.number_of_edges())
     return stats
 
 
@@ -62,10 +78,10 @@ if __name__ == "__main__":
     #N_nodes = [100,176,500,1000]
     #product = list(product(N_nodes,VE_ratios))
     product = np.loadtxt('../results/Graphs_stuff/unique_NEtupes')
-    keys = [str(x[0]) + 'N_' + str(x[1]) + 'V/E' for x in product]
-    #inputs = [(x[0],x[1]) for x in product]
+    keys = [str(int(x[0])) + 'N_' + str(int(x[1])) + 'E' for x in product]
+    inputs = [(int(x[0]),int(x[1])) for x in product]
     t0 = time.time()
-    p = Pool(8)
+    p = Pool(10)
     outputs  = p.map(gen_equiv_random,inputs)
     p.close()
     p.join()
@@ -74,7 +90,7 @@ if __name__ == "__main__":
     for i in range(len(keys)):
         data_dict[keys[i]] = outputs[i]
 
-    pickle.dump(data_dict,open('../data/helper_data/equivalent_random_stats.pkl','wb'))
+    pickle.dump(data_dict,open('../data/helper_data/equivalent_random_stats2.pkl','wb'))
 
     # for key in keys:
     #     print(key)

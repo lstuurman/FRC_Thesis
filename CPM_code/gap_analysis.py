@@ -21,20 +21,20 @@ def net_to_cube(g_type = 'ER',dim = 256):
     if g_type == 'ER':
         p = ER_p_value(4500,.25)
         g = nx.erdos_renyi_graph(4500,p)
-        g = fruchterman_reingold(g,15)
+        g = fruchterman_reingold(g,25)
     elif g_type == 'BA':
         g = nx.barabasi_albert_graph(4500,4)
-        g = fruchterman_reingold(g,15)
+        g = fruchterman_reingold(g,25)
     elif g_type == 'WS':
         k = WS_K_value(4500,.25)
         p = 0.027825594022071243
         g = nx.watts_strogatz_graph(4500,k,p)
-        g = fruchterman_reingold(g,15)
+        g = fruchterman_reingold(g,25)
     elif g_type == 'PW':
         m = M_power_cluster(4500,.25)
         p = 0.666666666666666
         g = nx.powerlaw_cluster_graph(4500,m,p)
-        g = fruchterman_reingold(g,15)
+        g = fruchterman_reingold(g,4500)
     elif g_type == 'GM':
         r = 20/256 # 20microns
         g = nx.random_geometric_graph(4500,r,dim = 3)
@@ -69,6 +69,8 @@ def take_random_slices(cube,scaling_f = 4):
     compressed_cut = np.sum(cut,axis = 0)
     # enlarge for better resolution of circles : 
     M = np.kron(compressed_cut, np.ones((scaling_f,scaling_f)))
+    #plt.imshow(M)
+    #plt.show()
     return M
 
 
@@ -131,7 +133,7 @@ def fill_circles(M):
     return M,radii_list
 
 def main():
-    save_cubes()
+    #save_cubes()
     files = glob.glob('../data/cubes/*.pkl')
     for f in files:
         cube = pickle.load(open(f,'rb'))
@@ -142,8 +144,9 @@ def main():
             M,radii = fill_circles(M)
             radii_data.append(radii)
             plt.imshow(M)
-            plt.show()
+            #plt.show()
             plt.savefig('../data/cubes' + gtype + str(i) + '.png')
+            print('../data/cubes' + gtype + str(i) + '.png')
             print('finished gap analysis : ',gtype,' ' + str(i))
         dfile = '../data/cubes/radii' + gtype + '.txt'
         np.savetxt(dfile,np.array(radii_data))

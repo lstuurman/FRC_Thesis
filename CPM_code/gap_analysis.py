@@ -4,7 +4,7 @@ import pickle
 import matplotlib.pyplot as plt 
 import glob
 from scipy import ndimage
-
+import pandas as pd
 import sys
 sys.path.insert(0,'../Code')
 from Generate_graphs import ER_p_value,WS_K_value,M_power_cluster,E_M_relation
@@ -19,26 +19,25 @@ def net_to_cube(g_type = 'ER',dim = 256):
     # generate graph of given type:
     print('Generating graph')
     if g_type == 'ER':
-        p = ER_p_value(4500,.25)
-        g = nx.erdos_renyi_graph(4500,p)
+        p = ER_p_value(200,.25)
+        g = nx.erdos_renyi_graph(200,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'BA':
-        g = nx.barabasi_albert_graph(4500,4)
+        g = nx.barabasi_albert_graph(200,4)
         g = fruchterman_reingold(g,25)
     elif g_type == 'WS':
-        k = WS_K_value(4500,.25)
+        k = WS_K_value(200,.25)
         p = 0.027825594022071243
-        g = nx.watts_strogatz_graph(4500,k,p)
+        g = nx.watts_strogatz_graph(200,k,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'PW':
-        m = M_power_cluster(4500,.25)
+        m = M_power_cluster(200,.25)
         p = 0.666666666666666
-        g = nx.powerlaw_cluster_graph(4500,m,p)
-        g = fruchterman_reingold(g,4500)
+        g = nx.powerlaw_cluster_graph(200,m,p)
+        g = fruchterman_reingold(g,25)
     elif g_type == 'GM':
-        r = 20/256 # 20microns
-        g = nx.random_geometric_graph(4500,r,dim = 3)
-hl 
+        r = 80/256 # 20microns
+        g = nx.random_geometric_graph(200,r,dim = 3)
     # extract positions from nx graph object : 
     positions = []
     for n,data in g.nodes(data = True):
@@ -56,7 +55,7 @@ def save_cubes():
     g_types = ['ER', 'BA', 'WS', 'PW', 'GM']
     for graph_type in g_types: 
         cube = net_to_cube(g_type = graph_type,dim = 256)
-        fname = '../data/cubes/' + graph_type + '.pkl'
+        fname = '../data/cubes/small' + graph_type + '.pkl'
         pickle.dump(cube,open(fname,'wb'))
         print('created cube with ',graph_type, ' graph')
 
@@ -104,7 +103,7 @@ def fill_circles(M):
     dist_frames = []
     frames = []
     
-    while max_radius > 7:
+    while max_radius > 2:
         # place largest possible circle at possition with max distance 
         mask = (x_axis[np.newaxis,:]-cy[0])**2 + (y_axis[:,np.newaxis]-cx[0])**2 < max_radius**2
         indeces = np.where(mask)
@@ -133,23 +132,29 @@ def fill_circles(M):
     return M,radii_list
 
 def main():
-    #save_cubes()
-    files = glob.glob('../data/cubes/*.pkl')
+    save_cubes()
+    files = glob.glob('../data/cubes/small*.pkl')
+    radii_data = []
     for f in files:
         cube = pickle.load(open(f,'rb'))
-        radii_data = []
+        #radii_data = []
         gtype = f[-6:-4]
         for i in range(5):
             M = take_random_slices(cube)
             M,radii = fill_circles(M)
-            radii_data.append(radii)
+            for r in radii:
+                radii_data.append([r,i,gtype])
             plt.imshow(M)
             #plt.show()
-            plt.savefig('../data/cubes' + gtype + str(i) + '.png')
-            print('../data/cubes' + gtype + str(i) + '.png')
+            plt.savefig('../data/cubes/small' + gtype + str(i) + '.png')
+            print('../data/cubes/' + gtype + str(i) + '.png')
             print('finished gap analysis : ',gtype,' ' + str(i))
-        dfile = '../data/cubes/radii' + gtype + '.txt'
-        np.savetxt(dfile,np.array(radii_data))
+    dfile = '../data/cubes/radii/small.csv'
+    df = pd.DataFrame(radii_data)
+    df.columns = ['Radius','iter','type']
+    print(df.head())
+    df.to_csv(dfile)
+        #np.savetxt(dfile,np.array(radii_data))
 
 
 

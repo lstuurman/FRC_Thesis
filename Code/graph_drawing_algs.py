@@ -78,6 +78,19 @@ def fruchterman_reingold(g,num_iters):
         print(i,' iterations in ',t2-t1)
     return g
 
+def normalize_postions(positions):
+    positions = np.array(positions)
+    new = []
+    for axes in range(3):
+        l = positions[:,axes]
+        new_axis = []
+        for coord in l:
+            x = (coord - min(l))/(max(l) - min(l))
+            new_axis.append(x)
+        new.append(new_axis)
+    new = np.array(new)
+    return new.T
+
 ### TEST ###
 # 2d : 
 

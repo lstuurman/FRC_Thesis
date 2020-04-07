@@ -8,7 +8,7 @@ import pandas as pd
 import sys
 sys.path.insert(0,'../Code')
 from Generate_graphs import ER_p_value,WS_K_value,M_power_cluster,E_M_relation
-from graph_drawing_algs import fruchterman_reingold
+from graph_drawing_algs import fruchterman_reingold,normalize_postions
 from Bresenheim import nodesInCube,fill_cube,adjust_thickness
 
 
@@ -19,30 +19,30 @@ def net_to_cube(g_type = 'ER',dim = 256):
     # generate graph of given type:
     print('Generating graph')
     if g_type == 'ER':
-        p = ER_p_value(200,.25)
-        g = nx.erdos_renyi_graph(200,p)
+        p = ER_p_value(4500,.25)
+        g = nx.erdos_renyi_graph(4500,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'BA':
-        g = nx.barabasi_albert_graph(200,4)
+        g = nx.barabasi_albert_graph(4500,4)
         g = fruchterman_reingold(g,25)
     elif g_type == 'WS':
-        k = WS_K_value(200,.25)
+        k = WS_K_value(4500,.25)
         p = 0.027825594022071243
-        g = nx.watts_strogatz_graph(200,k,p)
+        g = nx.watts_strogatz_graph(4500,k,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'PW':
-        m = M_power_cluster(200,.25)
+        m = M_power_cluster(4500,.25)
         p = 0.666666666666666
-        g = nx.powerlaw_cluster_graph(200,m,p)
+        g = nx.powerlaw_cluster_graph(4500,m,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'GM':
-        r = 80/256 # 20microns
-        g = nx.random_geometric_graph(200,r,dim = 3)
+        r = 20/256 # 20microns
+        g = nx.random_geometric_graph(4500,r,dim = 3)
     # extract positions from nx graph object : 
     positions = []
     for n,data in g.nodes(data = True):
         positions.append(data['pos'])
-
+    positions = normalize_postions(positions)
     # bin possitions and place in grid :
     print('Filling cube with graph') 
     g,_ = nodesInCube(g,positions,dim)
@@ -55,7 +55,7 @@ def save_cubes():
     g_types = ['ER', 'BA', 'WS', 'PW', 'GM']
     for graph_type in g_types: 
         cube = net_to_cube(g_type = graph_type,dim = 256)
-        fname = '../data/cubes/small' + graph_type + '.pkl'
+        fname = '../data/cubes/big' + graph_type + '.pkl'
         pickle.dump(cube,open(fname,'wb'))
         print('created cube with ',graph_type, ' graph')
 
@@ -133,7 +133,7 @@ def fill_circles(M):
 
 def main():
     save_cubes()
-    files = glob.glob('../data/cubes/small*.pkl')
+    files = glob.glob('../data/cubes/big*.pkl')
     radii_data = []
     for f in files:
         cube = pickle.load(open(f,'rb'))
@@ -146,10 +146,10 @@ def main():
                 radii_data.append([r,i,gtype])
             plt.imshow(M)
             #plt.show()
-            plt.savefig('../data/cubes/small' + gtype + str(i) + '.png')
+            plt.savefig('../data/cubes/big' + gtype + str(i) + '.png')
             print('../data/cubes/' + gtype + str(i) + '.png')
             print('finished gap analysis : ',gtype,' ' + str(i))
-    dfile = '../data/cubes/radii/small.csv'
+    dfile = '../data/cubes/radii/big.csv'
     df = pd.DataFrame(radii_data)
     df.columns = ['Radius','iter','type']
     print(df.head())

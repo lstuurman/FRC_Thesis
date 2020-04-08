@@ -43,25 +43,26 @@ def net_to_cube(g_type = 'ER',dim = 256):
     for n,data in g.nodes(data = True):
         positions.append(data['pos'])
     positions = normalize_postions(positions)
+    return g,positions
     # bin possitions and place in grid :
-    print('Filling cube with graph') 
-    g,_ = nodesInCube(g,positions,dim)
-    c = fill_cube(dim,g)
+    #print('Filling cube with graph') 
+    #g,_ = nodesInCube(g,positions,dim)
+    #c = fill_cube(dim,g)
     # adjust thickness so that it fills +- 17% of cube : 
-    thicckk = adjust_thickness(c,2)
-    return thicckk
+    #thicckk = adjust_thickness(c,2)
+    #return thicckk
 
 def save_cubes():
     g_types = ['ER', 'BA', 'WS', 'PW', 'GM']
     for graph_type in g_types: 
-        cube = net_to_cube(g_type = graph_type,dim = 256)
-        fname = '../data/cubes/big' + graph_type + '.pkl'
-        pickle.dump(cube,open(fname,'wb'))
+        g,pos = net_to_cube(g_type = graph_type,dim = 256)
+        fname = '../data/cubes/big_graph' + graph_type + '.pkl'
+        pickle.dump((g,pos),open(fname,'wb'))
         print('created cube with ',graph_type, ' graph')
 
 def take_random_slices(cube,scaling_f = 4):
     # random position for slice 
-    index = np.random.randint(0,252)
+    index = np.random.randint(50,202)
     axes = np.random.randint(3)
     #  rotate and sum 4 layers of the cut : 
     cut = np.rot90(cube,axes)[index:index + 4]
@@ -132,7 +133,7 @@ def fill_circles(M):
     return M,radii_list
 
 def main():
-    save_cubes()
+    #save_cubes()
     files = glob.glob('../data/cubes/big*.pkl')
     radii_data = []
     for f in files:
@@ -160,4 +161,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+    #save_cubes()

@@ -1,0 +1,23 @@
+import networkx as nx
+import numpy as np
+import networkx as nx 
+import pickle
+import matplotlib.pyplot as plt 
+import glob
+from scipy import ndimage
+import pandas as pd
+
+
+
+def edge_lengths(g,positions,dim):
+    # input is 3d list of [x,y,z] postitions
+    dim = dim - 1
+    xyz = np.array(positions)
+    positions = xyz * dim
+    
+    #positions = positions.astype(int)
+    # replace node data:
+    for n in g.nodes(data = True):
+        n[1]['pos'] = positions[n[0]]
+    return g,positions
+

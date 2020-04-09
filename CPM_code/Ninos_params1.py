@@ -73,8 +73,9 @@ def setup():
     print('Done')
 
     ### fill cube with cells
-    # number of cells : 
-    free_voxels = 64**3 - np.count_nonzero(frc_in_cube)
+    # number of cells :
+    #frc_in_cube = simulation.get_state() // 2**24 == 1 
+    free_voxels = 64**3  - np.count_nonzero(frc_in_cube)
     n_cells = np.floor(free_voxels/1000)
     # sample random positions : 
     free_indeces = np.where(frc_in_cube == 0.)
@@ -90,40 +91,56 @@ def setup():
     s = simulation.get_state()
 
     celltypes = s % 2**24
-    t = celltypes == 20
-    n_cells = np.unique(celltypes)
+    t = []
+    n_cells = len(np.unique(celltypes))
     # print(n_cells)
     # exit()
-    
+    print('all cells full : ',n_cells * 700)
     # little warmup run 
-    while np.sum(t) < 700:
-        celltypes = s % 2**24
-        t = celltypes == 20
+    while np.sum(t) < n_cells * 700:
+        cellids = s % 2**24
+        t = []
+        for n in range(2,n_cells + 2):
+            t.append(np.sum(cellids == n))
         print(np.sum(t))
-        simulation.run(1)
+        simulation.run(10)
         #print(np.sum(t))
+    print(t)
     return simulation
 
 def runsim(simulation,steps):
     state = simulation.get_state() 
 
     ids = state % 2**24
-    n_cells = np.unique(ids)
+    n_cells = len(np.unique(ids))
 
     iters = int(steps) # /10
-    cofmass_track = np.empty((n_cells,iters,3))
-
+    cofmass_track = np.zeros((n_cells,iters,3))
+    #cell_sizes = []
+    t0 = time.time()
     for i in range(iters):
         simulation.run(10)
+        cell_sizes = []
         for n in range(2,n_cells + 1):
-            cell = state // 2**24 == n
+            cell = state % 2**24 == n
+            # check cell_size : 
+            size = np.sum(cell)
+            cell_sizes.append(size)
+            if size < 500:
+                #print('to small')
+                continue
             cofmass_track[n-2,i] = np.array(real_cofmass(cell, pr = False))
-
-    return cofmass_track
+        if i == 0:
+            t1 = time.time() - t0
+            print('expected computing time : ',t1 * steps)
+        print('iteration : ',i)
+        print('number of small cells ',np.sum([1 for i in cell_sizes if i < 100]))
+    return cofmass_track #,cell_sizes
 
 if __name__ == "__main__":
     sim = setup()
-    tracks = runsim(sim,100)
+    tracks = runsim(sim,500)
     for i,track in enumerate(tracks):
-        fname = '../data/full_lne/frc_track' + i + '.txt'
+        fname = '../data/full_ln/frc_track' + i + '.txt'
         np.savetxt(fname,track)
+    #np.savetxt('../data/full_ln/frc_sizes.txt',sizes)

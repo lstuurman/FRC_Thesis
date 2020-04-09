@@ -75,8 +75,11 @@ def real_cofmass(cell,pr = False):
     """ cell = simulation.get_state() % 2**24 == id """
     neighborhood =  generate_binary_structure(3,4)
     labels, num_features = label(cell, structure=neighborhood)
+    #print(labels)
+    #print(num_features)
      # compute sizes of pieces of cell: (bigger then 1)
     sizes = [(np.count_nonzero(labels == i),i) for i in range(1,num_features + 1) if np.count_nonzero(labels == i) > 1]
+    #print(sizes)
     # Just one patch : 
     if len(sizes) == 1:
         return center_of_mass(cell)

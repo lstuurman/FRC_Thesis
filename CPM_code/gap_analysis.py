@@ -52,11 +52,59 @@ def net_to_cube(g_type = 'ER',dim = 256):
     #thicckk = adjust_thickness(c,2)
     #return thicckk
 
+def net_to_cube_adapted(g_type = 'ER',dim = 256):
+    # generate graph of given type:
+    print('Generating graph')
+    if g_type == 'ER':
+        p = ER_p_value(400,.25)
+        g = nx.erdos_renyi_graph(400,p)
+        g = fruchterman_reingold(g,25)
+    elif g_type == 'BA':
+        g = nx.barabasi_albert_graph(280,4)
+        g = fruchterman_reingold(g,25)
+    elif g_type == 'WS':
+        k = WS_K_value(200,.25)
+        p = 0.027825594022071243
+        g = nx.watts_strogatz_graph(200,k,p)
+        g = fruchterman_reingold(g,25)
+    elif g_type == 'PW':
+        m = M_power_cluster(1400,.25)
+        p = 0.666666666666666
+        g = nx.powerlaw_cluster_graph(400,m,p)
+        g = fruchterman_reingold(g,25)
+    elif g_type == 'GM':
+        r = 20/256 # 20microns
+        g = nx.random_geometric_graph(4500,r,dim = 3)
+    # extract positions from nx graph object : 
+    positions = []
+    for n,data in g.nodes(data = True):
+        positions.append(data['pos'])
+    positions = normalize_postions(positions)
+    #return g,positions
+    #bin possitions and place in grid :
+    print('Filling cube with graph') 
+    if g_type == 'GM' or g_type == 'WS'
+        g,_ = nodesInCube(g,positions,dim)
+        c = fill_cube(dim,g)
+        #adjust thickness so that it fills +- 17% of cube : 
+        thicckk = adjust_thickness(c,2)
+        print('percentage of volume occupied by frc',(np.sum(thicckk)/dim**3)*100)
+        return thicckk
+    else:
+        g,_ = nodesInCube(g,positions,4 * dim)
+        c = fill_cube(4 * dim,g)
+        #adjust thickness so that it fills +- 17% of cube : 
+        thicckk = adjust_thickness(c,2)
+        thickk = thicckk[384:-384,384:-384,384:-384]
+        print('percentage of volume occupied by frc',(np.sum(thicckk)/dim**3)*100)
+        return thicckk
+        
+
 def save_cubes():
     g_types = ['ER', 'BA', 'WS', 'PW', 'GM']
     for graph_type in g_types: 
-        g,pos = net_to_cube(g_type = graph_type,dim = 256)
-        fname = '../data/cubes/big_graph' + graph_type + '.pkl'
+        g,pos = net_to_cube_adapted(g_type = graph_type,dim = 256)
+        fname = '../data/cubes/adjusted_graph' + graph_type + '.pkl'
         pickle.dump((g,pos),open(fname,'wb'))
         print('created cube with ',graph_type, ' graph')
 
@@ -133,8 +181,8 @@ def fill_circles(M):
     return M,radii_list
 
 def main():
-    #save_cubes()
-    files = glob.glob('../data/cubes/big*.pkl')
+    save_cubes()
+    files = glob.glob('../data/cubes/adjusted*.pkl')
     radii_data = []
     for f in files:
         cube = pickle.load(open(f,'rb'))
@@ -147,10 +195,10 @@ def main():
                 radii_data.append([r,i,gtype])
             plt.imshow(M)
             #plt.show()
-            plt.savefig('../data/cubes/big' + gtype + str(i) + '.png')
+            plt.savefig('../data/cubes/adjusted' + gtype + str(i) + '.png')
             print('../data/cubes/' + gtype + str(i) + '.png')
             print('finished gap analysis : ',gtype,' ' + str(i))
-    dfile = '../data/cubes/radii/big.csv'
+    dfile = '../data/cubes/radii/adjusted.csv'
     df = pd.DataFrame(radii_data)
     df.columns = ['Radius','iter','type']
     print(df.head())

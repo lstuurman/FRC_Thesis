@@ -104,7 +104,7 @@ def fill_circles(M):
     dist_frames = []
     frames = []
     
-    while max_radius > 2:
+    while max_radius > 0:
         # place largest possible circle at possition with max distance 
         mask = (x_axis[np.newaxis,:]-cy[0])**2 + (y_axis[:,np.newaxis]-cx[0])**2 < max_radius**2
         indeces = np.where(mask)

@@ -66,17 +66,17 @@ def setup():
     #simulation.initialize_from_array(cube_with_type,1)
 
 
-    print('Creating FRC')
-    frc_in_cube = setup_frc(64)
-    print('Loading into simulation : ')
-    simulation.initialize_from_array(frc_in_cube,1)
-    print('Done')
+    #print('Creating FRC')
+    #frc_in_cube = setup_frc(64)
+    #print('Loading into simulation : ')
+    #simulation.initialize_from_array(frc_in_cube,1)
+    #print('Done')
 
     ### fill cube with cells
     # number of cells :
-    #frc_in_cube = simulation.get_state() // 2**24 == 1 
+    frc_in_cube = simulation.get_state() // 2**24 == 1 
     free_voxels = 64**3  - np.count_nonzero(frc_in_cube)
-    n_cells = np.floor(free_voxels/1000)
+    n_cells = np.floor(.8 * (free_voxels/1000))
     # sample random positions : 
     free_indeces = np.where(frc_in_cube == 0.)
     possible_seeds = np.array(list(zip(free_indeces[0],free_indeces[1],free_indeces[2])))
@@ -141,6 +141,6 @@ if __name__ == "__main__":
     sim = setup()
     tracks = runsim(sim,500)
     for i,track in enumerate(tracks):
-        fname = '../data/full_ln/frc_track' + i + '.txt'
+        fname = '../data/full_ln/frc_track_80dens' + str(i) + '.txt'
         np.savetxt(fname,track)
     #np.savetxt('../data/full_ln/frc_sizes.txt',sizes)

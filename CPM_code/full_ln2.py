@@ -92,18 +92,9 @@ def setup(l_act,m_act):
     celltypes = s % 2**24
     t = []
     n_cells = len(np.unique(celltypes))
-    # print(n_cells)
-    # exit()
-    print('all cells full : ',n_cells * 700)
+
     # little warmup run 
-    while np.sum(t) < n_cells * 700:
-        cellids = s % 2**24
-        t = []
-        for n in range(2,n_cells + 2):
-            t.append(np.sum(cellids == n))
-        print(np.sum(t))
-        simulation.run(10)
-        #print(np.sum(t))
+    simulation.run(100)
     print(t)
     return simulation
 

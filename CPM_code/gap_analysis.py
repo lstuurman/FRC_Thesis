@@ -56,21 +56,21 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
     # generate graph of given type:
     print('Generating graph')
     if g_type == 'ER':
-        p = ER_p_value(400,.25)
-        g = nx.erdos_renyi_graph(400,p)
+        p = ER_p_value(700,.25)
+        g = nx.erdos_renyi_graph(700,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'BA':
-        g = nx.barabasi_albert_graph(280,4)
+        g = nx.barabasi_albert_graph(700,4)
         g = fruchterman_reingold(g,25)
     elif g_type == 'WS':
-        k = WS_K_value(200,.25)
+        k = WS_K_value(500,.25)
         p = 0.027825594022071243
-        g = nx.watts_strogatz_graph(200,k,p)
+        g = nx.watts_strogatz_graph(500,k,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'PW':
-        m = M_power_cluster(1400,.25)
+        m = M_power_cluster(700,.25)
         p = 0.666666666666666
-        g = nx.powerlaw_cluster_graph(400,m,p)
+        g = nx.powerlaw_cluster_graph(700,m,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'GM':
         r = 20/256 # 20microns
@@ -83,7 +83,7 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
     #return g,positions
     #bin possitions and place in grid :
     print('Filling cube with graph') 
-    if g_type == 'GM' or g_type == 'WS'
+    if g_type == 'GM' or g_type == 'WS':
         g,_ = nodesInCube(g,positions,dim)
         c = fill_cube(dim,g)
         #adjust thickness so that it fills +- 17% of cube : 
@@ -96,16 +96,16 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
         #adjust thickness so that it fills +- 17% of cube : 
         thicckk = adjust_thickness(c,2)
         thickk = thicckk[384:-384,384:-384,384:-384]
-        print('percentage of volume occupied by frc',(np.sum(thicckk)/dim**3)*100)
-        return thicckk
+        print('percentage of volume occupied by frc',(np.sum(thickk)/dim**3)*100)
+        return thickk
         
 
 def save_cubes():
     g_types = ['ER', 'BA', 'WS', 'PW', 'GM']
     for graph_type in g_types: 
-        g,pos = net_to_cube_adapted(g_type = graph_type,dim = 256)
-        fname = '../data/cubes/adjusted_graph' + graph_type + '.pkl'
-        pickle.dump((g,pos),open(fname,'wb'))
+        cube = net_to_cube_adapted(g_type = graph_type,dim = 256)
+        fname = '../data/cubes/adjusted_' + graph_type + '.pkl'
+        pickle.dump(cube,open(fname,'wb'))
         print('created cube with ',graph_type, ' graph')
 
 def take_random_slices(cube,scaling_f = 4):

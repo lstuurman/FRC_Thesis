@@ -10,6 +10,41 @@ import pandas as pd
 import time
 from full_ln2 import * 
 
+def handle_boundaries2(cell_track,pr = False):
+    # look for boundary crossings in any
+    # of the coordinates
+    cell_track2 = cell_track.copy()
+    for i in range(len(cell_track) - 1):
+        dif = np.subtract(cell_track[i],cell_track[i+1])
+        for j,coordinate in enumerate(dif):
+            if coordinate > 32:
+                # went over boundary from 256 -> 0
+                if pr:
+                    print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
+                    print('Adding ',256, ' to rest of cell track') #cell_track[i,j]
+                    print('changed axis : ',j)
+                    print('Old coordinat : ',cell_track[i])
+
+                cell_track2[:i + 1,j] -= 62
+
+                if pr:
+                    print('New coordinate : ',cell_track[i])
+                    print(i,j)
+                
+            elif coordinate < -32:
+                # form 0 -> 256
+                if pr:
+                    print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
+                    print('Adding ', 256, ' to previous of cell track') 
+                    print('Old coordinat : ',cell_track[i])
+
+                cell_track2[:i + 1,j] += 62
+
+                if pr:
+                    print('New coordinate : ',cell_track[i])
+                    print(i,j)
+    return cell_track2
+
 def run_sim(params):
     t1 = time.time()
     lambda_act,max_act = params
@@ -18,8 +53,8 @@ def run_sim(params):
     for i in range(1):
         sim = setup(lambda_act,max_act)
         # run : 
-        cell_track = runsim(sim,500)
-        cell_track = handle_boundaries(cell_track,pr = False)
+        cell_track = runsim(sim,50)
+        cell_track = handle_boundaries2(cell_track,pr = False)
 
         # popt = fit_Motilty(delta_t,MSD)
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+str(i)
@@ -61,4 +96,8 @@ def gridsearch():
     # df.to_csv('testdat/no_frc1.csv')
 
 if __name__ == "__main__":
-    gridsearch()
+    #gridsearch()
+    l_act = np.linspace(1000,10000,num=10,dtype=int)
+    max_act = np.linspace(50,1000,num = 10,dtype=int)
+    inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
+    runsim(inputs[0],100)

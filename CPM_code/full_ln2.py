@@ -7,6 +7,8 @@ import pandas as pd
 import time
 import random
 
+
+
 def setup_frc(D):
     # show how code works : 
     # set dimension for grid : 
@@ -95,6 +97,7 @@ def setup(l_act,m_act):
 
     # little warmup run 
     simulation.run(100)
+
     print(t)
     return simulation
 

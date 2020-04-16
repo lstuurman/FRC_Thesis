@@ -63,10 +63,10 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
         g = nx.barabasi_albert_graph(700,4)
         g = fruchterman_reingold(g,25)
     elif g_type == 'WS':
-        k = WS_K_value(500,.25)
+        k = WS_K_value(2000,.25)
         p = 0.027825594022071243
-        g = nx.watts_strogatz_graph(500,k,p)
-        g = fruchterman_reingold(g,25)
+        g = nx.watts_strogatz_graph(2000,k,p)
+        g = fruchterman_reingold(g,20)
     elif g_type == 'PW':
         m = M_power_cluster(700,.25)
         p = 0.666666666666666
@@ -101,7 +101,7 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
         
 
 def save_cubes():
-    g_types = ['ER', 'BA', 'WS', 'PW', 'GM']
+    g_types = ['WS', 'GM'] #, 'WS', 'PW', 'GM']
     for graph_type in g_types: 
         cube = net_to_cube_adapted(g_type = graph_type,dim = 256)
         fname = '../data/cubes/adjusted_' + graph_type + '.pkl'
@@ -152,7 +152,7 @@ def fill_circles(M):
     dist_frames = []
     frames = []
     
-    while max_radius > 0:
+    while max_radius > 2:
         # place largest possible circle at possition with max distance 
         mask = (x_axis[np.newaxis,:]-cy[0])**2 + (y_axis[:,np.newaxis]-cx[0])**2 < max_radius**2
         indeces = np.where(mask)
@@ -181,7 +181,7 @@ def fill_circles(M):
     return M,radii_list
 
 def main():
-    save_cubes()
+    #save_cubes()
     files = glob.glob('../data/cubes/adjusted*.pkl')
     radii_data = []
     for f in files:
@@ -190,6 +190,8 @@ def main():
         gtype = f[-6:-4]
         for i in range(5):
             M = take_random_slices(cube)
+            plt.imshow(M)
+            plt.show()
             M,radii = fill_circles(M)
             for r in radii:
                 radii_data.append([r,i,gtype])

@@ -15,7 +15,7 @@ def run_sim(params):
     lambda_act,max_act = params
     # data to return : 
     data = []
-    for i in range(3):
+    for i in range(1):
         sim = setup(lambda_act,max_act)
         # run : 
         cell_track = runsim(sim,500)
@@ -23,7 +23,7 @@ def run_sim(params):
 
         # popt = fit_Motilty(delta_t,MSD)
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+str(i)
-        np.savetxt('../data/fullLN2/CELL'+fname+'.txt',cell_track)
+        np.savetxt('../data/full_LN2/CELL'+fname+'.txt',cell_track)
     print('computed : ',params, 'in ',time.time() - t1)
 
     #return data

@@ -17,7 +17,7 @@ def setup_frc(D):
     # create graphs with positions : 
     g = nx.random_geometric_graph(80,r,dim = 3)
     # nice 3d visualazition in plotly : 
-    matrix = nx.to_numpy_matrix(g)
+    #matrix = nx.to_numpy_matrix(g)
     positions = []
     for n,data in g.nodes(data = True):
         positions.append(data['pos'])
@@ -59,7 +59,7 @@ def setup(l_act,m_act):
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 1000, lambda_area=250)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 500)#8600
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 5400)#8600
     simulation.set_constraints(cell_type = 2, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
     # adhesion ; 
     simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -50)
@@ -93,28 +93,36 @@ def setup(l_act,m_act):
 
     celltypes = s % 2**24
     t = []
-    n_cells = len(np.unique(celltypes))
+    n_cells = np.unique(celltypes)
 
     # little warmup run 
     simulation.run(100)
 
-    print(t)
+    for n in n_cells:
+        celltypes = s % 2**24 == n
+        size = np.sum(celltypes)
+        t.append(size)
+        print(n,size)
+
+    # free voxels :
+
     return simulation
 
 def runsim(simulation,steps):
     state = simulation.get_state() 
 
     ids = state % 2**24
-    n_cells = len(np.unique(ids))
+    n_cells = np.unique(ids)
 
     iters = int(steps) # /10
-    cofmass_track = np.zeros((n_cells,iters,3))
+    cofmass_track = np.zeros((len(n_cells) - 1,iters,3))
+    print(cofmass_track.shape)
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
         simulation.run(10)
         cell_sizes = []
-        for n in range(2,n_cells + 1):
+        for n in n_cells[1:]:
             cell = state % 2**24 == n
             # check cell_size : 
             size = np.sum(cell)
@@ -123,17 +131,21 @@ def runsim(simulation,steps):
                 #print('to small')
                 continue
             cofmass_track[n-2,i] = np.array(real_cofmass(cell, pr = False))
+            #print(cofmass_track[n-2,i])
         if i == 0:
             t1 = time.time() - t0
             print('expected computing time : ',t1 * steps)
         print('iteration : ',i)
-        print('number of small cells ',np.sum([1 for i in cell_sizes if i < 100]))
+        #print('number of small cells ',np.sum([1 for i in cell_sizes if i < 100]))
+        #print(len(cofmass_track))
+    print(cofmass_track.shape)
     return cofmass_track #,cell_sizes
 
 if __name__ == "__main__":
-    sim = setup()
-    tracks = runsim(sim,500)
-    for i,track in enumerate(tracks):
-        fname = '../data/full_ln/frc_track_80dens' + str(i) + '.txt'
-        np.savetxt(fname,track)
-    #np.savetxt('../data/full_ln/frc_sizes.txt',sizes)
+    sim = setup(2000,100)
+    tracks = runsim(sim,20)
+    # for i,track in enumerate(tracks):
+    #     fname = '../data/full_ln/frc_track_80dens' + str(i) + '.txt'
+    #     np.savetxt(fname,track)
+    tracks = tracks.reshape((len(tracks) * 20,3))
+    np.savetxt('../data/full_ln/frc_sizes.txt',tracks)

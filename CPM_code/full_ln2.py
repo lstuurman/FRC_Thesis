@@ -115,14 +115,14 @@ def runsim(simulation,steps):
     n_cells = np.unique(ids)
 
     iters = int(steps) # /10
-    cofmass_track = np.zeros((len(n_cells) - 1,iters,3))
+    cofmass_track = np.zeros((len(n_cells)+1,iters,3))
     print(cofmass_track.shape)
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
         simulation.run(10)
         cell_sizes = []
-        for n in n_cells[1:]:
+        for n in n_cells:
             cell = state % 2**24 == n
             # check cell_size : 
             size = np.sum(cell)
@@ -130,7 +130,7 @@ def runsim(simulation,steps):
             if size < 500:
                 #print('to small')
                 continue
-            cofmass_track[n-2,i] = np.array(real_cofmass(cell, pr = False))
+            cofmass_track[n-1,i] = np.array(real_cofmass(cell, pr = False))
             #print(cofmass_track[n-2,i])
         if i == 0:
             t1 = time.time() - t0

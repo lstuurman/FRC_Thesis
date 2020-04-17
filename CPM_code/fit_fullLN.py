@@ -51,13 +51,12 @@ def run_sim(params):
 
     sim = setup(lambda_act,max_act)
     # run : 
-    cell_tracks = runsim(sim,50)
+    cell_tracks = runsim(sim,500)
     for i,track in enumerate(cell_tracks):
-        track = handle_boundaries2(cell_track)
-        cell_tracks[i] = track
-
-    fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+str(i)
-    np.savetxt('../data/full_LN2/CELL'+fname+'.txt',cell_track.reshape((len(cell_tracks) * len(cell_tracks[0]),3)))
+        newtrack = handle_boundaries2(track)
+        #cell_tracks[i] = newtrack
+        fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
+        np.savetxt('../data/full_LN2/CELL'+fname+'.txt',newtrack)
     print('computed : ',params, 'in ',time.time() - t1)
 
     #return data
@@ -71,7 +70,7 @@ def gridsearch():
     max_act = np.linspace(50,1000,num = 10,dtype=int)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
-    cpus = os.cpu_count() - 20
+    cpus = os.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_sim,inputs))
@@ -95,8 +94,8 @@ def gridsearch():
     # df.to_csv('testdat/no_frc1.csv')
 
 if __name__ == "__main__":
-    #gridsearch()
-    l_act = np.linspace(1000,10000,num=10,dtype=int)
-    max_act = np.linspace(50,1000,num = 10,dtype=int)
-    inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
-    run_sim(inputs[0])
+    gridsearch()
+    #l_act = np.linspace(1000,10000,num=10,dtype=int)
+    #max_act = np.linspace(50,1000,num = 10,dtype=int)
+    #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
+    #run_sim(inputs[0])

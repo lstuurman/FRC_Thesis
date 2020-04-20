@@ -1,15 +1,16 @@
 import numpy as np 
 import glob
-from CPM_helpers1 import *
-from MSD1cell import *
+#from CPM_helpers1 import *
+#from MSD1cell import *
 import pandas as pd
 import re 
-from mpl_toolkits import mplot3d
-import matplotlib.pyplot as plt
-import seaborn as sns
+#from mpl_toolkits import mplot3d
+#import matplotlib.pyplot as plt
+#import seaborn as sns
 import pickle
-from vis_frc import visualize_frc
-sns.set_style('darkgrid')
+from numpy.linalg import norm
+#from vis_frc import visualize_frc
+#sns.set_style('darkgrid')
 
 
 def get_motility(track,plot = False):
@@ -52,7 +53,7 @@ def new_auto(cell_track):
     for dt in range(0,300):
         # angles per dt: 
         cosines = []
-        for i in range(len(cell_track) - 2 - dt):
+        for i in range(len(cell_track) - 1 - dt):
             point1 = cell_track[i]
             point2 = cell_track[i + 1]
             point3 = cell_track[i + dt]
@@ -78,9 +79,11 @@ def all_autos(path):
     for id,name in enumerate(files):
         #f_names = glob.glob(name + '*.txt')
         # params : 
-        l,Max = name.split('MAX')
+        l,Max= name.split('MAX')
+        print(l,Max)
         _lambda = int(re.findall(num_pattern,l)[1])
-        _max = int(re.findall(num_pattern,Max)[0][:-1])
+        _max = int(re.findall(num_pattern,Max)[0])
+        cell_id = int(re.findall(num_pattern,Max)[1])
         track = np.loadtxt(name)
         correlations = new_auto(track)
         #tracks = [np.loadtxt(f) for f in f_names]
@@ -93,12 +96,13 @@ def all_autos(path):
 
         # append rows to create nice dataframe
         for i,x in enumerate(correlations):
-            rows.append([id,i,x,_lambda,_max])
+            rows.append([id,cell_id,i,x,_lambda,_max])
         print(name)
-        print(_lambda, ':',_max)
+        print(_lambda, ':',_max,':',cell_id)
+        #break
 
-    df = pd.DataFrame(data = rows,columns = ['id','dt','auto correlation','lambda','max act'])
-    df.to_csv('../results/autocorrelation_frc1.csv')
+    df = pd.DataFrame(data = rows,columns = ['id','cell_id','dt','auto correlation','lambda','max act'])
+    df.to_csv('autocorr_fullLN_frc1.csv')
     # # plot :::
     # sns.lineplot(x = 'dt', y = 'auto correlation', hue = 'lambda', data = df)#, style = 'max act' ,
     # plt.show()
@@ -180,7 +184,7 @@ def build_df(files):
     df.to_csv('../results/CPM_frc1.csv')
 
 if __name__ == "__main__":
-    path = '../data/CPM_data/frc1/'
+    path = '../data/full_LN2/'
     #all_autos_average(path)
     #get_volume(path)
     all_autos(path)

@@ -1,7 +1,7 @@
 import numpy as np 
 import glob
 #from CPM_helpers1 import *
-#from MSD1cell import *
+from MSD1cell import *
 import pandas as pd
 import re 
 #from mpl_toolkits import mplot3d
@@ -163,7 +163,7 @@ def get_volume(path):
     #volume_df.to_csv('../results/volume_frc1.csv')
     
 def build_df(files):
-    data_dict = {'Motility':[],'Persistance':[],'AutoSlope':[],'P-val':[]
+    data_dict = {'Cellid': [],'Motility':[],'Persistance':[],'AutoSlope':[],'P-val':[]
     ,'Lambda':[],'Max_act':[],'Speed':[]}
     numbers = '[-+]?\d*\.\d+|\d+'
     for f in files:
@@ -177,17 +177,19 @@ def build_df(files):
         data_dict['P-val'].append(p_val)
         l,Max = f.split('MAX')
         data_dict['Lambda'].append(int(re.findall(numbers,l)[1]))
-        data_dict['Max_act'].append(int(re.findall(numbers,Max)[0][:-1]))
+        data_dict['Max_act'].append(int(re.findall(numbers,Max)[0]))
+        data_dict['Cellid'].append(int(re.findall(numbers,Max)[1]))
         print(f)
     
     df = pd.DataFrame(data_dict)
-    df.to_csv('../results/CPM_frc1.csv')
+    df.to_csv('../results/fullCPM_frc1.csv')
 
 if __name__ == "__main__":
-    path = '../data/full_LN2/'
+    path = '../data/full_LN2/*.txt'
     #all_autos_average(path)
     #get_volume(path)
-    all_autos(path)
+    files = glob.glob(path)
+    build_df(files)
 
     # files = glob.glob(path)
     # files.sort()

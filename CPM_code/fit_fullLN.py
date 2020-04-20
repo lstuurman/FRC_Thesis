@@ -67,7 +67,7 @@ def gridsearch():
     ### to find some good parameters for cell track autocorrelation
     # input : 
     l_act = np.linspace(1000,10000,num=10,dtype=int)
-    max_act = np.linspace(50,1000,num = 10,dtype=int)
+    max_act = np.linspace(1000,5000,num = 5,dtype=int)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
     cpus = os.cpu_count() - 15

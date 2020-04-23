@@ -153,8 +153,18 @@ function initializeGrid(){
     }
 }
 
+
+// Actual simulations : 
+function paramSearch(){
+    let persist = Array.from(Array(21).keys(), x => x/20)
+    for (let p of persist){
+        setup_sim(2000,p)
+    }
+}
+
+paramSearch()
 // trial run : 
-setup_sim(2000,.7)
+// setup_sim(2000,.7)
 
 
 // // Loop over FRC :

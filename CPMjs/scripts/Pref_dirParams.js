@@ -1,7 +1,7 @@
 // First attempt at script in JS
 // Imports :
 
-let CPM = require('/home/lau/GIT/cpmjs/build/cpm-cjs.js')
+let CPM = require('../../../cpmjs/build/cpm-cjs.js')
 fs = require("fs")
 //let FRC = require('../img/frc.json')
 
@@ -40,8 +40,8 @@ function setup_sim(l_dir,persist){
             NRCELLS : [0,125],					// Number of cells to seed for all
                                                 // non-background cellkinds.
             // Runtime etc
-            BURNIN : 20,
-            RUNTIME : 100,
+            BURNIN : 200,
+            RUNTIME : 5000,
             RUNTIME_BROWSER : "Inf",
             
             // Visualization
@@ -64,7 +64,7 @@ function setup_sim(l_dir,persist){
     
         }
     }
-    var fname = String(l_dir) + '_' + String(persist) + 'log.txt'
+    var fname = '../../data/cpmjs/prefdir/' + String(l_dir) + '_' + String(persist) + 'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
         if (err) throw err;
@@ -110,7 +110,7 @@ function logStats(){
         // eslint-disable-next-line no-console
         let line = String(this.time) + "\t" + String(cid) + "\t" + 
         String(this.C.cellKind(cid)) + "\t" + thecentroid.join("\t") + "\n"
-        console.log(line)
+        //console.log(line)
         logger.write(line);
         
     }
@@ -158,6 +158,7 @@ function initializeGrid(){
 function paramSearch(){
     let persist = Array.from(Array(21).keys(), x => x/20)
     for (let p of persist){
+	console.log(p)
         setup_sim(2000,p)
     }
 }

@@ -59,7 +59,7 @@ def new_auto(cell_track):
             point3 = cell_track[i + dt]
             point4 = cell_track[i + dt + 1]
             if list(point2) == list(point4):
-                pass
+                continue
             v1 = point2 - point1
             v2 = point4 - point3
             #cos = np.clip(np.dot(v1,v2)/(norm(v1) * norm(v2)),-1,1)
@@ -70,7 +70,7 @@ def new_auto(cell_track):
     return averages
 
 def all_autos(path):
-    files = glob.glob(path+'*.txt')
+    files = glob.glob(path)
     print(len(files))
     files.sort()
     num_pattern = '[-+]?\d*\.\d+|\d+'
@@ -102,7 +102,7 @@ def all_autos(path):
         #break
 
     df = pd.DataFrame(data = rows,columns = ['id','cell_id','dt','auto correlation','lambda','max act'])
-    df.to_csv('autocorr_fullLN_frc2.csv')
+    df.to_csv('../results/autocorr_fullLN_frc2.csv')
     # # plot :::
     # sns.lineplot(x = 'dt', y = 'auto correlation', hue = 'lambda', data = df)#, style = 'max act' ,
     # plt.show()
@@ -180,16 +180,16 @@ def build_df(files):
         data_dict['Max_act'].append(int(re.findall(numbers,Max)[0]))
         data_dict['Cellid'].append(int(re.findall(numbers,Max)[1]))
         print(f)
-    
+
     df = pd.DataFrame(data_dict)
     df.to_csv('../results/fullCPM_frc1.csv')
 
 if __name__ == "__main__":
-    path = '../data/full_LN2/3*.txt'
-    #all_autos_average(path)
+    path = '../data/full_LN3/*.txt'
+    all_autos(path)
     #get_volume(path)
-    files = glob.glob(path)
-    build_df(files)
+    #files = glob.glob(path)
+    #build_df(files)
 
     # files = glob.glob(path)
     # files.sort()

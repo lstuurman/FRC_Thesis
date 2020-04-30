@@ -35,7 +35,7 @@
         let stopit = 0// track whether the simulation is running (start/stop button)
 
 
-        let zoom = 1, w = 50, t = 5000
+        let zoom = 1, w = 20, t = 5000
         let C, meter
 
         function initialize() {
@@ -52,7 +52,7 @@
 
         function setupCPM(conf) {
             const zoom = conf.zoom || 1
-            const w = conf.w || 50
+            const w = conf.w || 20
             const dimension = 3
             C = new CPM.CPM([w, w, w], {
                 T: 20,
@@ -61,11 +61,11 @@
                 // Energies : 
                 J: [[0, 5], [5, 10]],
                 // Volume : 
-                V: [0, 1000],
+                V: [0, 150],
                 LAMBDA_V: [0, 25],
                 // // Perimeter : 
-                P : [0,.2],
-                LAMBDA_P : [0,5400],
+                P : [0,2000],
+                LAMBDA_P : [0,.2],
                 // Act model : 
                 LAMBDA_ACT : [0,2000],
                 MAX_ACT : [0,80],
@@ -74,14 +74,15 @@
             C.add(new CPM.Adhesion(C.conf))
             C.add(new CPM.VolumeConstraint(C.conf))
             C.add(new CPM.PerimeterConstraint(C.conf))
-            C.add(new CPM.ActivityConstraint(C.conf))
+            let activity = new CPM.ActivityConstraint(C.conf)
+            C.add(activity)
 
             let Cim = new CPM.Canvas(C, { zoom: zoom })
 
             C.add({
                 postMCSListener: function () {
                     // Display every 'draw_each' steps.
-                    render3d(maxVisibleCells)
+                    render3d(maxVisibleCells,activity) //,activity)
                     controls && controls.update()
                     if (C.time > 5000) {
                         stopit = 1
@@ -179,7 +180,7 @@
                     <tr>
                         <td>Volume</td>
                         <td>
-                            <input type="text" value="1000" id="volume"
+                            <input type="text" value="150" id="volume"
                                 oninput="if(this.value>0){C.conf.V[1]=this.value}">
                         </td>
                         <td>&lambda;<sub>Volume</sub></td>
@@ -190,7 +191,7 @@
                     <tr>
                         <td>Perimeter</td>
                         <td>
-                            <input type="text" value="5400" id="perimeter" oninput="C.conf.P[1]=this.value">
+                            <input type="text" value="1000" id="perimeter" oninput="C.conf.P[1]=this.value">
                         </td>
                         <td>&lambda;<sub>P</sub></td>
                         <td>

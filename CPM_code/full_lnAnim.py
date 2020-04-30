@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import glob
 import matplotlib.image as mpimg
 import matplotlib.animation as animation
+import imageio
+import re 
 
 def simulate():
     sim = setup(2000,800)
@@ -28,26 +30,36 @@ def simulate():
 
     
 def animate(i):
-    files = glob.glob('../data/animation/2000_800_actfr*')
+    files = glob.glob('/home/lau/Desktop/Thesis Stuff/anim_data/2000_800_fr*')
+    files.sort()
     im.set_array(mpimg.imread(files[i]))
     return [im]
 
 def create_anim():
-    fps = 50
-    nSeconds = 10
-    files = glob.glob('../data/animation/2000_800_actfr*')
-
+    fps = 5
+    nSeconds = 100
+    files = glob.glob('/home/lau/Desktop/Thesis Stuff/anim_data/2000_800_fr*')
+    files.sort()
+    #print(files)
     fig = plt.figure(figsize=(20,20))
     f1 = mpimg.imread(files[0])
     global im
     im = plt.imshow(f1)
 
-    anim = animation.FuncAnimation(fig,animate,
-        frames = fps * nSeconds,interval= 1000/fps)
+    anim = animation.FuncAnimation(fig,animate) #,frames = fps * nSeconds,interval= 200
 
-    anim.save('fullact_ln_anim.mp4')
+    anim.save('full_ln_anim.mp4')
+
+def create_anim2():
+    filenames = glob.glob('/home/lau/Desktop/Thesis Stuff/anim_data/2000_800_actfr*')
+    filenames.sort(key=lambda var:[int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
+    with imageio.get_writer('full_lnact_2000_800_anim.mp4', mode='I') as writer:
+        for filename in filenames:
+            print(filename)
+            image = imageio.imread(filename)
+            writer.append_data(image)
 
 if __name__ == '__main__':
 #    simulate()
-    im = None
-    create_anim()
+    #im = None
+    create_anim2()

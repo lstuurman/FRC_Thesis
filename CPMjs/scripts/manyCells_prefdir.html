@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>3D CPM</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        body {
+            background-color: white;
+            margin: 5;
+            padding: 5;
+        }
+    </style>
+
+    <link rel="slidecontainer" href="3D_sliders.css">
+    <script src="/home/lau/GIT/cpmjs/build/cpm.js"></script>
+    <script src="/home/lau/GIT/cpmjs/examples/fpsmeter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.min.js"></script>
+    <script type="text/javascript" src="/home/lau/GIT/cpmjs/viz/TrackballControls.js"></script>
+    <script type="text/javascript" src="viz2.js"></script>
+    <script type="text/javascript">
+
+        // Optional: set some parameters via the url
+        var urlParams = new URLSearchParams(window.location.search)
+        var mesh_step = parseInt(urlParams.get("meshStep")) || 15
+        let ncells = parseInt(urlParams.get("ncells")) || 50
+        let maxVisibleCells = 4
+
+        //let CPM = require("/home/lau/GIT/cpmjs/build/cpm.js")
+
+		/* Global variables that are not model parameters
+			stopit tracks whether the simulation is running.
+		*/
+        let stopit = 0// track whether the simulation is running (start/stop button)
+
+
+        let zoom = 1, w = 20, t = 5000
+        let C, meter
+
+        function initialize() {
+            C, Gi = setupCPM({ zoom: zoom, w: w })
+            init3d(500, 500, C)
+        }
+
+        function mainloop() {
+            C.monteCarloStep()
+        }
+
+        let pdc, Cs
+        let n_cells = 50
+
+        function setupCPM(conf) {
+            const zoom = conf.zoom || 1
+            const w = conf.w || 20
+            const dimension = 3
+            C = new CPM.CPM([w, w, w], {
+                T: 20,
+                torus: [true, true, true],
+                nCellKinds: 1,
+                // Energies : 
+                J: [[0, 0], [0, 10]],
+                // Volume : 
+                V: [0, 150],
+                LAMBDA_V: [0, 25],
+                // // Perimeter : 
+                P: [0, 1400],
+                LAMBDA_P: [0, .2],
+                LAMBDA_DIR: [0, 200],
+                PERSIST: [0, 0.001], // ???
+                DELTA_T: [0, 15]
+            })
+            C.add(new CPM.Adhesion(C.conf))
+            C.add(new CPM.VolumeConstraint(C.conf))
+            //C.add(new CPM.PerimeterConstraint(C.conf))
+            //let activity = new CPM.ActivityConstraint(C.conf)
+            //C.add(activity)
+            pdc = new CPM.PersistenceConstraint(C.conf)
+            C.add(pdc)
+
+            let Cim = new CPM.Canvas(C, { zoom: zoom })
+
+            C.add({
+                postMCSListener: function () {
+                    // Display every 'draw_each' steps.
+                    render3d(maxVisibleCells) //,activity)
+                    controls && controls.update()
+                    if (C.time > 5000) {
+                        stopit = 1
+                        C.time = 0
+                    }
+                    meter.tick()
+
+                    if (!stopit) {
+                        requestAnimationFrame(mainloop)
+                    }
+                }
+            })
+
+            let Gi = new CPM.GridManipulator(C)
+            for (let i = 0; i < ncells; i++) {
+                Gi.seedCell(1)
+            }
+
+            // Start simulation
+            meter = new FPSMeter({ left: "auto", right: "5px" })
+            return C, Gi
+        }
+
+        // Functions for simulation buttons and input
+
+        function startanim() {
+            stopit = 0
+            requestAnimationFrame(mainloop)
+        }
+
+        function stopanim() {
+            stopit = 1
+        }
+
+        function seedCells(n) {
+            for (let i = 0; i < n; i++) {
+                Gi.seedCell(1)
+            }
+        }
+
+
+        function download(text, name, type) {
+            var a = document.getElementById("a");
+            var file = new Blob([text], { type: type });
+            a.href = URL.createObjectURL(file);
+            a.download = name;
+        }
+
+        function save_stats() {
+            let fs = require('fs')
+            let stats = C.getStat(CPM.Centroids)
+            fs.writeFile('celltracks.txt', stats, (err) => {
+                if (err) throw err;
+            })
+        }
+
+// function adjust_perimeter
+
+    </script>
+</head>
+
+<body onload="initialize();startanim()">
+
+    <div style="width:600px; margin:auto">
+
+        <!--<div id="sliders">
+</div>-->
+        <p></p>
+        <div id="stage">
+        </div>
+
+        <div>
+            <button onclick="startanim()">start </button>
+            <button onclick="stopanim()">stop </button>
+            <button onclick="seedCells(n_cells)"> seed cells </button>
+            <button onclick="requestAnimationFrame( mainloop )">step simulation</button>
+            <button onclick="print_track()"> save tracks</button>
+
+        </div>
+
+        <div class="slidecontainer">
+            <form autocomplete="off">
+                <table>
+                    <tr>
+                        <td>Adhesion<sub>C - M</sub></td>
+                        <td>
+                            <input type="text" value="0" id="jte"
+                                oninput="C.conf.J[1][0]=C.conf.J[0][1]=parseInt(this.value)">
+                        </td>
+                        <td>Adhesion<sub>C - C </sub></td>
+                        <td>
+                            <input type="text" value="10" id="jtt" oninput="C.conf.J[1][1]=parseInt(this.value)">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Volume</td>
+                        <td>
+                            <input type="text" value="150" id="volume" oninput="if(this.value>0){C.conf.V[1]=this.value}">
+                        </td>
+                        <td>&lambda;<sub>Volume</sub></td>
+                        <td>
+                            <input type="text" value="25" id="lvolume" oninput="C.conf.LAMBDA_V[1]=this.value">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Perimeter</td>
+                        <td>
+                            <input type="text" value="1400" id="perimeter" oninput="C.conf.P[1]=this.value">
+                        </td>
+                        <td>&lambda;<sub>P</sub></td>
+                        <td>
+                            <input type="text" value=".2" id="lperim" oninput="C.conf.LAMBDA_P[1]=this.value">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Peristance</td>
+                        <td>
+                            <input type="text" value=".001" id="mact" oninput="C.conf.PERSIST=this.value">
+                        </td>
+                        <td>&lambda;<sub>Dir</sub></td>
+                        <td>
+                            <input type="text" value="200" id="lact" oninput="C.conf.LAMBDA_DIR[1]=this.value">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Delta T</td>
+                        <td>
+                            <input type="text" value="15" id="dt" oninput="C.conf.DELTA_T[1]=this.value">
+                        </td>
+                        <td>Cells to seed</td>
+                        <td>
+                            <input type="text" value="125" id="ncells" oninput="n_cells = this.value">
+                        </td>
+                        <td>Number of Visible cells</td>
+                        <td>
+                            <input type="text" value="5" id="maxcells"
+                                oninput="maxVisibleCells = parseInt(this.value) + 1; console.log(maxVisibleCells)">
+                        </td>
+                    </tr>
+
+                </table>
+            </form>
+        </div>
+
+
+
+        <!-- <input type=“range” min =10 max=2000 value=“1000" id=“volume” oninput=“if(this.value>0){C.conf.V[1]=this.value}“> -->
+</body>
+
+</html>

@@ -102,7 +102,7 @@ def all_autos(path):
         #break
 
     df = pd.DataFrame(data = rows,columns = ['id','cell_id','dt','auto correlation','lambda','max act'])
-    df.to_csv('autocorr_fullLN_frc1.csv')
+    df.to_csv('autocorr_fullLN_frc2.csv')
     # # plot :::
     # sns.lineplot(x = 'dt', y = 'auto correlation', hue = 'lambda', data = df)#, style = 'max act' ,
     # plt.show()
@@ -185,7 +185,7 @@ def build_df(files):
     df.to_csv('../results/fullCPM_frc1.csv')
 
 if __name__ == "__main__":
-    path = '../data/full_LN2/*.txt'
+    path = '../data/full_LN2/3*.txt'
     #all_autos_average(path)
     #get_volume(path)
     files = glob.glob(path)

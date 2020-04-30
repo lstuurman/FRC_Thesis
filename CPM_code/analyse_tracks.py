@@ -76,7 +76,7 @@ def all_autos(path):
     num_pattern = '[-+]?\d*\.\d+|\d+'
     #uniq_names = set([name[:-5] for name in files])
     rows = []
-    for id,name in enumerate(files):
+    for id_,name in enumerate(files):
         #f_names = glob.glob(name + '*.txt')
         # params : 
         l,Max= name.split('MAX')
@@ -96,7 +96,7 @@ def all_autos(path):
 
         # append rows to create nice dataframe
         for i,x in enumerate(correlations):
-            rows.append([id,cell_id,i,x,_lambda,_max])
+            rows.append([id_,cell_id,i,x,_lambda,_max])
         print(name)
         print(_lambda, ':',_max,':',cell_id)
         #break

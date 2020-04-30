@@ -124,7 +124,7 @@ function init3d( w, h, C ){
 	container.appendChild( renderer.domElement );
 }
 
-function render3d( max_cells ) {
+function render3d( max_cells, activity) {
 	var i = 0, t, k
 	if( arguments.length == 0 ) max_cells = Infinity
 
@@ -135,9 +135,12 @@ function render3d( max_cells ) {
 		makevoxel()
 	}*/
 
+
+
 	for( let p of C.cellBorderPixels() ){
 		// t = C.cellpixelstype[cp[i]]; k = C.cellKind(t)
 			[p, v] = p
+
 
         if( cellvoxels.length < (i+1) ){ makevoxel() }
 		 if( v < max_cells ){
@@ -160,6 +163,26 @@ function render3d( max_cells ) {
 
 		cellvoxels[i].material.color.setHex( cellColors[v%cellColors.length] )
 		cellvoxels[i].material.opacity=0.15
+
+        if (activity !== undefined){
+            a = activity.pxact( C.grid.p2i( p ) )/activity.conf["MAX_ACT"][1]
+            let color = {r:1,g:1,b:0}
+
+            if( a > 0.5 ){
+                color["r"] = 1
+                color["g"]= (2-2*a)
+            } else {
+                color["r"] = (2*a)
+                color["g"] = 1
+            }
+            let hexcolor = new THREE.Color( color.r, color.g, color.b ).getHex()
+            cellvoxels[i].material.color.setHex(hexcolor)
+            
+            cellvoxels[i].material.opacity=0.4
+					
+        }
+
+
 		i++
 	}
 

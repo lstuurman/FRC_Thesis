@@ -1,7 +1,7 @@
 // First attempt at script in JS
 // Imports :
 
-let CPM = require('/home/lau/GIT/cpmjs/build/cpm-cjs.js')
+let CPM = require('../../../cpmjs/build/cpm-cjs.js')
 fs = require("fs")
 //let FRC = require('../img/frc.json')
 
@@ -30,7 +30,8 @@ function setup_sim(l_dir,max_act){
             LAMDA_P : [0,0,.2],
             // Pref Dir:
             MAX_ACT : [0,0,max_act],
-            LAMBDA_ACT : [0,0,l_dir]
+            LAMBDA_ACT : [0,0,l_dir],
+	    ACT_MEAN : "geometric"
 
         },
         simsettings : {
@@ -39,8 +40,8 @@ function setup_sim(l_dir,max_act){
             NRCELLS : [0,125],					// Number of cells to seed for all
                                                 // non-background cellkinds.
             // Runtime etc
-            BURNIN : 20,
-            RUNTIME : 100,
+            BURNIN : 200,
+            RUNTIME : 5000,
             RUNTIME_BROWSER : "Inf",
             
             // Visualization
@@ -63,7 +64,7 @@ function setup_sim(l_dir,max_act){
     
         }
     }
-    var fname = String(l_dir) + '_' + String(persist) + 'log.txt'
+    var fname = '../../data/cpmjs/act/' + String(l_dir) + '_' + String(max_act) + 'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
         if (err) throw err;
@@ -156,7 +157,9 @@ function initializeGrid(){
 // Actual simulations : 
 function paramSearch(){
     let acts = Array.from(Array(11).keys(), x => x * 100)
+    console.log(acts)
     for (let act of acts){
+	console.log(act)
         setup_sim(2000,act)
     }
 }

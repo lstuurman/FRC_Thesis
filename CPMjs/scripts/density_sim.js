@@ -25,17 +25,21 @@ function setup_sim(ncells){
             LAMBDA_V : [0,25],
             // Perimeter:
             P : [0,1400],
-            LAMDA_P : [0,0,.2],
+            LAMDA_P : [0,.2],
             // Pref Dir:
-            PERSIST : [0,0.001],
-            LAMBDA_DIR : [0,200],
-            DELTA_T : [0,15]
+            //PERSIST : [0,0.001],
+            //LAMBDA_DIR : [0,200],
+            //DELTA_T : [0,15]
+	    // ACT MODEL
+	    LAMBDA_ACT : [0,200],
+	    MAX_ACT : [0,120],
+	    ACT_MEAN : "geometric"
 
         },
         simsettings : {
 	
             // Cells on the grid
-            NRCELLS : [0,ncells],					// Number of cells to seed for all
+            NRCELLS : [ncells],					// Number of cells to seed for all
                                                 // non-background cellkinds.
             // Runtime etc
             BURNIN : 200,
@@ -62,8 +66,9 @@ function setup_sim(ncells){
     
         }
     }
-    let dens = ncells * 1000 / 50*50*50 
-    var fname = '../../data/cpmjs/density/PD_' + String(dens) + 'log.txt'
+    let dens = (ncells * 1000) / (50*50*50)
+    console.log(dens) 
+    var fname = '../../data/cpmjs/density/ACT_' + String(dens) + 'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
         if (err) throw err;
@@ -116,12 +121,18 @@ function logStats(){
 } 
 
 function Densities(){
-    let densis = Array.from(Array(21).keys(), x => x/20)
+    let densis = Array.from(Array(11).keys(), x => x/10)
     console.log(densis)
-    for (let i = 1; i < 21;i++){
+    for (let i = 1; i < 11;i++){
+	if (i == 1){
+	    ncells = 1
+	    setup_sim(ncells)
+	    console.log(ncells)
+	} else {
         ncells = parseInt((50*50*50/1000) * densis[i]) 
-        console.log(ncells)
         setup_sim(ncells)
+	console.log(ncells)
+	}
     }
 }
 

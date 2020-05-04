@@ -31,8 +31,8 @@ function setup_sim(ncells){
             //LAMBDA_DIR : [0,200],
             //DELTA_T : [0,15]
 	    // ACT MODEL
-	    LAMBDA_ACT : [0,200],
-	    MAX_ACT : [0,120],
+	    LAMBDA_ACT : [0,2000],
+	    MAX_ACT : [0,20],
 	    ACT_MEAN : "geometric"
 
         },

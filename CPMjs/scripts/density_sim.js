@@ -67,7 +67,7 @@ function setup_sim(ncells){
         }
     }
     let dens = (ncells * 1000) / (50*50*50)
-    console.log(dens) 
+    console.log('density : ',dens) 
     var fname = '../../data/cpmjs/density/ACT_' + String(dens) + 'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
@@ -84,7 +84,7 @@ function setup_sim(ncells){
     }
 
     let sim = new CPM.Simulation( config, custommethods )
-    sim.run()
+    //sim.run()
     logger.end()
 
 }
@@ -123,15 +123,15 @@ function logStats(){
 function Densities(){
     let densis = Array.from(Array(11).keys(), x => x/10)
     console.log(densis)
-    for (let i = 1; i < 11;i++){
-	if (i == 1){
+    for (let i = 0; i < 11;i++){
+	if (i == 0){
 	    ncells = 1
 	    setup_sim(ncells)
 	    console.log(ncells)
 	} else {
         ncells = parseInt((50*50*50/1000) * densis[i]) 
         setup_sim(ncells)
-	console.log(ncells)
+	console.log('N cells : ',ncells)
 	}
     }
 }

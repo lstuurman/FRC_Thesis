@@ -62,7 +62,7 @@ def new_auto(cell_track):
             v1 = point2 - point1
             v2 = point4 - point3
             # check for zero fectors to prevent division by zero: 
-            if (list(point2) == list(point4) or norm(v1) == 0) or norm(v2) == 0:
+            if norm(v1) == 0 or norm(v2) == 0: #(list(point2) == list(point4) or
                 #print('non moving cell')
                 continue
             #cos = np.clip(np.dot(v1,v2)/(norm(v1) * norm(v2)),-1,1)

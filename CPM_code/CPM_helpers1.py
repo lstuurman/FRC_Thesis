@@ -60,18 +60,18 @@ def dist_to_axis(x,ref):
     distances = []
     for i,axis in enumerate(x):
         d = axis - ref[i]
-        if d < 128 and d > -128:
+        if d < 64 and d > -64:
             distances.append(d)
         elif d < 0:
             # other patch on the other side of box
-            distances.append(d + 256)
+            distances.append(d + 64)
         else : 
-            distances.append(d - 256)
+            distances.append(d - 64)
     return distances
 
 
 
-def real_cofmass(cell,pr = False):
+def real_cofmass(cell,dim,pr = False):
     """ cell = simulation.get_state() % 2**24 == id """
     neighborhood =  generate_binary_structure(3,4)
     labels, num_features = label(cell, structure=neighborhood)
@@ -108,14 +108,27 @@ def real_cofmass(cell,pr = False):
             print('with weight : ', (sorted_sizes[i + 1][0] / biggest_size)) #biggest_size
             print(np.array(d) * (sorted_sizes[i + 1][0] / biggest_size))# biggest_size
         
+        # handel cell that spans accros boundary : 
+        for j,coord in enumerate(d):
+            if coord < 5 and coord > -5:
+                pass
+            elif coord > 5:
+                d[j] =  (masses[i+1][j]-dim) -biggest_patch[j]
+            elif coord < 5:
+                d[j] =  (masses[i+1][j]+dim) - biggest_patch[j]
+        
+        if pr:
+            print('Corrected d for boundaries : ',d)
+
+        
         biggest_patch += np.array(d) * (sorted_sizes[i + 1][0] / biggest_size)# + biggest_size +
         
         # correct negative values : 
         for i in range(3):
             if biggest_patch[i] < 0:
-                biggest_patch[i] += 256
-            elif biggest_patch[i] > 256.:
-                biggest_patch[i] -= 256
+                biggest_patch[i] += dim
+            elif biggest_patch[i] > float(dim):
+                biggest_patch[i] -= dim
         if pr:
             print('NEW biggest patch : ', biggest_patch)
     #biggest_patch = [x if x>0 and x < 256. elif x < 0 + 256 else x - 256 for x in biggest_patch]

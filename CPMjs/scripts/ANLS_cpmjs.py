@@ -15,11 +15,12 @@ def ANLSIS():
     # create data frame with fields : 
     #|| act/prfdir | density | speed | perisitance | order ||
     # data :
-    files = glob.glob('/home/lau/Desktop/Thesis Stuff/cpmjsDensity/*')
+    files = glob.glob('/home/lau/Desktop/Thesis Stuff/Density2/*')
     num_ptrn = '[-+]?\d*\.\d+|\d+'
     files.sort()
     # loop over files and compute average speed | peristance | order
     rows = []
+    print(files)
     for f in files:
         print(f)
         data = pd.read_csv(f, sep="\t", names=['time','id','ctype', 'x', 'y', 'z'])   
@@ -37,15 +38,16 @@ def ANLSIS():
         #     exit()
         speed = np.mean([[norm(v) for v in vec_track] for vec_track in vec_tracks])
         order = Order_tracks(vec_tracks)
+        lcl_order = order_radius(tracks,20)
         # persistance : 
         autocors = [new_auto(t) for t in tracks]
         persist = Persist_tracks(autocors)
-        print(speed,persist,order)
+        print(speed,np.average(persist),np.average(order),np.average(lcl_order))
         # params : 
         sim_type = f.split('_')[0].split('/')[-1]
         density = density = float(re.findall(num_ptrn,f.split('_')[1])[0])
-        rows.append([sim_type,density,speed,persist,order])
-    df = pd.DataFrame(data= rows, columns = ['Model','Density','speed','peristance','order'])
-    df.to_csv('results_dens.csv')
+        rows.append([sim_type,density,speed,np.average(persist),np.average(order),np.average(lcl_order)])
+    df = pd.DataFrame(data= rows, columns = ['Model','Density','speed','peristance','order','lcl_order'])
+    df.to_csv('results_dens2.csv')
 
 ANLSIS()

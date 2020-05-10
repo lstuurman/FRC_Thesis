@@ -10,7 +10,7 @@ from analyse_tracks import new_auto
 
 def to_vecs(cell_track):
     vecs = []
-    for i in range(80):
+    for i in range(len(cell_track)-1):
         point1 = cell_track[i]
         point2 = cell_track[i + 1]
         v1 = np.array(point2 - point1)
@@ -50,7 +50,26 @@ def Order_tracks(vec_tracks):
         cosines = [np.dot(v1,v2)/(norm(v1) * norm(v2)) for (v1,v2) in pairs] #if list(v1) != list(v2)
         orders.append(np.average(cosines))
 
-    return np.mean(orders)
+    return orders
+
+def order_radius(tracks,r):
+    vec_tracks = np.array([to_vecs(t) for t in tracks])
+    print(vec_tracks.shape)
+    print()
+    # list of order 
+    orders = []
+    for i in range(len(vec_tracks[0])):
+        vecs_at_t = vec_tracks[:,i]
+        # tuple vec wit position : 
+        vec_pos = [(tracks[j][i],vecs_at_t[j]) for j in range(len(vecs_at_t))]
+        vecs_at_t = [t for t in vecs_at_t if norm(t[1]) != 0]
+        pairs = combinations(vec_pos,2)
+
+        # filter out pairs that out of radius : 
+        pairs = [(v1,v2) for (v1,v2) in pairs if norm(v1[0] - v2[0]) < r]
+        cosines = [np.dot(v1[1],v2[1])/(norm(v1[1]) * norm(v2[1])) for (v1,v2) in pairs] #if list(v1) != list(v2)
+        orders.append(np.average(cosines))
+    return orders
 
 def Persist_tracks(autocors):
 
@@ -76,7 +95,7 @@ def Persist_tracks(autocors):
         half_lives.append(t_half)
     if len(half_lives) == 0:
         print(ac)
-    return np.mean(half_lives)
+    return half_lives
 
 def Persist(files):
     #files = glob.glob(path)

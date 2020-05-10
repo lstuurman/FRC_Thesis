@@ -68,6 +68,7 @@ def gridsearch():
     # input : 
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
     l_act = np.array([500,750,1000,2000,3000,4000,5000])
+    #l_act = np.array
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
     max_act = np.array([500,625,750,875,1000,1500,2000])
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]

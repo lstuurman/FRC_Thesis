@@ -50,7 +50,7 @@ def roseplot(track):
 
 def new_auto(cell_track): 
     averages = []
-    for dt in range(0,300):
+    for dt in range(0,len(cell_track)):
         # angles per dt: 
         cosines = []
         for i in range(len(cell_track) - 1 - dt):
@@ -68,8 +68,8 @@ def new_auto(cell_track):
             #cos = np.clip(np.dot(v1,v2)/(norm(v1) * norm(v2)),-1,1)
             cos = np.dot(v1,v2)/(norm(v1) * norm(v2))
             cosines.append(cos)
-        if len(cosines) > 100: #minimum 100 mcs with actual displacement
-            averages.append(np.average(cosines))
+        #if len(cosines) > 100: #minimum 100 mcs with actual displacement
+        averages.append(np.average(cosines))
     return averages
 
 def all_autos(path):

@@ -7,6 +7,41 @@ import pandas as pd
 import time
 import random
 
+def handle_boundaries2(cell_track,pr = False):
+    # look for boundary crossings in any
+    # of the coordinates
+    cell_track2 = cell_track.copy()
+    for i in range(len(cell_track) - 1):
+        dif = np.subtract(cell_track[i],cell_track[i+1])
+        for j,coordinate in enumerate(dif):
+            if coordinate > 64:
+                # went over boundary from 256 -> 0
+                if pr:
+                    print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
+                    print('Adding ',256, ' to rest of cell track') #cell_track[i,j]
+                    print('changed axis : ',j)
+                    print('Old coordinat : ',cell_track[i])
+
+                cell_track2[:i + 1,j] -= 64
+
+                if pr:
+                    print('New coordinate : ',cell_track[i])
+                    print(i,j)
+                
+            elif coordinate < -64:
+                # form 0 -> 256
+                if pr:
+                    print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
+                    print('Adding ', 256, ' to previous of cell track') 
+                    print('Old coordinat : ',cell_track[i])
+
+                cell_track2[:i + 1,j] += 64
+
+                if pr:
+                    print('New coordinate : ',cell_track[i])
+                    print(i,j)
+    return cell_track2
+
 
 
 def setup_frc(D):
@@ -52,7 +87,7 @@ def setup(l_act,m_act):
     # params suitable for single cell in empty space
     dimension = 64
     number_of_types = 3
-    temperature = 7
+    temperature = 70
 
     # initialize : 
 
@@ -77,7 +112,7 @@ def setup(l_act,m_act):
     # number of cells :
     #frc_in_cube = simulation.get_state() // 2**24 == 1 
     free_voxels = 64**3  - np.count_nonzero(frc_in_cube)
-    n_cells = np.floor(1 * (free_voxels/1000))
+    n_cells = np.floor(1 * (free_voxels/1000)
     # sample random positions : 
     free_indeces = np.where(frc_in_cube == 0.)
     possible_seeds = np.array(list(zip(free_indeces[0],free_indeces[1],free_indeces[2])))
@@ -85,7 +120,7 @@ def setup(l_act,m_act):
     seeds = possible_seeds[indx,:]
 
     for c in seeds:
-        simulation.add_cell(c[0],c[1],c[2],2)
+        simulation.add_cell(c[0],c[1],c[2])
     
     print('number of cells : ', len(seeds))
 
@@ -99,6 +134,7 @@ def setup(l_act,m_act):
     simulation.run(100)
 
     for n in n_cells:
+        print(n)
         celltypes = s % 2**24 == n
         size = np.sum(celltypes)
         t.append(size)
@@ -130,22 +166,27 @@ def runsim(simulation,steps):
             if size < 500:
                 #print('to small')
                 continue
-            cofmass_track[n-1,i] = np.array(real_cofmass(cell, pr = False))
+            cofmass_track[n-1,i] = np.array(real_cofmass(cell,64,pr = False))
+            #print(cofmass_track[n-1,i])
             #print(cofmass_track[n-2,i])
         if i == 0:
             t1 = time.time() - t0
             print('expected computing time : ',t1 * steps)
-        print('iteration : ',i)
+        print('iteration : ',i,cofmass_track[1,i])
         #print('number of small cells ',np.sum([1 for i in cell_sizes if i < 100]))
         #print(len(cofmass_track))
     print(cofmass_track.shape)
     return cofmass_track #,cell_sizes
 
 if __name__ == "__main__":
-    sim = setup(2000,100)
-    tracks = runsim(sim,20)
+    sim = setup(2000,1000)
+    tracks = runsim(sim,1000)
     # for i,track in enumerate(tracks):
     #     fname = '../data/full_ln/frc_track_80dens' + str(i) + '.txt'
     #     np.savetxt(fname,track)
-    tracks = tracks.reshape((len(tracks) * 20,3))
-    np.savetxt('../data/full_ln/frc_sizes.txt',tracks)
+    #tracks = tracks.reshape((len(tracks) * 20,3))
+    cell_track = tracks[1]
+    plot_celltrack(cell_track)
+    cell_track = handle_boundaries2(cell_track)
+    plot_celltrack(cell_track)
+    np.savetxt('testdat/testtrack_frc.txt',tracks[1])

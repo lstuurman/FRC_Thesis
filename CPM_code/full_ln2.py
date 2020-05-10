@@ -112,7 +112,7 @@ def setup(l_act,m_act):
     # number of cells :
     #frc_in_cube = simulation.get_state() // 2**24 == 1 
     free_voxels = 64**3  - np.count_nonzero(frc_in_cube)
-    n_cells = np.floor(1 * (free_voxels/1000)
+    n_cells = np.floor(1 * (free_voxels/1000))
     # sample random positions : 
     free_indeces = np.where(frc_in_cube == 0.)
     possible_seeds = np.array(list(zip(free_indeces[0],free_indeces[1],free_indeces[2])))
@@ -120,7 +120,7 @@ def setup(l_act,m_act):
     seeds = possible_seeds[indx,:]
 
     for c in seeds:
-        simulation.add_cell(c[0],c[1],c[2])
+        simulation.add_cell(c[0],c[1],c[2],2)
     
     print('number of cells : ', len(seeds))
 

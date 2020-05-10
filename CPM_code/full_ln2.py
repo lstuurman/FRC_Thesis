@@ -102,17 +102,17 @@ def setup(l_act,m_act):
     simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 0)
 
 
-    print('Creating FRC')
-    frc_in_cube = setup_frc(64)
-    print('Loading into simulation : ')
-    simulation.initialize_from_array(frc_in_cube,1)
-    print('Done')
+    # print('Creating FRC')
+    # frc_in_cube = setup_frc(64)
+    # print('Loading into simulation : ')
+    # simulation.initialize_from_array(frc_in_cube,1)
+    # print('Done')
 
     ### fill cube with cells
     # number of cells :
-    #frc_in_cube = simulation.get_state() // 2**24 == 1 
+    frc_in_cube = simulation.get_state() // 2**24 == 1 
     free_voxels = 64**3  - np.count_nonzero(frc_in_cube)
-    n_cells = np.floor(1 * (free_voxels/1000))
+    n_cells = np.floor(1 * (free_voxels/150))
     # sample random positions : 
     free_indeces = np.where(frc_in_cube == 0.)
     possible_seeds = np.array(list(zip(free_indeces[0],free_indeces[1],free_indeces[2])))
@@ -172,7 +172,7 @@ def runsim(simulation,steps):
         if i == 0:
             t1 = time.time() - t0
             print('expected computing time : ',t1 * steps)
-        print('iteration : ',i,cofmass_track[1,i])
+        #print('iteration : ',i,cofmass_track[1,i])
         #print('number of small cells ',np.sum([1 for i in cell_sizes if i < 100]))
         #print(len(cofmass_track))
     print(cofmass_track.shape)

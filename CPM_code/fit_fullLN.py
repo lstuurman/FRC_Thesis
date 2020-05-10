@@ -68,12 +68,12 @@ def gridsearch():
     # input : 
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
     l_act = np.array([500,750,1000,2000,3000,4000,5000])
-    #l_act = np.array
+    max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
-    max_act = np.array([500,625,750,875,1000,1500,2000])
+    #max_act = np.array([500,625,750,875,1000,1500,2000])
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
-    cpus = os.cpu_count() - 15
+    cpus = 5 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_sim,inputs))

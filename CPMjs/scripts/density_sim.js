@@ -66,7 +66,7 @@ function setup_sim(ncells){
     
         }
     }
-    let dens = (ncells * 1000) / (50*50*50)
+    let dens = (ncells * 150) / (50*50*50)
     console.log('density : ',dens) 
     var fname = '../../data/cpmjs/density2/PRFDR_' + String(dens) + 'log.txt'
     // create empty file to append to :
@@ -129,7 +129,7 @@ function Densities(){
 	    setup_sim(ncells)
 	    console.log(ncells)
 	} else {
-        ncells = parseInt((50*50*50/1000) * densis[i]) 
+        ncells = parseInt((50*50*50/150) * densis[i]) 
         setup_sim(ncells)
 	console.log('N cells : ',ncells)
 	}

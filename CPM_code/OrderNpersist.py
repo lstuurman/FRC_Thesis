@@ -37,7 +37,15 @@ def Order(files):
     if len(orders) == 0 or len(speeds) == 0:
         print('Speeds : ',speeds)
     return np.mean(orders),np.mean(speeds)
-    
+
+def Order2(files):
+    tracks = [np.loadtxt(f) for f in files]
+    vec_tracks = np.array([to_vecs(t) for t in tracks])
+    speeds = [[norm(v) for v in vec_track] for vec_track in vec_tracks]
+    ordr = Order_tracks2(vec_tracks)
+    lcl = order_radius(tracks,10)
+    return norm(ordr),np.average(lcl),np.average(speeds)
+
 def Order_tracks2(vec_tracks):
     # sum vec instead of calculating angles : 
     orders = 0
@@ -61,23 +69,6 @@ def Order_tracks(vec_tracks):
         cosines = [np.dot(v1,v2)/(norm(v1) * norm(v2)) for (v1,v2) in pairs] #if list(v1) != list(v2)
         orders.append(np.average(cosines))
 
-    return orders
-
-def order_radius2(tracks,r):
-    vec_tracks = np.array([to_vecs(t) for t in tracks])
-    # list of order 
-    orders = []
-    for i in range(len(vec_tracks[0])):
-        vecs_at_t = vec_tracks[:,i]
-        # tuple vec wit position : 
-        vec_pos = [(tracks[j][i],vecs_at_t[j]) for j in range(len(vecs_at_t))]
-        vecs_at_t = [t for t in vecs_at_t if norm(t[1]) != 0]
-        pairs = combinations(vec_pos,2)
-
-        # filter out pairs that out of radius : 
-        pairs = [(v1,v2) for (v1,v2) in pairs if norm(v1[0] - v2[0]) < r]
-        cosines = [np.dot(v1[1],v2[1])/(norm(v1[1]) * norm(v2[1])) for (v1,v2) in pairs] #if list(v1) != list(v2)
-        orders.append(np.average(cosines))
     return orders
 
 def order_radius(tracks,r):
@@ -173,19 +164,19 @@ def build_csv(path):
         print(len(files))
         #for f in files:
             #print(prms,f)
-        ordr,speed = Order(files)
+        ordr,lcl,speed = Order2(files)
         prst = Persist(files)
-        rows.append([i,prms[0],prms[1],speed,prst,ordr])
+        rows.append([i,prms[0],prms[1],speed,prst,ordr,lcl])
         print(rows[i])
         #if i > 5:
             #break
 
     df = pd.DataFrame(data = rows,
-        columns = ['index', 'Lambda', 'Max_act','speed','persistance','order'])
-    df.to_csv('result_per_param_fullLN3.csv')
+        columns = ['index', 'Lambda', 'Max_act','speed','persistance','order','lcl_order'])
+    df.to_csv('result_per_param_ACT_single.csv')
     
 
 
 
 if __name__ == "__main__":
-    build_csv('../data/full_LN3/*')
+    build_csv('../data/LN_small_single/*')

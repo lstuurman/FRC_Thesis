@@ -27,13 +27,13 @@ function setup_sim(ncells){
             P : [0,1400],
             LAMDA_P : [0,.2],
             // Pref Dir:
-            //PERSIST : [0,0.5],
-            //LAMBDA_DIR : [0,2000],
-            //DELTA_T : [0,15]
+            PERSIST : [0,0.01],
+            LAMBDA_DIR : [0,2000],
+            DELTA_T : [0,15]
 	    // ACT MODEL
-	    LAMBDA_ACT : [0,2000],
-	    MAX_ACT : [0,20],
-	    ACT_MEAN : "geometric"
+	    //LAMBDA_ACT : [0,2000],
+	    //MAX_ACT : [0,120],
+	    //ACT_MEAN : "geometric"
 
         },
         simsettings : {
@@ -68,7 +68,7 @@ function setup_sim(ncells){
     }
     let dens = (ncells * 150) / (50*50*50)
     console.log('density : ',dens) 
-    var fname = '../../data/cpmjs/density2/ACT_' + String(dens) + 'log.txt'
+    var fname = '../../data/cpmjs/density/PRFDR_' + String(dens) + 'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
         if (err) throw err;

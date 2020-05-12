@@ -30,7 +30,7 @@ function setup_sim(PERS,LAMBDA){
         simsettings : {
 	
             // Cells on the grid
-            NRCELLS : [1],					// Number of cells to seed for all
+            NRCELLS : [parseInt(64*64*64/150)],					// Number of cells to seed for all
                                                 // non-background cellkinds.
             // Runtime etc
             BURNIN : 200,
@@ -115,6 +115,9 @@ function fit_PRFDR(){
     // Loop over all combinations : 
 
     for(var pers of persists){
+	if(pers == 0){
+	    pers = 0.01
+	}
         for(var lamb of Lambdas){
             //console.log(pers,lamb)
             setup_sim(pers,lamb)
@@ -122,6 +125,7 @@ function fit_PRFDR(){
     }
 }
 
+fit_PRFDR()
 
 // console.log()
 // for (let i = 0; i < 11;i++){

@@ -38,6 +38,17 @@ def Order(files):
         print('Speeds : ',speeds)
     return np.mean(orders),np.mean(speeds)
     
+def Order_tracks2(vec_tracks):
+    # sum vec instead of calculating angles : 
+    orders = 0
+    for i in range(len(vec_tracks[0])):
+        vecs_at_t = vec_tracks[:,i]
+        for v in vecs_at_t:
+            orders += v
+    print(orders)
+    return norm(orders)
+
+
 def Order_tracks(vec_tracks):
     # list of order 
     orders = []
@@ -50,6 +61,23 @@ def Order_tracks(vec_tracks):
         cosines = [np.dot(v1,v2)/(norm(v1) * norm(v2)) for (v1,v2) in pairs] #if list(v1) != list(v2)
         orders.append(np.average(cosines))
 
+    return orders
+
+def order_radius2(tracks,r):
+    vec_tracks = np.array([to_vecs(t) for t in tracks])
+    # list of order 
+    orders = []
+    for i in range(len(vec_tracks[0])):
+        vecs_at_t = vec_tracks[:,i]
+        # tuple vec wit position : 
+        vec_pos = [(tracks[j][i],vecs_at_t[j]) for j in range(len(vecs_at_t))]
+        vecs_at_t = [t for t in vecs_at_t if norm(t[1]) != 0]
+        pairs = combinations(vec_pos,2)
+
+        # filter out pairs that out of radius : 
+        pairs = [(v1,v2) for (v1,v2) in pairs if norm(v1[0] - v2[0]) < r]
+        cosines = [np.dot(v1[1],v2[1])/(norm(v1[1]) * norm(v2[1])) for (v1,v2) in pairs] #if list(v1) != list(v2)
+        orders.append(np.average(cosines))
     return orders
 
 def order_radius(tracks,r):

@@ -155,12 +155,17 @@ def build_csv(path):
     # find unique param pairs in folder :
     num_ptrn = '[-+]?\d*\.\d+|\d+'
     all_files = glob.glob(path)
-    param_strings = [f.split('_')[2] for f in all_files]
+    print(all_files)
+    param_strings = [f.split('_')[3] for f in all_files]
     params = set([tuple(re.findall(num_ptrn,s)) for s in param_strings])
-    
+    print(params)
+    print(param_strings)
     rows = []
     for i,prms in enumerate(params):
         files = [f for f in all_files if '_' + prms[0] + 'M' in f and 'X' + prms[1] + '_' in f]
+        files = [f for f in files if int(re.findall(num_ptrn,f)[-1]) > 1]
+        files.sort(reverse = True,key = lambda x: int(re.findall(num_ptrn,x)[-1]))
+        print(files)
         print(len(files))
         #for f in files:
             #print(prms,f)
@@ -173,10 +178,10 @@ def build_csv(path):
 
     df = pd.DataFrame(data = rows,
         columns = ['index', 'Lambda', 'Max_act','speed','persistance','order','lcl_order'])
-    df.to_csv('result_per_param_ACT_single.csv')
+    df.to_csv('result_per_param_ACT_full.csv')
     
 
 
 
 if __name__ == "__main__":
-    build_csv('../data/LN_small_single/*')
+    build_csv('../data/LN_small_nofrc/*')

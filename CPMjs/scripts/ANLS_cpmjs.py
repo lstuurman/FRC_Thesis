@@ -1,15 +1,14 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 import glob
 import re
-
+from numpy.linalg import norm
 import sys
 sys.path.insert(0,'../../CPM_code')
 sys.path.insert(0,'../../Code')
 #from MSD1cell import *
-from OrderNpersist import * 
+from OrderNpersist import to_vecs,Order_tracks2 ,order_radius,Persist_tracks 
+from analyse_tracks import new_auto
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -30,7 +29,7 @@ def ANLSIS():
     # create data frame with fields : 
     #|| act/prfdir | density | speed | perisitance | order ||
     # data :
-    files = glob.glob('/home/lau/Desktop/Thesis Stuff/Dens3/*')
+    files = glob.glob('../../data/cpmjs/density/*')
     num_ptrn = '[-+]?\d*\.\d+|\d+'
     files.sort()
     # loop over files and compute average speed | peristance | order

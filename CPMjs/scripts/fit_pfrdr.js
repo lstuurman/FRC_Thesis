@@ -59,7 +59,7 @@ function setup_sim(PERS,LAMBDA){
     }
     console.log('LAMBDA : ',LAMBDA) 
     console.log('PERSIST : ',PERS)
-    var fname = '../../data/cpmjs/single_PRFDR/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
+    var fname = '../../data/cpmjs/full_PRFDR/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
         if (err) throw err;

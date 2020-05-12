@@ -26,22 +26,27 @@ def seed_cpm():
     # data to save : 
     rows = []
     # iteratively seed cells : 
-    for n in range(max_cells):
+    for n in range(int(max_cells/10)):
         # get sim state and occupied voxels: 
         full_voxels = simulation.get_state() // 2**24 == 2
         free_indeces = np.where(full_voxels == 0.)
         # list possible empty spaces
         possible_seeds = np.array(list(zip(free_indeces[0],free_indeces[1],free_indeces[2])))
-        # indx = np.random.randint(len(possible_seeds), size = int(n_cells))
-        # seeds = possible_seeds[indx,:]
-        seed = random.sample(possible_seeds,1)
-        # add T cell : 
-        simulation.add_cell(seed[0],seed[1],seed[2],2)
+        indx = np.random.randint(len(possible_seeds), size = 10)
+        seed = possible_seeds[indx,:]
+        #print(seed)
+        #seed = random.sample(possible_seeds,1)
+        # add T cells :
+        for c in seed:
+            simulation.add_cell(c[0],c[1],c[2],2)
         # burnin sim : 
-        sim.run(200)
+        simulation.run(50)
 
         # save data : 
-        rows.append([n,len(possible_seeds)])
-
+        rows.append([n*10,len(possible_seeds)])
+        print(rows[-1])
     df = pd.DataFrame(data = rows, columns= ['Seeded_cells','Free_voxels'])
-    df.to_csv('increasing_pressure.csv')
+    df.to_csv('increasing_pressure2.csv')
+
+seed_cpm()
+

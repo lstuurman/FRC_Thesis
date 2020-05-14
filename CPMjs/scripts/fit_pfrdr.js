@@ -16,10 +16,10 @@ function setup_sim(PERS,LAMBDA){
             // Adhesion:
             J: [[0, 0], [0, 100]],
             // Volume: 
-            V : [0,150],
+            V : [0,500],
             LAMBDA_V : [0,250],
             // Perimeter:
-            P : [0,1400],
+            P : [0,1600],
             LAMDA_P : [0,2],
             // Pref Dir:
             PERSIST : [0,PERS],
@@ -30,7 +30,7 @@ function setup_sim(PERS,LAMBDA){
         simsettings : {
 	
             // Cells on the grid
-            NRCELLS : [parseInt(64*64*64/150)],					// Number of cells to seed for all
+            NRCELLS : [parseInt(64*64*64/500)],					// Number of cells to seed for all
                                                 // non-background cellkinds.
             // Runtime etc
             BURNIN : 200,
@@ -59,7 +59,7 @@ function setup_sim(PERS,LAMBDA){
     }
     console.log('LAMBDA : ',LAMBDA) 
     console.log('PERSIST : ',PERS)
-    var fname = '../../data/cpmjs/full_PRFDR/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
+    var fname = '../../data/cpmjs/full_PRFDR_V500/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
         if (err) throw err;

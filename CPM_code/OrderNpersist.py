@@ -112,8 +112,8 @@ def Persist_tracks(autocors):
         t_half = dt_0 + (.5 - cos_0)/(cos_1 - cos_0) * (dt_1 - dt_0)
         #print(cos_0,cos_1,t_half)
         half_lives.append(t_half)
-    if len(half_lives) == 0:
-        print(ac)
+    #if len(half_lives) == 0:
+        #print(ac)
     return half_lives
 
 def Persist(files):

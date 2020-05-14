@@ -74,7 +74,7 @@ def new_auto(cell_track):
             averages.append(1)
         else:
             averages.append(np.average(cosines))
-    print('computed AC one track')
+    #print('computed AC one track')
     return averages
 
 def all_autos(path):

@@ -41,7 +41,7 @@ def OrderAt_T(vec_tracks):
         
     return av_ordr,std_ordr
 
-def local_order(tracks,bins = 5):
+def local_order(tracks,vec_tracks,bins = 5):
     # find smallest track : 
     min_length = min([len(t) for t in vec_tracks])
     flat_tracks = [item for sublist in tracks for item in sublist.flatten()]
@@ -98,7 +98,10 @@ def build_csv(path):
         std_speed = np.std(speeds)
         print('Speed calculated')
         #peristance : 
-        autocors = [new_auto(t) for t in tracks]
+        autocors = [] #[new_auto(t) for t in tracks]
+        for ti,t in enumerate(tracks):
+            autocors.append(new_auto(t))
+            print(ti)
         half_times = Persist_tracks(autocors)
         ht = np.average(half_times)
         std_ht = np.std(half_times)
@@ -107,7 +110,7 @@ def build_csv(path):
         ordr1 = Global_order(vec_tracks)
         ordr2,std_ordr2 = OrderAt_T(vec_tracks)
         print('Global order calculated')
-        lcl_ordrs = local_order(tracks)
+        lcl_ordrs = local_order(tracks,vec_tracks)
         lcl_ordr = np.average(lcl_ordrs)
         std_lcl = np.std(lcl_ordrs)
 

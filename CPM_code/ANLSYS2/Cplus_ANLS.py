@@ -89,7 +89,7 @@ def build_csv(path):
         files.sort(reverse = True,key = lambda x: int(re.findall(num_ptrn,x)[-1]))
         # extract tracks from files :
         tracks = [np.loadtxt(f) for f in files]
-
+        print('number of cells for paramset : ',len(tracks))
         # speed : 
         vec_tracks = np.array([to_vecs(t) for t in tracks])
         speeds = [[norm(v) for v in vec_track] for vec_track in vec_tracks]

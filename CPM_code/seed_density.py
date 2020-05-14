@@ -15,8 +15,9 @@ def seed_cpm():
 
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=250)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 1400)#8600
+    simulation.set_constraints(cell_type = 2,target_area = 500, lambda_area=250)
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 1600)#8600
+    simulation.set_constraints(cell_type = 2, lambda_act = 2000, max_act = 100)
     # adhesion ; 
     simulation.set_constraints(cell_type = 2,other_cell_type = 1,adhesion = 100)
     simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 0)
@@ -46,7 +47,7 @@ def seed_cpm():
         rows.append([n*10,len(possible_seeds)])
         print(rows[-1])
     df = pd.DataFrame(data = rows, columns= ['Seeded_cells','Free_voxels'])
-    df.to_csv('increasing_pressure2.csv')
+    df.to_csv('increasing_pressure3.csv')
 
 seed_cpm()
 

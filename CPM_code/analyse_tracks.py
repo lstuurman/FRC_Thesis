@@ -50,7 +50,7 @@ def roseplot(track):
 
 def new_auto(cell_track): 
     averages = []
-    for dt in range(0,len(cell_track)):
+    for dt in range(0,100):
         # angles per dt: 
         cosines = []
         for i in range(len(cell_track) - 1 - dt):
@@ -74,6 +74,7 @@ def new_auto(cell_track):
             averages.append(1)
         else:
             averages.append(np.average(cosines))
+    print('computed AC one track')
     return averages
 
 def all_autos(path):

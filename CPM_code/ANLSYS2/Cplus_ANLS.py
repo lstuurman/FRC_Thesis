@@ -1,10 +1,14 @@
 import pandas as pd
 import numpy as np
 import glob
-from OrderNpersist import Persist_tracks,Order_tracks2,order_radius,to_vecs
-from analyse_tracks import new_auto
 from numpy.linalg import norm
 from itertools import product
+import re
+
+import sys
+sys.path.insert(0,'../')
+from OrderNpersist import Persist_tracks,Order_tracks2,order_radius,to_vecs
+from analyse_tracks import new_auto
 
 def Global_order(vec_tracks):
     # sum vec instead of calculating angles : 
@@ -50,6 +54,7 @@ def local_order(tracks,bins = 5):
     # go through vectors per timestep :
     orders = []
     for i in range(min_length):
+        print('Time in track:',i)
         # bin according to position :
         vecs_at_t = vt2[:,i]
         pos = [tracks[j][i] for j in range(len(vecs_at_t))]
@@ -91,29 +96,31 @@ def build_csv(path):
         speeds = [item for sublist in speeds for item in sublist]
         speed = np.mean(speeds)
         std_speed = np.std(speeds)
-
+        print('Speed calculated')
         #peristance : 
         autocors = [new_auto(t) for t in tracks]
         half_times = Persist_tracks(autocors)
         ht = np.average(half_times)
         std_ht = np.std(half_times)
-
+        print('Persistance calculated')
         #order : 
         ordr1 = Global_order(vec_tracks)
         ordr2,std_ordr2 = OrderAt_T(vec_tracks)
+        print('Global order calculated')
         lcl_ordrs = local_order(tracks)
         lcl_ordr = np.average(lcl_ordrs)
         std_lcl = np.std(lcl_ordrs)
 
         rows.append([prms[0],prms[1],speed,ht,ordr1,ordr2,lcl_ordr])
         deviation_rows.append([prms[0],prms[1],std_speed,std_ht,std_ordr2,std_lcl])
+        print(rows[-1])
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('result_per_param_ACT_full.csv')
+    df1.to_csv('ACT_full.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('ACT_full.csv')
+    df2.to_csv('ACT_full_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../data/LN_small_nofrc/*')
+    build_csv('../../data/LN_small_nofrc/*')

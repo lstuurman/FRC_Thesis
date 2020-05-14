@@ -69,7 +69,11 @@ def new_auto(cell_track):
             cos = np.dot(v1,v2)/(norm(v1) * norm(v2))
             cosines.append(cos)
         #if len(cosines) > 100: #minimum 100 mcs with actual displacement
-        averages.append(np.average(cosines))
+        if len(cosines) == 0:
+            # cell hasnt moved at all in this dt ;
+            averages.append(1)
+        else:
+            averages.append(np.average(cosines))
     return averages
 
 def all_autos(path):

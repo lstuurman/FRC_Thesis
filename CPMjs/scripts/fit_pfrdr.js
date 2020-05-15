@@ -30,7 +30,7 @@ function setup_sim(PERS,LAMBDA){
         simsettings : {
 	
             // Cells on the grid
-            NRCELLS : 1, // [parseInt(64*64*64/500)],					// Number of cells to seed for all
+            NRCELLS :[1], // [parseInt(64*64*64/500)],					// Number of cells to seed for all
                                                 // non-background cellkinds.
             // Runtime etc
             BURNIN : 200,

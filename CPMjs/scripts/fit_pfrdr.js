@@ -30,7 +30,7 @@ function setup_sim(PERS,LAMBDA){
         simsettings : {
 	
             // Cells on the grid
-            NRCELLS : [parseInt(64*64*64/500)],					// Number of cells to seed for all
+            NRCELLS : 1, // [parseInt(64*64*64/500)],					// Number of cells to seed for all
                                                 // non-background cellkinds.
             // Runtime etc
             BURNIN : 200,
@@ -59,7 +59,7 @@ function setup_sim(PERS,LAMBDA){
     }
     console.log('LAMBDA : ',LAMBDA) 
     console.log('PERSIST : ',PERS)
-    var fname = '../../data/cpmjs/full_PRFDR_V500/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
+    var fname = '../../data/cpmjs/single_PRFDR_V500/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
         if (err) throw err;

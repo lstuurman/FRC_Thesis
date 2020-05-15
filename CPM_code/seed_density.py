@@ -15,8 +15,8 @@ def seed_cpm():
 
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 2,target_area = 500, lambda_area=250)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 1600)#8600
+    simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=250)
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 1400)#8600
     simulation.set_constraints(cell_type = 2, lambda_act = 2000, max_act = 100)
     # adhesion ; 
     simulation.set_constraints(cell_type = 2,other_cell_type = 1,adhesion = 100)
@@ -27,13 +27,18 @@ def seed_cpm():
     # data to save : 
     rows = []
     # iteratively seed cells : 
-    for n in range(int(max_cells/10)):
+    for n in range(int(max_cells)):
         # get sim state and occupied voxels: 
         full_voxels = simulation.get_state() // 2**24 == 2
         free_indeces = np.where(full_voxels == 0.)
         # list possible empty spaces
         possible_seeds = np.array(list(zip(free_indeces[0],free_indeces[1],free_indeces[2])))
+        if len(possible_seeds) < 150:
+            break
         indx = np.random.randint(len(possible_seeds), size = 10)
+        #else:
+        #    indx = np.random.randint(len(possible_seeds),size = 1)
+
         seed = possible_seeds[indx,:]
         #print(seed)
         #seed = random.sample(possible_seeds,1)
@@ -47,7 +52,7 @@ def seed_cpm():
         rows.append([n*10,len(possible_seeds)])
         print(rows[-1])
     df = pd.DataFrame(data = rows, columns= ['Seeded_cells','Free_voxels'])
-    df.to_csv('increasing_pressure3.csv')
+    df.to_csv('increasing_pressureV150.csv')
 
 seed_cpm()
 

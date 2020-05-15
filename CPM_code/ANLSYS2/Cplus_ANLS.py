@@ -9,6 +9,7 @@ import sys
 sys.path.insert(0,'../')
 from OrderNpersist import Persist_tracks,Order_tracks2,order_radius,to_vecs
 from analyse_tracks import new_auto
+from CPM_helpers1 import plot_celltrack
 
 def Global_order(vec_tracks):
     # sum vec instead of calculating angles : 
@@ -90,6 +91,8 @@ def build_csv(path):
         # extract tracks from files :
         tracks = [np.loadtxt(f) for f in files]
         print('number of cells for paramset : ',len(tracks))
+        #for t in tracks:
+         #   plot_celltrack(t)
         # speed : 
         vec_tracks = np.array([to_vecs(t) for t in tracks])
         speeds = [[norm(v) for v in vec_track] for vec_track in vec_tracks]
@@ -120,10 +123,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('ACT_full.csv')
+    df1.to_csv('150V_single_ACT.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('ACT_full_std.csv')
+    df2.to_csv('150V_single_ACT_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/LN_small_nofrc/*')
+    build_csv('../../data/FIT_speedy/150V_single/*')

@@ -94,7 +94,7 @@ def setup(l_act,m_act):
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 500, lambda_area=250)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 1600)#8600
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 3500)#8600
     simulation.set_constraints(cell_type = 2, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
     # adhesion ; 
     simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -50)
@@ -112,7 +112,7 @@ def setup(l_act,m_act):
     # number of cells :
     frc_in_cube = simulation.get_state() // 2**24 == 1 
     free_voxels = 64**3  - np.count_nonzero(frc_in_cube)
-    n_cells = np.floor(1 * (free_voxels/500))
+    n_cells = 1 # np.floor(1 * (free_voxels/500))
     # sample random positions : 
     free_indeces = np.where(frc_in_cube == 0.)
     possible_seeds = np.array(list(zip(free_indeces[0],free_indeces[1],free_indeces[2])))
@@ -163,7 +163,7 @@ def runsim(simulation,steps):
             # check cell_size : 
             size = np.sum(cell)
             cell_sizes.append(size)
-            if size < 500:
+            if size <100:
                 #print('to small')
                 continue
             cofmass_track[n-1,i] = np.array(real_cofmass(cell,64,pr = False))

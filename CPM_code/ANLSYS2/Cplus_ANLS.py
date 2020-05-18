@@ -85,8 +85,9 @@ def build_csv(path):
     rows = []
     deviation_rows = []
     for i,prms in enumerate(params):
+        print(prms)
         files = [f for f in all_files if '_' + prms[0] + 'M' in f and 'X' + prms[1] + '_' in f]
-        files = [f for f in files if int(re.findall(num_ptrn,f)[-1]) > 1]
+        #files = [f for f in files if int(re.findall(num_ptrn,f)[-1]) > 1]
         files.sort(reverse = True,key = lambda x: int(re.findall(num_ptrn,x)[-1]))
         # extract tracks from files :
         tracks = [np.loadtxt(f) for f in files]
@@ -123,10 +124,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('500VT7_single_ACT.csv')
+    df1.to_csv('500VT200_single_ACT.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('500VT7_single_ACT_std.csv')
+    df2.to_csv('500VT200_single_ACT_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/FIT_speedy/500V_singleT7/*')
+    build_csv('../../data/FIT_speedy/500VT200_single/*')

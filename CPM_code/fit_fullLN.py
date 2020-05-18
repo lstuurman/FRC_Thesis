@@ -59,7 +59,7 @@ def run_sim(params):
         newtrack = handle_boundaries2(track)
         #cell_tracks[i] = newtrack
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FIT_speedy/150V_single_2/CELL'+fname+'.txt',newtrack)
+        np.savetxt('../data/FIT_speedy/150VT200P4000_single/CELL'+fname+'.txt',newtrack)
     print('computed : ',params, 'in ',time.time() - t1)
 
     #return data
@@ -71,13 +71,13 @@ def gridsearch():
     # input : 
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
     #l_act = np.array([500,750,1000,2000,3000,4000,5000])
-    l_act = np.array([2500,5000,10000,15000,20000])
+    l_act = np.array([500,1000,2500,5000,10000])
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
     max_act = np.array([10,25,50,75,100,250])
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
-    cpus = 5 #.cpu_count() - 15
+    cpus = 10 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_sim,inputs))

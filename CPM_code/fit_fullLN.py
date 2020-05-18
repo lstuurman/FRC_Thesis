@@ -48,15 +48,18 @@ def handle_boundaries2(cell_track,pr = False):
 def run_sim(params):
     t1 = time.time()
     lambda_act,max_act = params
-
-    sim = setup(lambda_act,max_act)
-    # run : 
-    cell_tracks = runsim(sim,500)
+    # iterate 5 times : 
+    cell_tracks = []
+    for _ in range(5):
+        sim = setup(lambda_act,max_act)
+        # run : 
+        cell_track = runsim(sim,500)
+        cell_tracks.append(cell_track[-1])
     for i,track in enumerate(cell_tracks):
         newtrack = handle_boundaries2(track)
         #cell_tracks[i] = newtrack
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FIT_speedy/500V_single/CELL'+fname+'.txt',newtrack)
+        np.savetxt('../data/FIT_speedy/150V_single_2/CELL'+fname+'.txt',newtrack)
     print('computed : ',params, 'in ',time.time() - t1)
 
     #return data
@@ -67,10 +70,11 @@ def gridsearch():
     ### to find some good parameters for cell track autocorrelation
     # input : 
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
-    l_act = np.array([500,750,1000,2000,3000,4000,5000])
+    #l_act = np.array([500,750,1000,2000,3000,4000,5000])
+    l_act = np.array([2500,5000,10000,15000,20000])
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
-    max_act = np.array([10,50,100,250,500,750,1000])
+    max_act = np.array([10,25,50,75,100,250])
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
     cpus = 5 #.cpu_count() - 15

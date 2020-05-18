@@ -1,13 +1,13 @@
 import numpy as np
 #from Bresenheim import *
-import cpm
+#import cpm
 import matplotlib.pyplot as plt
 from scipy.ndimage.measurements import center_of_mass
 from scipy.ndimage import label , generate_binary_structure
 from scipy.spatial.distance import euclidean
 from numpy.linalg import norm
 from mpl_toolkits import mplot3d
-from mayavi import mlab
+#from mayavi import mlab
 
 #source env/bin/activate
 

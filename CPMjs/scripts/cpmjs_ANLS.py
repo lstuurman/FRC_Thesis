@@ -4,11 +4,14 @@ import glob
 from numpy.linalg import norm
 from itertools import product
 import re
+import matplotlib
+#matplotlib.use('Agg')
 
 import sys
 sys.path.insert(0,'../../CPM_code/')
 from OrderNpersist import Persist_tracks,Order_tracks2,order_radius,to_vecs
 from analyse_tracks import new_auto
+from CPM_helpers1 import plot_celltrack
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -110,6 +113,9 @@ def build_csv(path):
         if len(tracks) == 0:
             print('no cell track??',f)
             continue
+        for t in tracks:
+            plot_celltrack(t)
+
         # speed : 
         vec_tracks = np.array([to_vecs(t) for t in tracks])
         speeds = [[norm(v) for v in vec_track] for vec_track in vec_tracks]
@@ -140,10 +146,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Persist','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('V500_PRFDR_single.csv')
+    df1.to_csv('V500_PRFDR_single2.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Perist','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('V500_PRFDR_single_std.csv')
+    df2.to_csv('V500_PRFDR_single2_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/cpmjs/single_PRFDR_V500/*')
+    build_csv('../../data/cpmjs/single_PRFDR_V500_2/*')

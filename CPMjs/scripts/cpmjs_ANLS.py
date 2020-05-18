@@ -35,11 +35,11 @@ def handle_boundaries(cell_track,pr = False):
     for i in range(len(cell_track) - 1):
         dif = np.subtract(cell_track[i],cell_track[i+1])
         for j,coordinate in enumerate(dif):
-            if coordinate > 64:
+            if coordinate > 30:
                 # went over boundary from 256 -> 
                 cell_track2[:i + 1,j] -= 64
 
-            elif coordinate < -64:
+            elif coordinate < -30:
                 cell_track2[:i + 1,j] += 64
     return cell_track2
 

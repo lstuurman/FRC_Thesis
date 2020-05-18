@@ -72,6 +72,7 @@ def new_auto(cell_track):
         if len(cosines) == 0:
             # cell hasnt moved at all in this dt ;
             averages.append(1)
+            return None
         else:
             averages.append(np.average(cosines))
     #print('computed AC one track')

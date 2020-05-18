@@ -16,10 +16,10 @@ function setup_sim(PERS,LAMBDA){
             // Adhesion:
             J: [[0, 0], [0, 100]],
             // Volume: 
-            V : [0,500],
+            V : [0,150],
             LAMBDA_V : [0,250],
             // Perimeter:
-            P : [0,3500],
+            P : [0,1400],
             LAMDA_P : [0,2],
             // Pref Dir:
             PERSIST : [0,PERS],
@@ -59,7 +59,7 @@ function setup_sim(PERS,LAMBDA){
     }
     console.log('LAMBDA : ',LAMBDA) 
     console.log('PERSIST : ',PERS)
-    var fname = '../../data/cpmjs/single_PRFDR_V500/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
+    var fname = '../../data/cpmjs/single_PRFDR_V150_2/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
         if (err) throw err;
@@ -73,9 +73,16 @@ function setup_sim(PERS,LAMBDA){
         // initializeGrid : initializeGrid,
         logStats : logStats
     }
+    
+    // run simulation 5 times : 
+    for (let i=0;i<6;i++){
+        iter = String(i)
+        let sim = new CPM.Simulation( config, custommethods )
+        sim.run()
+    }
 
-    let sim = new CPM.Simulation( config, custommethods )
-    sim.run()
+    //let sim = new CPM.Simulation( config, custommethods )
+    //sim.run()
     logger.end()
 
 }
@@ -101,7 +108,7 @@ function logStats(){
         let thecentroid = allcentroids[cid];
         
         // eslint-disable-next-line no-console
-        let line = String(this.time) + "\t" + String(cid) + "\t" + 
+        let line = String(this.time) + "\t" + iter + "\t" + //String(cid)
         String(this.C.cellKind(cid)) + "\t" + thecentroid.join("\t") + "\n"
         //console.log(line)
         logger.write(line);
@@ -110,14 +117,15 @@ function logStats(){
 } 
 
 function fit_PRFDR(){
-    let persists = Array.from(Array(11).keys(), x => x/10)
+    //let persists = Array.from(Array(11).keys(), x => x/10)
+    persists = Array.from(Array(7).keys(), x => 1/(10**x))
     let Lambdas = Array(500,750,1000,2000,3000,4000,5000)
     // Loop over all combinations : 
 
     for(var pers of persists){
-	if(pers == 0){
-	    pers = 0.01
-	}
+	//if(pers == 0){
+	//    pers = 0.01
+	//}
         for(var lamb of Lambdas){
             //console.log(pers,lamb)
             setup_sim(pers,lamb)

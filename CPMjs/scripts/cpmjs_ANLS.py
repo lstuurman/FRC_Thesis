@@ -4,7 +4,8 @@ import glob
 from numpy.linalg import norm
 from itertools import product
 import re
-import matplotlib
+import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
 #matplotlib.use('Agg')
 
 import sys
@@ -12,6 +13,20 @@ sys.path.insert(0,'../../CPM_code/')
 from OrderNpersist import Persist_tracks,Order_tracks2,order_radius,to_vecs
 from analyse_tracks import new_auto
 from CPM_helpers1 import plot_celltrack
+
+def save_track(cell_track,prms1,prms2,i):
+    # plot path of center of mass  :
+    x = [c[0] for c in cell_track]
+    y = [c[1] for c in cell_track]
+    z = [c[2] for c in cell_track]
+
+    #fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    ax.plot3D(x,y,z)
+    ax.scatter3D(x[0],y[0],z[0],label = 'start')
+    ax.scatter3D(x[-1],y[-1],z[-1],label = 'end')
+    ax.legend()
+    plt.savefig('../img/PRFDR_single' + prms1 + prms2 + '_' + str(i) + '.png')
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -113,8 +128,8 @@ def build_csv(path):
         if len(tracks) == 0:
             print('no cell track??',f)
             continue
-        for t in tracks:
-            plot_celltrack(t)
+        for iter,t in enumerate(tracks):
+            save_track(t,prms[0],prms[1],iter)
 
         # speed : 
         vec_tracks = np.array([to_vecs(t) for t in tracks])

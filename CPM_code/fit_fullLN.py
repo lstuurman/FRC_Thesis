@@ -59,7 +59,7 @@ def run_sim(params):
         newtrack = handle_boundaries2(track)
         #cell_tracks[i] = newtrack
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FIT_speedy/500VT200P4000_singleLowELS/CELL'+fname+'.txt',newtrack)
+        np.savetxt('../data/FIT_speedy/15VT200P1800_singlelowELS/CELL'+fname+'.txt',newtrack)
     print('computed : ',params, 'in ',time.time() - t1)
 
     #return data

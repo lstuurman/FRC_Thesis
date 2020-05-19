@@ -93,12 +93,12 @@ def setup(l_act,m_act):
 
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=250)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 20, target_perimeter = 1800) #8600
+    simulation.set_constraints(cell_type = 2,target_area = 500, lambda_area=250)
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 2, target_perimeter = 4000) #8600
     simulation.set_constraints(cell_type = 2, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
     # adhesion ; 
-    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -50)
-    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 100)
+    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 10)
     simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 0)
 
 
@@ -156,7 +156,7 @@ def runsim(simulation,steps):
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
-        simulation.run(10)
+        simulation.run(1000)
         cell_sizes = []
         for n in n_cells:
             cell = state % 2**24 == n

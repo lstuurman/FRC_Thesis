@@ -4,12 +4,28 @@ import glob
 from numpy.linalg import norm
 from itertools import product
 import re
-
+from scipy.spatial.distance import euclidean
 import sys
+import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d 
 sys.path.insert(0,'../')
 from OrderNpersist import Persist_tracks,Order_tracks2,order_radius,to_vecs
 from analyse_tracks import new_auto
 from CPM_helpers1 import plot_celltrack
+
+def save_track(cell_track,prms1,prms2,i):
+    # plot path of center of mass  :
+    x = [c[0] for c in cell_track]
+    y = [c[1] for c in cell_track]
+    z = [c[2] for c in cell_track]
+
+    #fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    ax.plot3D(x,y,z)
+    ax.scatter3D(x[0],y[0],z[0],label = 'start')
+    ax.scatter3D(x[-1],y[-1],z[-1],label = 'end')
+    ax.legend()
+    plt.savefig('../../results/ACT_CHECKS/tracks4/singleLowE' + prms1 + prms2 + '_' + str(i) + '.png')
 
 def Global_order(vec_tracks):
     # sum vec instead of calculating angles : 
@@ -92,8 +108,8 @@ def build_csv(path):
         # extract tracks from files :
         tracks = [np.loadtxt(f) for f in files]
         print('number of cells for paramset : ',len(tracks))
-        #for t in tracks:
-         #   plot_celltrack(t)
+        for iter,t in enumerate(tracks):
+            save_track(t,prms[0],prms[1],iter)
         # speed : 
         vec_tracks = np.array([to_vecs(t) for t in tracks])
         speeds = [[norm(v) for v in vec_track] for vec_track in vec_tracks]
@@ -105,6 +121,8 @@ def build_csv(path):
         autocors = [] #[new_auto(t) for t in tracks]
         for ti,t in enumerate(tracks):
             autocors.append(new_auto(t))
+            plt.plot(autocors[-1],range(len(autocors[-1])))
+            plt.savefig('../../results/ACT_CHECKS/AC4/' + prms[0] + prms[1] + 'Single500LowE_' + str(ti) +'.png')
             print(ti)
         half_times = Persist_tracks(autocors)
         ht = np.average(half_times)
@@ -124,10 +142,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('500VT200_single_ACT.csv')
+    df1.to_csv('500VT200P4000LowE_single_ACT.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('500VT200_single_ACT_std.csv')
+    df2.to_csv('500VT200P4000LowE_single_ACT_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/FIT_speedy/500VT200_single/*')
+    build_csv('../../data/FIT_speedy/500VT200P4000_singleLowE/*')

@@ -54,13 +54,13 @@ function setup_sim(PERS,LAMBDA){
             
             // Output stats etc
             STATSOUT : { browser: false, node: true }, // Should stats be computed?
-            LOGRATE : 20							// Output stats every <LOGRATE> MCS.
+            LOGRATE : 10							// Output stats every <LOGRATE> MCS.
     
         }
     }
     console.log('LAMBDA : ',LAMBDA) 
     console.log('PERSIST : ',PERS)
-    var fname = '../../data/cpmjs/single_PRFDR_V150_2/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
+    var fname = '../../data/cpmjs/single_PRFDR_V150_3/Lambda' + String(LAMBDA) + 'PERS' +String(PERS) +'log.txt'
     // create empty file to append to :
     let new_file = fs.writeFile(fname,'',function (err) {
         if (err) throw err;
@@ -119,13 +119,13 @@ function logStats(){
 
 function fit_PRFDR(){
     //let persists = Array.from(Array(11).keys(), x => x/10)
-    persists = Array.from(Array(7).keys(), x => .1**x)
-    let Lambdas = Array(500,750,1000,2000,3000,4000,5000)
+    persists = Array.from(Array(10).keys(), x => x/10)
+    let Lambdas = Array(50,100,500,1000,2000,5000,10000,20000)
     // Loop over all combinations : 
 
     for(var pers of persists){
-	if(pers > .1){
-	    continue;
+	if(pers == 0){
+	    pers = 0.9999999999;
 	}
         for(var lamb of Lambdas){
             //console.log(pers,lamb)

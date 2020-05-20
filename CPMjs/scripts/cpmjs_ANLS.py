@@ -163,10 +163,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Persist','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('V150_PRFDR_single3.csv')
+    df1.to_csv('V150_PRFDR_single5.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Perist','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('V150_PRFDR_single3_std.csv')
+    df2.to_csv('V150_PRFDR_single5_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/cpmjs/single_PRFDR_V150/*')
+    build_csv('../../data/cpmjs/single_PRFDR_V150_3/*')

@@ -35,11 +35,11 @@ def handle_boundaries(cell_track,pr = False):
     for i in range(len(cell_track) - 1):
         dif = np.subtract(cell_track[i],cell_track[i+1])
         for j,coordinate in enumerate(dif):
-            if coordinate > 32:
+            if coordinate > 6:
                 # went over boundary from 256 -> 
                 cell_track2[:i + 1,j] -= 64
 
-            elif coordinate < -32:
+            elif coordinate < -6:
                 cell_track2[:i + 1,j] += 64
     return cell_track2
 
@@ -163,10 +163,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Persist','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('V150_PRFDR_single5.csv')
+    df1.to_csv('V150_PRFDR_single6.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Perist','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('V150_PRFDR_single5_std.csv')
+    df2.to_csv('V150_PRFDR_single6_std.csv')
 
 if __name__ == "__main__":
     build_csv('../../data/cpmjs/single_PRFDR_V150_3/*')

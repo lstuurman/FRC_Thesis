@@ -58,12 +58,12 @@ def seed_cpm():
             size = np.sum(celltypes)
             sizes.append(size)
         # save data : 
-        rows.append([n*10,len(possible_seeds)])
+        rows.append([n*10,len(possible_seeds),sum(sizes)])
         size_matrix.append(sizes)
 
         print(rows[-1])
         print(sizes)
-    df = pd.DataFrame(data = rows, columns= ['Seeded_cells','Free_voxels'])
+    df = pd.DataFrame(data = rows, columns= ['Seeded_cells','Free_voxels','Cell_volume'])
     df.to_csv('increasing_pressureV150.csv')
     nparr = np.array(size_matrix)
     np.savetxt('size_matrix.txt',nparr)

@@ -142,10 +142,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('150VT200P1800LowELS_single_ACT.csv')
+    df1.to_csv('single_ACT3.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('150VT200P1800LowELS_single_ACT_std.csv')
+    df2.to_csv('single_ACT3_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/FIT_speedy/150VT200P1800_singlelowELS/*')
+    build_csv('../../data/FIT_speedy2/150VT20P1600_LA25single/*')

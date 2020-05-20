@@ -95,7 +95,7 @@ def Persist_tracks(autocors):
     half_lives = []
     # find half time auto corr : 
     for ac in autocors:
-        if len(ac) == 0:
+        if len(ac) == 0 or None in ac:
             # weird fucking non moving cell or something..
             continue
         ac = np.array(ac)

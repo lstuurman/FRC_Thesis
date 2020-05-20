@@ -14,7 +14,7 @@ def handle_boundaries2(cell_track,pr = False):
     for i in range(len(cell_track) - 1):
         dif = np.subtract(cell_track[i],cell_track[i+1])
         for j,coordinate in enumerate(dif):
-            if coordinate > 64:
+            if coordinate > 32:
                 # went over boundary from 256 -> 0
                 if pr:
                     print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
@@ -28,7 +28,7 @@ def handle_boundaries2(cell_track,pr = False):
                     print('New coordinate : ',cell_track[i])
                     print(i,j)
                 
-            elif coordinate < -64:
+            elif coordinate < -32:
                 # form 0 -> 256
                 if pr:
                     print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
@@ -93,13 +93,13 @@ def setup(l_act,m_act):
 
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=250)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 2, target_perimeter = 1800) #8600
-    simulation.set_constraints(cell_type = 2, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=3)
+    simulation.set_constraints(cell_type = 1, lambda_perimeter = 2, target_perimeter = 1600) #8600
+    simulation.set_constraints(cell_type = 1, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
     # adhesion ; 
-    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
-    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 10)
-    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 0)
+    #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
+    simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
+    simulation.set_constraints(cell_type = 1,other_cell_type = 0,adhesion = 0)
 
 
     # print('Creating FRC')
@@ -120,7 +120,7 @@ def setup(l_act,m_act):
     seeds = possible_seeds[indx,:]
 
     for c in seeds:
-        simulation.add_cell(c[0],c[1],c[2],2)
+        simulation.add_cell(c[0],c[1],c[2],1)
     
     print('number of cells : ', len(seeds))
 
@@ -156,7 +156,7 @@ def runsim(simulation,steps):
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
-        simulation.run(1000)
+        simulation.run(10)
         cell_sizes = []
         for n in n_cells:
             cell = state % 2**24 == n

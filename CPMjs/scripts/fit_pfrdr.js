@@ -1,3 +1,4 @@
+//let CPM = require('../../../artistoo/artistoo/build/artistoo-cjs.js')
 let CPM = require('../../../cpmjs/build/cpm-cjs.js')
 fs = require("fs")
 
@@ -53,7 +54,7 @@ function setup_sim(PERS,LAMBDA){
             
             // Output stats etc
             STATSOUT : { browser: false, node: true }, // Should stats be computed?
-            LOGRATE : 10							// Output stats every <LOGRATE> MCS.
+            LOGRATE : 20							// Output stats every <LOGRATE> MCS.
     
         }
     }
@@ -75,7 +76,7 @@ function setup_sim(PERS,LAMBDA){
     }
     
     // run simulation 5 times : 
-    for (let i=0;i<5;i++){
+    for (let i=0;i<3;i++){
         iter = String(i)
         let sim = new CPM.Simulation( config, custommethods )
         sim.run()
@@ -123,9 +124,9 @@ function fit_PRFDR(){
     // Loop over all combinations : 
 
     for(var pers of persists){
-	//if(pers == 0){
-	//    pers = 0.01
-	//}
+	if(pers > .1){
+	    continue;
+	}
         for(var lamb of Lambdas){
             //console.log(pers,lamb)
             setup_sim(pers,lamb)

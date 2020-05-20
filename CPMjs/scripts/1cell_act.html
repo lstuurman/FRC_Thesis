@@ -14,11 +14,18 @@
     </style>
 
     <link rel="slidecontainer" href="3D_sliders.css">
-    <script src="/home/lau/GIT/cpmjs/build/cpm.js"></script>
+    <script src="artistoo/src/models/CPM.js"></script>
+    <script src="artistoo/build/artistoo.js"></script>
+    <script src="artistoo/examples/3D/fpsmeter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.min.js"></script>
+    <script type="text/javascript" src="artistoo/viz/TrackballControls.js"></script>
+    <script type="text/javascript" src="viz2.js"></script>
+
+    <!-- <script src="/home/lau/GIT/cpmjs/build/cpm.js"></script>
     <script src="/home/lau/GIT/cpmjs/examples/fpsmeter.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.min.js"></script>
-    <script type="text/javascript" src="/home/lau/GIT/cpmjs/viz/TrackballControls.js"></script>
-    <script type="text/javascript" src="viz2.js"></script>
+    <script type="text/javascript" src="/home/lau/GIT/cpmjs/viz/TrackballControls.js"></script> -->
+    <!-- <script type="text/javascript" src="viz2.js"></script> -->
     <script type="text/javascript">
 
         // Optional: set some parameters via the url
@@ -68,7 +75,7 @@
                 LAMBDA_P : [0,.2],
                 // Act model : 
                 LAMBDA_ACT : [0,200],
-                MAX_ACT : [0,120],
+                MAX_ACT : [0,10],
                 ACT_MEAN : "geometric"
             })
             C.add(new CPM.Adhesion(C.conf))
@@ -97,9 +104,9 @@
             })
 
             let Gi = new CPM.GridManipulator(C)
-            for (let i = 0; i < ncells; i++) {
-                Gi.seedCell(1)
-            }
+            // for (let i = 0; i < ncells; i++) {
+            //     Gi.seedCell(1)
+            // }
 
             // Start simulation
             meter = new FPSMeter({ left: "auto", right: "5px" })

@@ -65,8 +65,8 @@
                 LAMBDA_V: [0, 25],
                 // // Perimeter : 
                 P: [0, 1400],
-                LAMBDA_P: [0, .2],
-                LAMBDA_DIR: [0, 200],
+                LAMBDA_P: [0, 2],
+                LAMBDA_DIR: [0, 2000],
                 PERSIST: [0, 0.001], // ???
                 DELTA_T: [0, 15]
             })
@@ -209,9 +209,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Delta T</td>
+                        <td>T</td>
                         <td>
-                            <input type="text" value="15" id="dt" oninput="C.conf.DELTA_T[1]=this.value">
+                            <input type="text" value="200" id="dt" oninput="C.conf.T=this.value">
                         </td>
                         <td>Cells to seed</td>
                         <td>

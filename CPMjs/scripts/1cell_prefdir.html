@@ -14,12 +14,21 @@
     </style>
 
     <link rel="slidecontainer" href="3D_sliders.css">
-    <script src="/home/lau/GIT/cpmjs/build/cpm.js"></script>
+    <!-- <script src="/home/lau/GIT/cpmjs/build/cpm.js"></script>
     <script src="/home/lau/GIT/cpmjs/examples/fpsmeter.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.min.js"></script>
     <script type="text/javascript" src="/home/lau/GIT/cpmjs/viz/TrackballControls.js"></script>
+    <script type="text/javascript" src="viz2.js"></script> -->
+    <script src="artistoo/src/models/CPM.js"></script>
+    <script src="artistoo/build/artistoo.js"></script>
+    <script src="artistoo/examples/3D/fpsmeter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.min.js"></script>
+    <script type="text/javascript" src="artistoo/viz/TrackballControls.js"></script>
     <script type="text/javascript" src="viz2.js"></script>
+
     <script type="text/javascript">
+
+
 
         // Optional: set some parameters via the url
         var urlParams = new URLSearchParams(window.location.search)
@@ -72,7 +81,7 @@
             })
             C.add(new CPM.Adhesion(C.conf))
             C.add(new CPM.VolumeConstraint(C.conf))
-            //C.add(new CPM.PerimeterConstraint(C.conf))
+            C.add(new CPM.PerimeterConstraint(C.conf))
             //let activity = new CPM.ActivityConstraint(C.conf)
             //C.add(activity)
             pdc = new CPM.PersistenceConstraint(C.conf)
@@ -98,9 +107,9 @@
             })
 
             let Gi = new CPM.GridManipulator(C)
-            for (let i = 0; i < ncells; i++) {
-                Gi.seedCell(1)
-            }
+            // for (let i = 0; i < ncells; i++) {
+            //     Gi.seedCell(1)
+            // }
 
             // Start simulation
             meter = new FPSMeter({ left: "auto", right: "5px" })
@@ -209,9 +218,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Delta T</td>
+                        <td>T</td>
                         <td>
-                            <input type="text" value="15" id="dt" oninput="C.conf.DELTA_T[1]=this.value">
+                            <input type="text" value="15" id="dt" oninput="C.conf.T=this.value">
                         </td>
                         <td>Cells to seed</td>
                         <td>

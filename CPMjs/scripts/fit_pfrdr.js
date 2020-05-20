@@ -10,17 +10,17 @@ function setup_sim(PERS,LAMBDA){
         field_size : [64,64,64],
         conf : {
             torus : [true,true,true],
-            T : 70,
+            T : 20,
             nCellKinds : 1,
 
             // Adhesion:
-            J: [[0, 0], [0, 100]],
+            J: [[0, 0], [0, 10]],
             // Volume: 
             V : [0,150],
-            LAMBDA_V : [0,250],
+            LAMBDA_V : [0,25],
             // Perimeter:
             P : [0,1400],
-            LAMDA_P : [0,2],
+            LAMDA_P : [0,.2],
             // Pref Dir:
             PERSIST : [0,PERS],
             LAMBDA_DIR : [0,LAMBDA],
@@ -75,7 +75,7 @@ function setup_sim(PERS,LAMBDA){
     }
     
     // run simulation 5 times : 
-    for (let i=0;i<6;i++){
+    for (let i=0;i<5;i++){
         iter = String(i)
         let sim = new CPM.Simulation( config, custommethods )
         sim.run()
@@ -118,7 +118,7 @@ function logStats(){
 
 function fit_PRFDR(){
     //let persists = Array.from(Array(11).keys(), x => x/10)
-    persists = Array.from(Array(7).keys(), x => 1/(10**x))
+    persists = Array.from(Array(7).keys(), x => .1**x)
     let Lambdas = Array(500,750,1000,2000,3000,4000,5000)
     // Loop over all combinations : 
 

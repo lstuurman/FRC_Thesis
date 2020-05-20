@@ -26,7 +26,7 @@ def save_track(cell_track,prms1,prms2,i):
     ax.scatter3D(x[0],y[0],z[0],label = 'start')
     ax.scatter3D(x[-1],y[-1],z[-1],label = 'end')
     ax.legend()
-    plt.savefig('../img/PRFDR_single' + prms1 + prms2 + '_' + str(i) + '.png')
+    plt.savefig('../img/PRFDR/tracks/single150' + prms1 + prms2 + '_' + str(i) + '.png')
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -142,6 +142,8 @@ def build_csv(path):
         autocors = [] #[new_auto(t) for t in tracks]
         for ti,t in enumerate(tracks):
             autocors.append(new_auto(t))
+            plt.plot(autocors[-1],range(len(autocors[-1])))
+            plt.savefig('../img/PRFDR/AC/' + prms[0] + prms[1] + 'Single150_' + str(ti) + '.png')
             print(ti)
         half_times = Persist_tracks(autocors)
         ht = np.average(half_times)
@@ -161,10 +163,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Persist','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('V500_PRFDR_single2.csv')
+    df1.to_csv('V150_PRFDR_single2.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Perist','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('V500_PRFDR_single2_std.csv')
+    df2.to_csv('V150_PRFDR_single2_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/cpmjs/single_PRFDR_V500_2/*')
+    build_csv('../../data/cpmjs/single_PRFDR_V150_2/*')

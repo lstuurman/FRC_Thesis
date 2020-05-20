@@ -25,6 +25,7 @@ def seed_cpm():
     max_cells = free_voxels/150
     # data to save : 
     rows = []
+    size_matrix = []
     # iteratively seed cells : 
     for n in range(int(max_cells)):
         # get sim state and occupied voxels: 
@@ -47,12 +48,25 @@ def seed_cpm():
             simulation.add_cell(c[0],c[1],c[2],1)
         # burnin sim : 
         simulation.run(50)
+        # cell sizes : 
+        sizes = []
+        cell_ids = simulation.get_state() % 2**24
+        n_cells = np.unique(cell_ids)
 
+        for i_d in n_cells:
+            celltypes = simulation.get_state % 2**24 == i_d
+            size = np.sum(celltypes)
+            sizes.append(size)
         # save data : 
         rows.append([n*10,len(possible_seeds)])
+        size_matrix.append(sizes)
+
         print(rows[-1])
+        print(sizes)
     df = pd.DataFrame(data = rows, columns= ['Seeded_cells','Free_voxels'])
     df.to_csv('increasing_pressureV150.csv')
+    nparr = np.array(size_matrix)
+    np.savetxt('size_matrix.txt',nparr)
 
 seed_cpm()
 

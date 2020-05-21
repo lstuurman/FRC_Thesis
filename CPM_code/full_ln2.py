@@ -93,13 +93,13 @@ def setup(l_act,m_act):
 
     simulation = cpm.Cpm(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=3)
-    simulation.set_constraints(cell_type = 1, lambda_perimeter = 2, target_perimeter = 1600) #8600
-    simulation.set_constraints(cell_type = 1, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = 2, target_perimeter = 1500) #8600
+    simulation.set_constraints(cell_type = 2, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
     # adhesion ; 
     #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
-    simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
-    simulation.set_constraints(cell_type = 1,other_cell_type = 0,adhesion = 0)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 10)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 0)
 
 
     # print('Creating FRC')

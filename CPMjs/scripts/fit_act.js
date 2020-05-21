@@ -11,7 +11,7 @@ function setup_sim(MAX,LAMBDA){
         field_size : [64,64,64],
         conf : {
             torus : [true,true,true],
-            T : 20,
+            T : 200,
             nCellKinds : 1,
 
             // Adhesion:
@@ -20,7 +20,7 @@ function setup_sim(MAX,LAMBDA){
             V : [0,150],
             LAMBDA_V : [0,25],
             // Perimeter:
-            P : [0,1400],
+            P : [0,1500],
             LAMDA_P : [0,.2],
             // ACT:
             LAMBDA_ACT : [0,LAMBDA],

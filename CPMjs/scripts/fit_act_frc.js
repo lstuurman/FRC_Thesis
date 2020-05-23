@@ -1,5 +1,5 @@
-//let CPM = require('../../../artistoo/artistoo/build/artistoo-cjs.js')
-let CPM = require('../../../cpmjs/build/cpm-cjs.js')
+let CPM = require('../../../artistoo/build/artistoo-cjs.js')
+//let CPM = require('../../../cpmjs/build/cpm-cjs.js')
 fs = require("fs")
 
 // SCRIPT FOR FITTING LAMBDA AND PERISTIST OF PREFERENTIAL DIRECTION MODEL
@@ -98,8 +98,8 @@ function initializeGrid(){
     if( !this.helpClasses["gm"] ){ this.addGridManipulator(); }
 
     let nrcells = this.conf["NRCELLS"], cellkind, i;
-    let FRC = require('../img/frc.json')
-    //console.log(FRC)
+    FRC = require('../img/frc.json')
+    console.log(FRC[0][0][0])
     // seed frc cells : 
     for (let x = 0; x < 64; x ++){
         for (let y = 0; y < 64; y++){
@@ -112,6 +112,19 @@ function initializeGrid(){
             }
         }
     }
+    
+    // Seed the right number of cells for each cellkind
+    for( cellkind = 1; cellkind < nrcells.length; cellkind ++ ){
+        
+        for( i = 0; i < nrcells[cellkind]; i++ ){
+            // first cell always at the midpoint. Any other cells
+            // randomly.                
+            
+            this.gm.seedCell( cellkind+1 );
+            
+        }
+    }
+}
 
 function logStats(){
     
@@ -172,5 +185,4 @@ fit_ACT()
 //     ncells = parseInt((50*50*50/150) * densis[i]) 
 //     setup_sim(ncells)
 // console.log('N cells : ',ncells)
-// }
 // }

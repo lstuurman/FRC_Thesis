@@ -5,7 +5,7 @@ from numpy.linalg import norm
 from itertools import product
 import re
 import matplotlib.pyplot as plt
-from mpl_toolkits import mplot3d
+#from mpl_toolkits import mplot3d
 #matplotlib.use('Agg')
 
 import sys
@@ -128,8 +128,8 @@ def build_csv(path):
         if len(tracks) == 0:
             print('no cell track??',f)
             continue
-        for iter,t in enumerate(tracks):
-            save_track(t,prms[0],prms[1],iter)
+        #for iter,t in enumerate(tracks):
+            #save_track(t,prms[0],prms[1],iter)
 
         # speed : 
         vec_tracks = np.array([to_vecs(t) for t in tracks])
@@ -143,7 +143,7 @@ def build_csv(path):
         for ti,t in enumerate(tracks):
             autocors.append(new_auto(t))
             plt.plot(autocors[-1],range(len(autocors[-1])))
-            plt.savefig('../img/PRFDR/AC/' + prms[0] + prms[1] + 'Single150_' + str(ti) + '.png')
+            plt.savefig('../img/ACT/AC/' + prms[0] + prms[1] + 'Single150_' + str(ti) + '.png')
             print(ti)
         half_times = Persist_tracks(autocors)
         ht = np.average(half_times)
@@ -163,10 +163,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Persist','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('V150_PRFDR_single6.csv')
+    df1.to_csv('V150_ACT_single.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Perist','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('V150_PRFDR_single6_std.csv')
+    df2.to_csv('V150_ACT_single_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/cpmjs/single_PRFDR_V150_3/*')
+    build_csv('../../data/cpmjs/single_ACT_150/*')

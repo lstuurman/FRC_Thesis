@@ -50,7 +50,7 @@ def run_sim(params):
     lambda_act,max_act = params
     # iterate 5 times : 
     cell_tracks = []
-    for _ in range(5):
+    for _ in range(10):
         sim = setup(lambda_act,max_act)
         # run : 
         cell_track = runsim(sim,500)
@@ -73,10 +73,11 @@ def gridsearch():
     # input : 
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
     #l_act = np.array([500,750,1000,2000,3000,4000,5000])
-    l_act = np.array([500,1000,2500,5000,10000])
+    #l_act = np.array([500,1000,2500,5000,10000])
+    l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
-    max_act = np.array([20,50,75,100,200])
+    max_act = np.array([10,20,30,40,50,60,70,80,90,100,125,150,200])
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
     cpus = 10 #.cpu_count() - 15
@@ -88,7 +89,7 @@ def gridsearch():
     # save data :
     #pickle.dump(output,open('testdat/raw_nofrc.pkl','wb'))
 
-    # data = {'Motility':[],'Persistance':[],'Scanned_volume':[],'Lambda_act':[],'Max_act':[]}
+# data = #{'Motility':[],'Persistance':[],'Scanned_volume':[],'Lambda_act':[],'Max_act':[]}
     # for i,tup in enumerate(inputs):
     #     data = output[i]
     #     data['Scanned_volume'].append(np.average(data[:,2]))

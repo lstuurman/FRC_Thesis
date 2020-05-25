@@ -13,14 +13,14 @@ def seed_cpm():
 
     # initialize : 
 
-    simulation = cpm.Cpm(dimension, number_of_types, temperature)
+    simulation = cpm.Cpm3d(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
-    simulation.set_constraints(cell_type = 2, lambda_perimeter = 2, target_perimeter = 1400)#8600
+    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
+    simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1500)#8600
     #simulation.set_constraints(cell_type = 1, lambda_act = 1000,max_act = 10)
     # adhesion ; 
-    simulation.set_constraints(cell_type = 2,other_cell_type = 1,adhesion = 10)
-    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 0)
+    simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
+    simulation.set_constraints(cell_type = 1,other_cell_type = 0,adhesion = 0)
 
     free_voxels = 64**3
     max_cells = free_voxels/150
@@ -47,7 +47,7 @@ def seed_cpm():
         #seed = random.sample(possible_seeds,1)
         # add T cells :
         for c in seed:
-            simulation.add_cell(c[0],c[1],c[2],2)
+            simulation.add_cell(c[0],c[1],c[2],1)
         # burnin sim : 
         simulation.run(100)
         # cell sizes : 

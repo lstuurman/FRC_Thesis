@@ -1,5 +1,5 @@
-//let CPM = require('../../../artistoo/artistoo/build/artistoo-cjs.js')
-let CPM = require('../../../cpmjs/build/cpm-cjs.js')
+let CPM = require('../../../artistoo/build/artistoo-cjs.js')
+//let CPM = require('../../../cpmjs/build/cpm-cjs.js')
 fs = require("fs")
 
 // SCRIPT FOR FITTING LAMBDA AND PERISTIST OF PREFERENTIAL DIRECTION MODEL
@@ -11,7 +11,7 @@ function setup_sim(MAX,LAMBDA){
         field_size : [64,64,64],
         conf : {
             torus : [true,true,true],
-            T : 200,
+            T : 20,
             nCellKinds : 1,
 
             // Adhesion:
@@ -120,7 +120,7 @@ function logStats(){
 function fit_ACT(){
     //let persists = Array.from(Array(11).keys(), x => x/10)
     //persists = Array.from(Array(10).keys(), x => x/10)
-    let max_acts = Array(20,50,75,100,200)
+    let max_acts = Array(10,20,50,75,100,200)
     let Lambdas = Array(50,100,500,1000,2000,5000,10000,20000)
     // Loop over all combinations : 
 

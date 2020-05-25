@@ -28,8 +28,8 @@ def seed_cpm():
     rows = []
     size_matrix = []
     # Also write to file : 
-    mat_file = open('size_matrix.txt','a')
-    row_file = open('rows.txt','a')
+    mat_file = open('size_matrix.txt','w')
+    row_file = open('rows.txt','w')
     s = simulation.get_state()
     # iteratively seed cells : 
     for n in range(int(max_cells)):
@@ -65,11 +65,13 @@ def seed_cpm():
         # save data : 
         rows.append([n*10,len(possible_seeds),sum(sizes)])
         size_matrix.append(sizes)
-        row_to_write = str(n*10) + '\t' + str(len(possible_seeds)) + '\t' + str(sum(sizes))
+        row_to_write = str(n*10) + '\t' + str(len(possible_seeds)) + '\t' + str(sum(sizes)) + '\n'
         row_file.write(row_to_write)
-        mat_file.write("\t".join(str(x) for x in sizes))
+        mat_file.write("\t".join(str(x) for x in sizes) + '\n')
         print(rows[-1])
         print(sizes)
+    mat_file.close()
+    row_file.close()
     df = pd.DataFrame(data = rows, columns= ['Seeded_cells','Free_voxels','Cell_volume'])
     df.to_csv('increasing_pressureV150.csv')
     # make matrix square :

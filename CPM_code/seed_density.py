@@ -28,7 +28,7 @@ def seed_cpm():
     rows = []
     size_matrix = []
     # Also write to file : 
-    mat_file = open('size_matrix.txt','a')
+    mat_file = open('matrix.txt','a')
     row_file = open('rows.txt','a')
     s = simulation.get_state()
     # iteratively seed cells : 

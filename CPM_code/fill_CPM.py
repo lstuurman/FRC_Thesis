@@ -1,20 +1,20 @@
 import cpm
 import numpy as np
-from CPM_helpers1 import *
-#from MSD1cell import *
-import pickle
 import pandas as pd
 import time
 import random
+from itertools import product
+from multiprocessing import Pool
+from CPM_helpers1 import real_cofmass
 
-def handle_boundaries2(cell_track,pr = False):
+def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
     # of the coordinates
     cell_track2 = cell_track.copy()
     for i in range(len(cell_track) - 1):
         dif = np.subtract(cell_track[i],cell_track[i+1])
         for j,coordinate in enumerate(dif):
-            if coordinate > 32:
+            if coordinate > 16:
                 # went over boundary from 256 -> 0
                 if pr:
                     print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
@@ -22,20 +22,20 @@ def handle_boundaries2(cell_track,pr = False):
                     print('changed axis : ',j)
                     print('Old coordinat : ',cell_track[i])
 
-                cell_track2[:i + 1,j] -= 64
+                cell_track2[:i + 1,j] -= 32
 
                 if pr:
                     print('New coordinate : ',cell_track[i])
                     print(i,j)
-                
-            elif coordinate < -32:
+
+            elif coordinate < -16:
                 # form 0 -> 256
                 if pr:
                     print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
                     print('Adding ', 256, ' to previous of cell track') 
                     print('Old coordinat : ',cell_track[i])
 
-                cell_track2[:i + 1,j] += 64
+                cell_track2[:i + 1,j] += 32
 
                 if pr:
                     print('New coordinate : ',cell_track[i])
@@ -43,49 +43,12 @@ def handle_boundaries2(cell_track,pr = False):
     return cell_track2
 
 
-
-def setup_frc(D):
-    # show how code works : 
-    # set dimension for grid : 
-    D = 64
-    r = 20/64# 20microns
-    # create graphs with positions : 
-    g = nx.random_geometric_graph(80,r,dim = 3)
-    # nice 3d visualazition in plotly : 
-    #matrix = nx.to_numpy_matrix(g)
-    positions = []
-    for n,data in g.nodes(data = True):
-        positions.append(data['pos'])
-
-    # bin possitions and place in grid : 
-    g,_ = nodesInCube(g,positions,D)
-    c = fill_cube(D,g)
-    cube = adjust_thickness(c,2)
-    #adjust thickness so that it fills +- 17% of cube : 
-    # show crossection ; 
-
-
-    # mlab.contour3d(cube)
-    # mlab.show()
-
-    
-    # slicee = cube[32:32+4]
-    # plt.imshow(np.sum(slicee,axis = 0))
-    # plt.show()
-
-    # slicee = cube[32:32+4,:32,:32]
-    # plt.imshow(np.sum(slicee,axis = 0))
-    # plt.show()
-
-    print('percentage of volume occupied by frc',(np.sum(cube)/D**3)*100)
-    return cube
-
-def setup(l_act,m_act):
+def setup(dens):
         ### SET UP CPM ###
     # params from Nino: multiplicated the adhesion engergies by 10
     # and because lambda of .1 not possible here. 
     # params suitable for single cell in empty space
-    dimension = 64
+    dimension = 32
     number_of_types = 2
     temperature = 20
 
@@ -95,24 +58,17 @@ def setup(l_act,m_act):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1500) #8600
-    simulation.set_constraints(cell_type = 1, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 1, lambda_persistence = 2000, persistence_diffusion = .9,persistence_time = 15) # 2500, max_act = 42
     # adhesion ; 
     #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
     simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
     simulation.set_constraints(cell_type = 0,other_cell_type = 1,adhesion = 0)
 
-
-    # print('Creating FRC')
-    # frc_in_cube = setup_frc(64)
-    # print('Loading into simulation : ')
-    # simulation.initialize_from_array(frc_in_cube,1)
-    # print('Done')
-
     ### fill cube with cells
     # number of cells :
     frc_in_cube = simulation.get_state() // 2**24 == 1 
-    free_voxels = 64**3  - np.count_nonzero(frc_in_cube)
-    n_cells = 1 # np.floor(1 * (free_voxels/500))
+    free_voxels = 32**3  - np.count_nonzero(frc_in_cube)
+    n_cells = np.floor(dens * (free_voxels/150))
     # sample random positions : 
     free_indeces = np.where(frc_in_cube == 0.)
     possible_seeds = np.array(list(zip(free_indeces[0],free_indeces[1],free_indeces[2])))
@@ -156,40 +112,72 @@ def runsim(simulation,steps):
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
-        simulation.run(10)
+        simulation.run(20)
         cell_sizes = []
-        #centroids = sim.get_centroids()
-        #print(centroids)
+        #centers = simulation.get_centroids()
+        #print(centers)
         for n in n_cells:
             cell = state % 2**24 == n
             # check cell_size : 
             size = np.sum(cell)
+            #print(size)
             cell_sizes.append(size)
             if size <100:
                 #print('to small')
                 continue
-            cofmass_track[n,i] = np.array(real_cofmass(cell,64,pr = False))
-            #print(cofmass_track[n-1,i])
+            cofmass_track[n,i] = np.array(real_cofmass(cell,32,pr = False))
+            #print(cofmass_track[n,i])
+            #print(n,size)
             #print(cofmass_track[n-2,i])
         if i == 0:
             t1 = time.time() - t0
             print('expected computing time : ',t1 * steps)
-        print(cofmass_track[1,i])
-        #print('iteration : ',i,cofmass_track[1,i])
-        #print('number of small cells ',np.sum([1 for i in cell_sizes if i < 100]))
-        #print(len(cofmass_track))
-    print(cofmass_track.shape)
+    #print(cofmass_track[-1])
+    #print(cofmass_track.shape)
     return cofmass_track #,cell_sizes
 
+def run_grid_point(density):
+    t1 = time.time()
+    #lambda_act,max_act = params
+    # iterate 5 times : 
+    cell_tracks = []
+    for _ in range(10):
+        sim = setup(density)
+        # run : 
+        cell_track = runsim(sim,500)
+        #for t in cell_track:
+            #cell_tracks.append(t)
+        cell_tracks.append(cell_track[-1])
+    for i,track in enumerate(cell_tracks):
+        newtrack = handle_boundaries(track)
+        #cell_tracks[i] = newtrack
+        fname = "150V_DENS"  +str(density) + "/CELL_LAMBDA_"+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
+        np.savetxt('../data/increase_DENS_PRFDR/'+fname+'.txt',newtrack)
+    print('computed : ',params, 'in ',time.time() - t1)
+
+
+def gridsearch():
+    ### runn multi T-cell simulations for with different combinations of params
+    ### to find some good parameters for cell track autocorrelation
+    # input : 
+    #l_act = np.linspace(1000,5000,num=10,dtype=int)
+    #l_act = np.array([500,750,1000,2000,3000,4000,5000])
+    l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
+    #max_act = np.array([10,50,75,100,150,200,500])
+    #max_act = np.linspace(1000,5000,num = 5,dtype=int)
+    max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
+    inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
+    # run in parallel : 
+    cpus = 10 #.cpu_count() - 15
+    print('Using ',cpus,'cores')
+    p = Pool(cpus)
+    output = np.array(p.map(run_grid_point,inputs))
+    p.close()
+    p.join()
+
 if __name__ == "__main__":
-    sim = setup(2000,20)
-    tracks = runsim(sim,1000)
-    # for i,track in enumerate(tracks):
-    #     fname = '../data/full_ln/frc_track_80dens' + str(i) + '.txt'
-    #     np.savetxt(fname,track)
-    #tracks = tracks.reshape((len(tracks) * 20,3))
-    cell_track = tracks[1]
-    plot_celltrack(cell_track)
-    cell_track = handle_boundaries2(cell_track)
-    plot_celltrack(cell_track)
-    np.savetxt('testdat/testtrack_frc.txt',tracks[1])
+    #sim = setup(2000,20)
+    # run : 
+    #cell_track = runsim(sim,500)
+
+    gridsearch()

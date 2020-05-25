@@ -27,6 +27,9 @@ def seed_cpm():
     # data to save : 
     rows = []
     size_matrix = []
+    # Also write to file : 
+    mat_file = open('size_matrix.txt','a')
+    row_file = open('rows.txt','a')
     s = simulation.get_state()
     # iteratively seed cells : 
     for n in range(int(max_cells)):
@@ -62,7 +65,9 @@ def seed_cpm():
         # save data : 
         rows.append([n*10,len(possible_seeds),sum(sizes)])
         size_matrix.append(sizes)
-
+        row_to_write = str(n*10) + '\t' + str(len(possible_seeds)) + '\t' + str(sum(sizes))
+        row_file.write(row_to_write)
+        mat_file.write("\t".join(str(x) for x in sizes))
         print(rows[-1])
         print(sizes)
     df = pd.DataFrame(data = rows, columns= ['Seeded_cells','Free_voxels','Cell_volume'])

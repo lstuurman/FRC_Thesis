@@ -87,7 +87,7 @@ def setup(l_act,m_act):
     # params suitable for single cell in empty space
     dimension = 64
     number_of_types = 2
-    temperature = 20
+    temperature = 200
 
     # initialize : 
 
@@ -156,7 +156,7 @@ def runsim(simulation,steps):
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
-        simulation.run(10)
+        simulation.run(20)
         cell_sizes = []
         #centroids = sim.get_centroids()
         #print(centroids)

@@ -6,6 +6,7 @@ import random
 from itertools import product
 from multiprocessing import Pool
 from CPM_helpers1 import real_cofmass
+import os
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -58,7 +59,7 @@ def setup(dens):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1500) #8600
-    simulation.set_constraints(cell_type = 1, lambda_persistence = 2000, persistence_diffusion = .9,persistence_time = 15) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 1, lambda_persistence = 3000, persistence_diffusion = .76,persistence_time = 15) # 2500, max_act = 42
     # adhesion ; 
     #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
     simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
@@ -138,22 +139,23 @@ def runsim(simulation,steps):
 
 def run_grid_point(density):
     t1 = time.time()
+    os.mkdir("150V_DENS"  +str(density))
     #lambda_act,max_act = params
     # iterate 5 times : 
     cell_tracks = []
-    for _ in range(10):
+    for _ in range(1):
         sim = setup(density)
         # run : 
         cell_track = runsim(sim,500)
         #for t in cell_track:
             #cell_tracks.append(t)
-        cell_tracks.append(cell_track[-1])
+        cell_tracks.append(cell_track[0:])
     for i,track in enumerate(cell_tracks):
         newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
-        fname = "150V_DENS"  +str(density) + "/CELL_LAMBDA_"+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
+        fname = "150V_DENS"  +str(density) + "/CELL_" + str(i)
         np.savetxt('../data/increase_DENS_PRFDR/'+fname+'.txt',newtrack)
-    print('computed : ',params, 'in ',time.time() - t1)
+    #print('computed : ',params, 'in ',time.time() - t1)
 
 
 def gridsearch():

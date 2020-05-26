@@ -174,7 +174,7 @@ def runsim(simulation,steps):
         if i == 0:
             t1 = time.time() - t0
             print('expected computing time : ',t1 * steps)
-        print(cofmass_track[1,i])
+        #print(cofmass_track[1,i])
         #print('iteration : ',i,cofmass_track[1,i])
         #print('number of small cells ',np.sum([1 for i in cell_sizes if i < 100]))
         #print(len(cofmass_track))

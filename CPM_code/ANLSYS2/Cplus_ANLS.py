@@ -95,7 +95,7 @@ def build_csv(path):
     # find unique param pairs in folder :
     num_ptrn = '[-+]?\d*\.\d+|\d+'
     all_files = glob.glob(path)
-    param_strings = [f.split('_')[3] for f in all_files]
+    param_strings = [f.split('_')[4] for f in all_files]
     params = set([tuple(re.findall(num_ptrn,s)) for s in param_strings])
 
     rows = []
@@ -142,10 +142,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('single_ACT.csv')
+    df1.to_csv('singleZOOM2_PRFDR.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('single_ACT_std.csv')
+    df2.to_csv('singleZOOM2_PRFDR_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/FIT_speedy2/150V_single/*')
+    build_csv('../../data/FIT_speedy_PRFDR/150_singleZOOM2/*')

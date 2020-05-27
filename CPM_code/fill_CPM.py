@@ -59,7 +59,7 @@ def setup(dens):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1500) #8600
-    simulation.set_constraints(cell_type = 1, lambda_persistence = 3000, persistence_diffusion = .76,persistence_time = 15) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 1, lambda_persistence = 3800, persistence_diffusion = .8,persistence_time = 15) # 2500, max_act = 42
     # adhesion ; 
     #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
     simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
@@ -69,6 +69,8 @@ def setup(dens):
     # number of cells :
     frc_in_cube = simulation.get_state() // 2**24 == 1 
     free_voxels = 32**3  - np.count_nonzero(frc_in_cube)
+    print(free_voxels)
+    print(dens)
     n_cells = np.floor(dens * (free_voxels/150))
     # sample random positions : 
     free_indeces = np.where(frc_in_cube == 0.)
@@ -164,16 +166,16 @@ def gridsearch():
     # input : 
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
     #l_act = np.array([500,750,1000,2000,3000,4000,5000])
-    l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
+    #l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
     max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
-    inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
+    #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
     cpus = 10 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
-    output = np.array(p.map(run_grid_point,inputs))
+    output = np.array(p.map(run_grid_point,max_act))
     p.close()
     p.join()
 

@@ -73,8 +73,8 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
         g = nx.powerlaw_cluster_graph(700,m,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'GM':
-        r = 20/256 # 20microns
-        g = nx.random_geometric_graph(4500,r,dim = 3)
+        r = 20/dim # 20microns
+        g = nx.random_geometric_graph(9000,r,dim = 3)#4500
     # extract positions from nx graph object : 
     positions = []
     for n,data in g.nodes(data = True):
@@ -87,24 +87,24 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
         g,_ = nodesInCube(g,positions,dim)
         c = fill_cube(dim,g)
         #adjust thickness so that it fills +- 17% of cube : 
-        thicckk = adjust_thickness(c,2)
+        thicckk = adjust_thickness(c,1)
         print('percentage of volume occupied by frc',(np.sum(thicckk)/dim**3)*100)
         return thicckk
     else:
         g,_ = nodesInCube(g,positions,4 * dim)
         c = fill_cube(4 * dim,g)
         #adjust thickness so that it fills +- 17% of cube : 
-        thicckk = adjust_thickness(c,2)
+        thicckk = adjust_thickness(c,1)
         thickk = thicckk[384:-384,384:-384,384:-384]
         print('percentage of volume occupied by frc',(np.sum(thickk)/dim**3)*100)
         return thickk
         
 
 def save_cubes():
-    g_types = ['WS', 'GM'] #, 'WS', 'PW', 'GM']
+    g_types = ['GM'] #, 'WS', 'PW', 'GM']
     for graph_type in g_types: 
         cube = net_to_cube_adapted(g_type = graph_type,dim = 256)
-        fname = '../data/cubes/adjusted_' + graph_type + '.pkl'
+        fname = '../data/cubes2/adjusted_' + graph_type + '.pkl'
         pickle.dump(cube,open(fname,'wb'))
         print('created cube with ',graph_type, ' graph')
 
@@ -210,5 +210,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
-    #save_cubes()
+    #main()
+    save_cubes()

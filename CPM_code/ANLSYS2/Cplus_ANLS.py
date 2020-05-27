@@ -142,10 +142,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('singleZOOM3_PRFDR.csv')
+    df1.to_csv('singleZOOM4_PRFDR.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('singleZOOM3_PRFDR_std.csv')
+    df2.to_csv('singleZOOM4_PRFDR_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/FIT_speedy_PRFDR/150_singleZOOM3/*')
+    build_csv('../../data/FIT_speedy_PRFDR/150_singleZOOM4/*')

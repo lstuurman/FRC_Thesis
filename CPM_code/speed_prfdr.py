@@ -112,7 +112,7 @@ def runsim(simulation,steps):
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
-        simulation.run(20)
+        simulation.run(19)
         cell_sizes = []
         #centers = simulation.get_centroids()
         #print(centers)
@@ -152,7 +152,7 @@ def run_grid_point(params):
         newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FIT_speedy_PRFDR/150_singleZOOM3/CELL'+fname+'.txt',newtrack)
+        np.savetxt('../data/FIT_speedy_PRFDR/150_singleZOOM4/CELL'+fname+'.txt',newtrack)
     print('computed : ',params, 'in ',time.time() - t1)
 
 
@@ -163,7 +163,7 @@ def gridsearch():
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
     #l_act = np.array([500,750,1000,2000,3000,4000,5000])
     #l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
-    l_act = np.linspace(2700,3100,5)
+    l_act = np.linspace(3000,4000,11)
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
     #max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])

@@ -135,13 +135,15 @@ def runsim(simulation,steps):
         if i == 0:
             t1 = time.time() - t0
             print('expected computing time : ',t1 * steps)
+        print(cofmass_track[2,i])
     #print(cofmass_track[-1])
     #print(cofmass_track.shape)
     return cofmass_track #,cell_sizes
 
 def run_grid_point(density):
     t1 = time.time()
-    os.mkdir("150V_DENS"  +str(density))
+    if not os.path.exists("150V_DENS"  +str(density)):
+        os.mkdir("150V_DENS"  +str(density))
     #lambda_act,max_act = params
     # iterate 5 times : 
     cell_tracks = []
@@ -151,7 +153,7 @@ def run_grid_point(density):
         cell_track = runsim(sim,500)
         #for t in cell_track:
             #cell_tracks.append(t)
-        cell_tracks.append(cell_track[0:])
+        cell_tracks.append(cell_track[1:])
     for i,track in enumerate(cell_tracks):
         newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
@@ -172,7 +174,7 @@ def gridsearch():
     max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
-    cpus = 10 #.cpu_count() - 15
+    cpus = 1 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_grid_point,max_act))

@@ -7,6 +7,7 @@ from itertools import product
 from multiprocessing import Pool
 from CPM_helpers1 import real_cofmass
 import os
+import pickle
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -50,26 +51,28 @@ def setup(dens):
     # and because lambda of .1 not possible here. 
     # params suitable for single cell in empty space
     dimension = 32
-    number_of_types = 2
+    number_of_types = 3
     temperature = 20
 
     # initialize : 
 
     simulation = cpm.Cpm3d(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
-    simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1500) #8600
-    simulation.set_constraints(cell_type = 1, lambda_persistence = 3800, persistence_diffusion = .8,persistence_time = 15) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
+    simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1500) #8600
+    simulation.set_constraints(cell_type = 2, lambda_persistence = 3800, persistence_diffusion = .8,persistence_time = 15) # 2500, max_act = 42
     # adhesion ; 
-    #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
-    simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
-    simulation.set_constraints(cell_type = 0,other_cell_type = 1,adhesion = 0)
+    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 10)
+    simulation.set_constraints(cell_type = 0,other_cell_type = 2,adhesion = 0)
+    simulation.set_constraints(cell_type = 1, fixed = 1)
 
     ### fill cube with cells
     # number of cells :
-    frc_in_cube = pickle.load('../data/cubes/adjusted_GM.pkl') # or ../data/cubes2/adjusted_GM.pkl          simulation.get_state() // 2**24 == 1 
+    frc_in_cube = pickle.load(open('../data/cubes2/adjusted_GM.pkl','rb')) # or ../data/cubes2/adjusted_GM.pkl          simulation.get_state() // 2**24 == 1 
     # make it fit dim : 
     frc_in_cube = frc_in_cube[32:64,32:64,32:64]
+    simulation.initialize_from_array(frc_in_cube,1)
 
     free_voxels = 32**3  - np.count_nonzero(frc_in_cube)
     print(free_voxels)
@@ -82,7 +85,7 @@ def setup(dens):
     seeds = possible_seeds[indx,:]
 
     for c in seeds:
-        simulation.add_cell(c[0],c[1],c[2],1)
+        simulation.add_cell(c[0],c[1],c[2],2)
     
     print('number of cells : ', len(seeds))
 
@@ -144,7 +147,8 @@ def runsim(simulation,steps):
 
 def run_grid_point(density):
     t1 = time.time()
-    os.mkdir("150V_DENS_FRC1"  +str(density))
+    if not os.path.exists("150V_DENS_FRC2_"  +str(density)):
+        os.mkdir("150V_DENS_FRC2_"  +str(density))
     #lambda_act,max_act = params
     # iterate 5 times : 
     cell_tracks = []
@@ -154,12 +158,12 @@ def run_grid_point(density):
         cell_track = runsim(sim,500)
         #for t in cell_track:
             #cell_tracks.append(t)
-        cell_tracks.append(cell_track[0:])
+        cell_tracks.append(cell_track[2:])
     for i,track in enumerate(cell_tracks):
         newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
-        fname = "150V_DENS"  +str(density) + "/CELL_" + str(i)
-        np.savetxt('../data/increase_DENS_PRFDR/'+fname+'.txt',newtrack)
+        fname = "150V_DENS_FRC2_"  +str(density) + "/CELL_" + str(i)
+        np.savetxt('../data/increase_DENS_PRFDR_FRC2/'+fname+'.txt',newtrack)
     #print('computed : ',params, 'in ',time.time() - t1)
 
 

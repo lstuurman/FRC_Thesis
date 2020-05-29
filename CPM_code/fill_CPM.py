@@ -135,15 +135,19 @@ def runsim(simulation,steps):
         if i == 0:
             t1 = time.time() - t0
             print('expected computing time : ',t1 * steps)
-        print(cofmass_track[2,i])
+        #print(cofmass_track[2,i])
     #print(cofmass_track[-1])
     #print(cofmass_track.shape)
     return cofmass_track #,cell_sizes
 
 def run_grid_point(density):
     t1 = time.time()
-    if not os.path.exists("150V_DENS"  +str(density)):
-        os.mkdir("150V_DENS"  +str(density))
+    try:
+        os.mkdir("../data/increase_DENS_PRFDR/150V_DENS"  +str(density))
+    except:
+        pass
+    #if not os.path.exists("150V_DENS"  +str(density)):
+    #    os.mkdir("150V_DENS"  +str(density))
     #lambda_act,max_act = params
     # iterate 5 times : 
     cell_tracks = []
@@ -153,13 +157,16 @@ def run_grid_point(density):
         cell_track = runsim(sim,500)
         #for t in cell_track:
             #cell_tracks.append(t)
-        cell_tracks.append(cell_track[1:])
+        cell_tracks = cell_track[1:]
+    print(cell_tracks)
     for i,track in enumerate(cell_tracks):
+        print(i)
         newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
         fname = "150V_DENS"  +str(density) + "/CELL_" + str(i)
         np.savetxt('../data/increase_DENS_PRFDR/'+fname+'.txt',newtrack)
-    #print('computed : ',params, 'in ',time.time() - t1)
+        print('saved track',i)
+    print('computed : ',density, 'in ',time.time() - t1)
 
 
 def gridsearch():
@@ -171,10 +178,11 @@ def gridsearch():
     #l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
-    max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
+    #max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
+    max_act = np.array([0.8,0.9])
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
-    cpus = 1 #.cpu_count() - 15
+    cpus = 2 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_grid_point,max_act))
@@ -187,3 +195,4 @@ if __name__ == "__main__":
     #cell_track = runsim(sim,500)
 
     gridsearch()
+    #run_grid_point(0.1)

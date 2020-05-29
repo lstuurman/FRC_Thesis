@@ -69,7 +69,7 @@ def setup(dens):
 
     ### fill cube with cells
     # number of cells :
-    frc_in_cube = pickle.load(open('../data/cubes2/adjusted_GM.pkl','rb')) # or ../data/cubes2/adjusted_GM.pkl          simulation.get_state() // 2**24 == 1 
+    frc_in_cube = pickle.load(open('../data/cubes/adjusted_GM.pkl','rb')) # or ../data/cubes2/adjusted_GM.pkl          simulation.get_state() // 2**24 == 1 
     # make it fit dim : 
     frc_in_cube = frc_in_cube[32:64,32:64,32:64]
     simulation.initialize_from_array(frc_in_cube,1)
@@ -114,6 +114,7 @@ def runsim(simulation,steps):
 
     ids = state % 2**24
     n_cells = np.unique(ids)
+    print(n_cells)
 
     iters = int(steps) # /10
     cofmass_track = np.zeros((len(n_cells),iters,3))
@@ -125,7 +126,7 @@ def runsim(simulation,steps):
         cell_sizes = []
         #centers = simulation.get_centroids()
         #print(centers)
-        for n in n_cells:
+        for n in n_cells[1:]:
             cell = state % 2**24 == n
             # check cell_size : 
             size = np.sum(cell)
@@ -134,7 +135,7 @@ def runsim(simulation,steps):
             if size <100:
                 #print('to small')
                 continue
-            cofmass_track[n,i] = np.array(real_cofmass(cell,32,pr = False))
+            cofmass_track[n-2,i] = np.array(real_cofmass(cell,32,pr = False))
             #print(cofmass_track[n,i])
             #print(n,size)
             #print(cofmass_track[n-2,i])
@@ -147,24 +148,28 @@ def runsim(simulation,steps):
 
 def run_grid_point(density):
     t1 = time.time()
-    if not os.path.exists("150V_DENS_FRC2_"  +str(density)):
-        os.mkdir("150V_DENS_FRC2_"  +str(density))
+    #if not os.path.exists("150V_DENS_FRC2_"  +str(density)):
+    try:
+        os.mkdir("../data/increase_DENS_PRFDR_FRC1/150V_DENS_FRC1_"  +str(density))
+    except:
+        pass
     #lambda_act,max_act = params
     # iterate 5 times : 
-    cell_tracks = []
+    #cell_tracks = []
     for _ in range(1):
         sim = setup(density)
         # run : 
         cell_track = runsim(sim,500)
         #for t in cell_track:
             #cell_tracks.append(t)
-        cell_tracks.append(cell_track[2:])
-    for i,track in enumerate(cell_tracks):
+        #cell_tracks = cell_track[2:]
+    for i,track in enumerate(cell_track):
+        print(i)
         newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
-        fname = "150V_DENS_FRC2_"  +str(density) + "/CELL_" + str(i)
-        np.savetxt('../data/increase_DENS_PRFDR_FRC2/'+fname+'.txt',newtrack)
-    #print('computed : ',params, 'in ',time.time() - t1)
+        fname = "150V_DENS_FRC1_"  +str(density) + "/CELL_" + str(i)
+        np.savetxt('../data/increase_DENS_PRFDR_FRC1/'+fname+'.txt',newtrack)
+    print('computed : ',density, 'in ',time.time() - t1)
 
 
 def gridsearch():
@@ -179,7 +184,7 @@ def gridsearch():
     max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
-    cpus = 10 #.cpu_count() - 15
+    cpus = 5 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_grid_point,max_act))
@@ -190,5 +195,5 @@ if __name__ == "__main__":
     #sim = setup(2000,20)
     # run : 
     #cell_track = runsim(sim,500)
-
+    #run_grid_point(.1)
     gridsearch()

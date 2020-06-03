@@ -101,8 +101,11 @@ def build_csv(path):
     ind_rows = []
     global_rows = []
     for foldr in folders:
-        files = glob.glob(foldr)
-        dens = re.findal(num_ptrn,foldr.split('_')[3])[0]
+        files = glob.glob(foldr+ '/*')
+        #print(files)
+        print(foldr)
+        dens = re.findall(num_ptrn,foldr.split('_')[-1])[0]
+        print(dens)
         files.sort(reverse = True,key = lambda x: int(re.findall(num_ptrn,x)[-1]))
         # extract tracks from files :
         tracks = [np.loadtxt(f) for f in files]
@@ -133,11 +136,11 @@ def build_csv(path):
         print(np.average(speeds),global_rows[-1])
 
     df1 = pd.DataFrame(data = ind_rows,
-        columns = ['Lambda', 'Max_act','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('DENS_PRFDR_ind.csv')
-    df2 = pd.DataFrame(data = deviation_rows,
-        columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('DENS_PRFDR_global.csv')
+        columns = ['dens','cell_id','speed','persist'])
+    df1.to_csv('density/DENS_PRFDR_ind.csv')
+    df2 = pd.DataFrame(data = global_rows,
+        columns = ['density','global_order','sum_order','std_sum_order','lcl_order','std_lcl'])
+    df2.to_csv('density/DENS_PRFD_global.csv')
 
 if __name__ == "__main__":
     build_csv('../../data/increase_DENS_PRFDR/*')

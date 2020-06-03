@@ -69,7 +69,7 @@ def setup(dens):
 
     ### fill cube with cells
     # number of cells :
-    frc_in_cube = pickle.load(open('../data/cubes/adjusted_GM.pkl','rb')) # or ../data/cubes2/adjusted_GM.pkl          simulation.get_state() // 2**24 == 1 
+    frc_in_cube = pickle.load(open('../data/cubes2/adjusted_GM.pkl','rb')) # or ../data/cubes2/adjusted_GM.pkl          simulation.get_state() // 2**24 == 1 
     # make it fit dim : 
     frc_in_cube = frc_in_cube[32:64,32:64,32:64]
     simulation.initialize_from_array(frc_in_cube,1)
@@ -150,7 +150,7 @@ def run_grid_point(density):
     t1 = time.time()
     #if not os.path.exists("150V_DENS_FRC2_"  +str(density)):
     try:
-        os.mkdir("../data/increase_DENS_PRFDR_FRC1/150V_DENS_FRC1_"  +str(density))
+        os.mkdir("../data/increase_DENS_PRFDR_FRC2/150V_DENS_FRC2_"  +str(density))
     except:
         pass
     #lambda_act,max_act = params
@@ -167,8 +167,8 @@ def run_grid_point(density):
         print(i)
         newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
-        fname = "150V_DENS_FRC1_"  +str(density) + "/CELL_" + str(i)
-        np.savetxt('../data/increase_DENS_PRFDR_FRC1/'+fname+'.txt',newtrack)
+        fname = "150V_DENS_FRC2_"  +str(density) + "/CELL_" + str(i)
+        np.savetxt('../data/increase_DENS_PRFDR_FRC2/'+fname+'.txt',newtrack)
     print('computed : ',density, 'in ',time.time() - t1)
 
 
@@ -181,7 +181,8 @@ def gridsearch():
     #l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
-    max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
+    #max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
+    max_act = np.array([1.0])
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
     cpus = 5 #.cpu_count() - 15

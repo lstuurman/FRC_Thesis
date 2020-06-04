@@ -3723,3 +3723,1414 @@ number of cells :  1
 1 149
 (2, 500, 3)
 expected computing time :  17.751216888427734
+(2, 500, 3)
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  27.571916580200195
+(2, 500, 3)
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+(2, 500, 3)
+expected computing time :  19.74475383758545
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  20.49875259399414
+(2, 500, 3)
+number of cells :  1
+(2, 500, 3)
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  27.85646915435791
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  22.12202548980713
+(2, 500, 3)
+number of cells :  1
+0
+0 261992
+1
+1 152
+(2, 500, 3)
+expected computing time :  19.988298416137695
+(2, 500, 3)
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  19.538044929504395
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  28.248071670532227
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  19.280076026916504
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  10.971426963806152
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  10.695219039916992
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  16.2508487701416
+number of cells :  1
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+number of cells :  1
+expected computing time :  22.969603538513184
+expected computing time :  11.404991149902344
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  24.663805961608887
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.256498336791992
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.915160179138184
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.113762855529785
+(2, 500, 3)
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  28.27000617980957
+(2, 500, 3)
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  14.034867286682129
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  13.96477222442627
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  26.76558494567871
+number of cells :  1
+0
+0 261992
+1
+1 152
+(2, 500, 3)
+expected computing time :  11.383652687072754
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.817408561706543
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  16.045808792114258
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.478304862976074
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.404156684875488
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.632561683654785
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  16.03984832763672
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  12.083768844604492
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+number of cells :  1
+0
+0 262000
+1
+1 144
+(2, 500, 3)
+expected computing time :  13.61846923828125
+0
+0 261991
+1
+1 153
+(2, 500, 3)
+expected computing time :  28.56278419494629
+(2, 500, 3)
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  18.738627433776855
+(2, 500, 3)
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  27.837157249450684
+(2, 500, 3)
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  13.984203338623047
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  10.936141014099121
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  25.18022060394287
+computed :  (50, 0.5) in  124.00944995880127
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.5814208984375
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  11.77990436553955
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.232733726501465
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  22.472262382507324
+(2, 500, 3)
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  19.521236419677734
+(2, 500, 3)
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  19.939422607421875
+(2, 500, 3)
+number of cells :  1
+(2, 500, 3)
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.59424877166748
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.848402976989746
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+number of cells :  1
+expected computing time :  12.19487190246582
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.37697696685791
+computed :  (100, 0.3) in  132.41887402534485
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.447787284851074
+computed :  (50, 0.1) in  136.0865671634674
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  17.684459686279297
+0
+0 261999
+1
+1 145
+(2, 500, 3)
+expected computing time :  14.44709300994873
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  14.5338773727417
+(2, 500, 3)
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  30.02011775970459
+(2, 500, 3)
+number of cells :  1
+0
+0 261997
+1
+1 147
+(2, 500, 3)
+expected computing time :  14.149665832519531
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+0
+0 261997
+1
+1 147
+(2, 500, 3)
+expected computing time :  14.642119407653809
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  14.380335807800293
+(2, 500, 3)
+number of cells :  1
+0
+0 261992
+1
+1 152
+(2, 500, 3)
+expected computing time :  21.31795883178711
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  14.803290367126465
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  21.334528923034668
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.926485061645508
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  16.65329933166504
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  24.779081344604492
+computed :  (200, 0.9) in  139.6635422706604
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.08674430847168
+computed :  (100, 0.7) in  143.48551774024963
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  17.37534999847412
+computed :  (200, 0.5) in  144.26065135002136
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  12.440681457519531
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  11.149406433105469
+computed :  (50, 0.9) in  146.99868774414062
+computed :  (200, 0.1) in  147.0466468334198
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+number of cells :  1
+expected computing time :  11.17241382598877
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.993408203125
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  19.818425178527832
+expected computing time :  21.125078201293945
+(2, 500, 3)
+number of cells :  1
+0
+0 261992
+1
+1 152
+(2, 500, 3)
+expected computing time :  19.639015197753906
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.344194412231445
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.99538803100586
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  16.177654266357422
+computed :  (300, 0.7) in  154.04669737815857
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.489510536193848
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.149048805236816
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+number of cells :  1
+0
+0 261998
+1
+1 146
+(2, 500, 3)
+0
+0 261997
+1
+1 147
+(2, 500, 3)
+expected computing time :  13.851284980773926
+expected computing time :  13.764739036560059
+(2, 500, 3)
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+(2, 500, 3)
+expected computing time :  19.571423530578613
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  19.57392692565918
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  20.807504653930664
+(2, 500, 3)
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  27.707934379577637
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.825753211975098
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.849326133728027
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.853409767150879
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  17.022252082824707
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.127948760986328
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.896801948547363
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  11.249184608459473
+(2, 500, 3)
+number of cells :  1
+0
+0 261998
+1
+1 146
+(2, 500, 3)
+expected computing time :  27.40180492401123
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  14.268994331359863
+(2, 500, 3)
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  19.96016502380371
+(2, 500, 3)
+number of cells :  1
+0
+0 261998
+1
+1 146
+(2, 500, 3)
+(2, 500, 3)
+expected computing time :  20.350933074951172
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  28.123855590820312
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  13.91303539276123
+(2, 500, 3)
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  13.884782791137695
+(2, 500, 3)
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.861039161682129
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  17.597198486328125
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.977625846862793
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  16.375422477722168
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.23301410675049
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.741084098815918
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.608553886413574
+computed :  (300, 0.3) in  177.91023206710815
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  13.004899024963379
+number of cells :  1
+0
+0 261997
+1
+1 147
+(2, 500, 3)
+expected computing time :  11.440634727478027
+number of cells :  1
+0
+0 261997
+1
+1 147
+(2, 500, 3)
+expected computing time :  19.572734832763672
+(2, 500, 3)
+number of cells :  1
+0
+0 261999
+1
+1 145
+(2, 500, 3)
+expected computing time :  14.315247535705566
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.662525177001953
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.833024978637695
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.9635591506958
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.697649955749512
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.376738548278809
+(2, 500, 3)
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  29.57320213317871
+(2, 500, 3)
+number of cells :  1
+(2, 500, 3)
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  28.107881546020508
+number of cells :  1
+0
+0 261999
+1
+1 145
+(2, 500, 3)
+expected computing time :  19.418001174926758
+(2, 500, 3)
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  14.050602912902832
+(2, 500, 3)
+number of cells :  1
+0
+0 261998
+1
+1 146
+(2, 500, 3)
+(2, 500, 3)
+expected computing time :  19.553661346435547
+(2, 500, 3)
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+number of cells :  1
+expected computing time :  14.295220375061035
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  13.552427291870117
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+number of cells :  1
+0
+0 261998
+1
+1 146
+(2, 500, 3)
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  13.344168663024902
+expected computing time :  28.156638145446777
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  16.16382598876953
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.025786399841309
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  17.655372619628906
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  18.29826831817627
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.207222938537598
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  17.103195190429688
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.784029960632324
+(2, 500, 3)
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  14.117717742919922
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  24.631261825561523
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.661125183105469
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  17.596125602722168
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.10982894897461
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.671185493469238
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  16.001105308532715
+number of cells :  1
+0
+0 261991
+1
+1 153
+(2, 500, 3)
+expected computing time :  17.381787300109863
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.907530784606934
+(2, 500, 3)
+number of cells :  1
+0
+0 261997
+1
+1 147
+(2, 500, 3)
+expected computing time :  14.169573783874512
+(2, 500, 3)
+number of cells :  1
+0
+0 261992
+1
+1 152
+(2, 500, 3)
+expected computing time :  21.71003818511963
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+(2, 500, 3)
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  14.060258865356445
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  20.6143856048584
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  14.384865760803223
+(2, 500, 3)
+number of cells :  1
+(2, 500, 3)
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  21.49653434753418
+number of cells :  1
+0
+0 261999
+1
+1 145
+(2, 500, 3)
+expected computing time :  13.869762420654297
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  19.071102142333984
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  11.0931396484375
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.717391967773438
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.94198226928711
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.071205139160156
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.96901226043701
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.964601516723633
+(2, 500, 3)
+number of cells :  1
+(2, 500, 3)
+0
+0 261997
+1
+1 147
+(2, 500, 3)
+expected computing time :  21.395564079284668
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  14.034152030944824
+(2, 500, 3)
+number of cells :  1
+0
+0 261997
+1
+1 147
+(2, 500, 3)
+expected computing time :  14.25933837890625
+(2, 500, 3)
+number of cells :  1
+0
+0 262000
+1
+1 144
+(2, 500, 3)
+expected computing time :  13.868451118469238
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+number of cells :  1
+expected computing time :  14.422774314880371
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  13.959527015686035
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.803030967712402
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.828852653503418
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.075496673583984
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  21.514058113098145
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.249423027038574
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  10.439157485961914
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  16.76774024963379
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.32468605041504
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  13.592839241027832
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  14.010906219482422
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  21.67224884033203
+(2, 500, 3)
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  21.73614501953125
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.672139167785645
+number of cells :  1
+0
+0 261993
+1
+1 151
+(2, 500, 3)
+expected computing time :  11.200785636901855
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  17.965078353881836
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.385083198547363
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.21532917022705
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  17.688632011413574
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.032265663146973
+(2, 500, 3)
+(2, 500, 3)
+number of cells :  1
+0
+0 261998
+1
+1 146
+(2, 500, 3)
+number of cells :  1
+expected computing time :  14.244556427001953
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  21.22020721435547
+(2, 500, 3)
+computed :  (200, 10.0) in  333.4761893749237
+number of cells :  1
+0
+0 261997
+1
+1 147
+(2, 500, 3)
+expected computing time :  18.88597011566162
+(2, 500, 3)
+computed :  (200, 110.0) in  334.3372206687927
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  13.983845710754395
+(2, 500, 3)
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  21.6904878616333
+(2, 500, 3)
+computed :  (200, 210.0) in  336.5705840587616
+number of cells :  1
+0
+0 261996
+1
+1 148
+(2, 500, 3)
+expected computing time :  13.778448104858398
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  11.425137519836426
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.996580123901367
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  16.580939292907715
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.540055274963379
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  11.489152908325195
+number of cells :  1
+0
+0 261994
+1
+1 150
+(2, 500, 3)
+expected computing time :  10.885357856750488
+number of cells :  1
+0
+0 261995
+1
+1 149
+(2, 500, 3)
+expected computing time :  17.343521118164062

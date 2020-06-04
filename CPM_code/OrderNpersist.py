@@ -102,8 +102,13 @@ def Persist_tracks(autocors):
         #print(ac[0])
         max_indeces = np.where(ac > .5)[0]
         min_indeces = np.where(ac < .5)[0]
-        if len(max_indeces) == 0 or len(min_indeces) == 0:
+        if len(max_indeces) == 0:
             print(ac)
+            continue
+        if len(min_indeces) == 0:
+            # very persistent cell : 
+            half_lives.append(len(ac))
+            print(len(ac))
             continue
         dt_0 = max(np.where(ac > .5)[0])
         dt_1 = min(np.where(ac < .5)[0])

@@ -44,7 +44,7 @@ def OrderAt_T(vec_tracks):
     for i,v in enumerate(vec_tracks):
         vt2[i] = v[:min_length]
                    
-    print(vt2.shape)
+    #print(vt2.shape)
     orders = []
     for i in range(min_length):
         vecs_at_t = vt2[:,i]
@@ -52,7 +52,7 @@ def OrderAt_T(vec_tracks):
         for v in vecs_at_t:
             ordr += v
         orders.append(ordr)
-    print('lenght of order shoulde be min_lenght. Min_lenght',min_length,'==',len(orders))
+    #print('lenght of order shoulde be min_lenght. Min_lenght',min_length,'==',len(orders))
     av_ordr = np.average([norm(v) for v in orders])
     std_ordr = np.std([norm(v) for v in orders])
         
@@ -71,7 +71,7 @@ def local_order(tracks,vec_tracks,bins = 5):
     # go through vectors per timestep :
     orders = []
     for i in range(min_length):
-        print('Time in track:',i)
+        #print('Time in track:',i)
         # bin according to position :
         vecs_at_t = vt2[:,i]
         pos = [tracks[j][i] for j in range(len(vecs_at_t))]
@@ -118,8 +118,9 @@ def build_csv(path):
         autocors = [] #[new_auto(t) for t in tracks]
         for ti,t in enumerate(tracks):
             autocors.append(new_auto(t))
-            print(ti)
+            #print(ti)
         half_times = Persist_tracks(autocors)
+        print('Length half Times : ',len(half_times))
         # save individual
         for i,ht in enumerate(half_times):
             ind_rows.append([dens,i,speeds[i],ht])
@@ -134,13 +135,14 @@ def build_csv(path):
 
         global_rows.append([dens,ordr1,ordr2,std_ordr2,lcl_ordr,std_lcl])
         print(np.average(speeds),global_rows[-1])
+        print(ind_rows[-1])
 
     df1 = pd.DataFrame(data = ind_rows,
         columns = ['dens','cell_id','speed','persist'])
     df1.to_csv('density/DENS_PRFDR_ind.csv')
     df2 = pd.DataFrame(data = global_rows,
         columns = ['density','global_order','sum_order','std_sum_order','lcl_order','std_lcl'])
-    df2.to_csv('density/DENS_PRFD_global.csv')
+    df2.to_csv('density/DENS_PRFDR_global.csv')
 
 if __name__ == "__main__":
     build_csv('../../data/increase_DENS_PRFDR/*')

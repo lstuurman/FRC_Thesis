@@ -50,7 +50,7 @@ def run_sim(params):
     lambda_act,max_act = params
     # iterate 5 times : 
     cell_tracks = []
-    for _ in range(10):
+    for _ in range(20):
         sim = setup(lambda_act,int(max_act))
         # run : 
         cell_track = runsim(sim,500)
@@ -61,7 +61,7 @@ def run_sim(params):
         newtrack = handle_boundaries2(track)
         #cell_tracks[i] = newtrack
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FIT_speedy2/single_ZOOM5/CELL'+fname+'.txt',newtrack)
+        np.savetxt('../data/FIT_speedy2/single_5/CELL'+fname+'.txt',newtrack)
     print('computed : ',params, 'in ',time.time() - t1)
 
     #return data
@@ -76,11 +76,13 @@ def gridsearch():
     #l_act = np.array([500,1000,2500,5000,10000])
     #l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,5000,10000,20000])
     #l_act = np.linspace(50,90,21)
-    l_act = np.linspace(2500,5000,11)
+    #l_act = np.linspace(2500,5000,11)
+    l_act = np.array([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2500, 5000, 10000, 20000])
     #max_act = np.array([10,20,30,40,50,60,70,80,90,100,110,120,130,140,150])
-    max_act = np.linspace(100,250,11)
+    #max_act = np.linspace(100,250,11)
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
     #max_act = np.linspace(100,1000,10)
+    max_act = np.linspace(10,250,25)
     print(l_act,max_act)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 

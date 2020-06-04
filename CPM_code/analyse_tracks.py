@@ -50,7 +50,7 @@ def roseplot(track):
 
 def new_auto(cell_track): 
     averages = []
-    for dt in range(0,100):
+    for dt in range(0,len(celltrack)):
         # angles per dt: 
         cosines = []
         for i in range(len(cell_track) - 1 - dt):

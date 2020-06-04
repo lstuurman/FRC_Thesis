@@ -6,6 +6,7 @@ import random
 from itertools import product
 from multiprocessing import Pool
 from CPM_helpers1 import real_cofmass
+import os
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -14,7 +15,7 @@ def handle_boundaries(cell_track,pr = False):
     for i in range(len(cell_track) - 1):
         dif = np.subtract(cell_track[i],cell_track[i+1])
         for j,coordinate in enumerate(dif):
-            if coordinate > 32:
+            if coordinate > 16:
                 # went over boundary from 256 -> 0
                 if pr:
                     print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
@@ -22,35 +23,34 @@ def handle_boundaries(cell_track,pr = False):
                     print('changed axis : ',j)
                     print('Old coordinat : ',cell_track[i])
 
-                cell_track2[:i + 1,j] -= 64
+                cell_track2[:i + 1,j] -= 32
 
                 if pr:
                     print('New coordinate : ',cell_track[i])
                     print(i,j)
 
-            elif coordinate < -32:
+            elif coordinate < -16:
                 # form 0 -> 256
                 if pr:
                     print('Jumped from :',cell_track[i],'to :',cell_track[i+1])
                     print('Adding ', 256, ' to previous of cell track') 
                     print('Old coordinat : ',cell_track[i])
 
-                cell_track2[:i + 1,j] += 64
+                cell_track2[:i + 1,j] += 32
 
                 if pr:
                     print('New coordinate : ',cell_track[i])
                     print(i,j)
     return cell_track2
 
-
-def setup(l_act,m_act):
+def setup(dens):
         ### SET UP CPM ###
     # params from Nino: multiplicated the adhesion engergies by 10
     # and because lambda of .1 not possible here. 
     # params suitable for single cell in empty space
-    dimension = 64
+    dimension = 32
     number_of_types = 2
-    temperature = 20
+    temperature = 200
 
     # initialize : 
 
@@ -58,17 +58,19 @@ def setup(l_act,m_act):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1500) #8600
-    simulation.set_constraints(cell_type = 1, lambda_persistence = l_act, persistence_diffusion = m_act,persistence_time = 15) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 1, lambda_act = 3500, max_act = 160)
     # adhesion ; 
     #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
     simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
     simulation.set_constraints(cell_type = 0,other_cell_type = 1,adhesion = 0)
-
     ### fill cube with cells
     # number of cells :
     frc_in_cube = simulation.get_state() // 2**24 == 1 
-    free_voxels = 64**3  - np.count_nonzero(frc_in_cube)
-    n_cells = 1 # np.floor(1 * (free_voxels/500))
+    free_voxels = 32**3  - np.count_nonzero(frc_in_cube)
+    print(free_voxels)
+    print(dens)
+    n_cells = np.floor(dens * (free_voxels/150))
+
     # sample random positions : 
     free_indeces = np.where(frc_in_cube == 0.)
     possible_seeds = np.array(list(zip(free_indeces[0],free_indeces[1],free_indeces[2])))
@@ -96,8 +98,6 @@ def setup(l_act,m_act):
         t.append(size)
         print(n,size)
 
-    # free voxels :
-
     return simulation
 
 def runsim(simulation,steps):
@@ -112,7 +112,7 @@ def runsim(simulation,steps):
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
-        simulation.run(19)
+        simulation.run(20)
         cell_sizes = []
         #centers = simulation.get_centroids()
         #print(centers)
@@ -125,35 +125,46 @@ def runsim(simulation,steps):
             if size <100:
                 #print('to small')
                 continue
-            cofmass_track[n,i] = np.array(real_cofmass(cell,64,pr = False))
+            cofmass_track[n,i] = np.array(real_cofmass(cell,32,pr = False))
             #print(cofmass_track[n,i])
             #print(n,size)
             #print(cofmass_track[n-2,i])
         if i == 0:
             t1 = time.time() - t0
             print('expected computing time : ',t1 * steps)
+        #print(cofmass_track[2,i])
     #print(cofmass_track[-1])
     #print(cofmass_track.shape)
     return cofmass_track #,cell_sizes
 
-def run_grid_point(params):
+def run_grid_point(density):
     t1 = time.time()
-    lambda_act,max_act = params
+    try:
+        os.mkdir("../data/increase_DENS_ACT/150V_DENS"  +str(density))
+    except:
+        pass
+    #if not os.path.exists("150V_DENS"  +str(density)):
+    #    os.mkdir("150V_DENS"  +str(density))
+    #lambda_act,max_act = params
     # iterate 5 times : 
     cell_tracks = []
-    for _ in range(20):
-        sim = setup(lambda_act,max_act)
+    for iter in range(3):
+        sim = setup(density)
         # run : 
         cell_track = runsim(sim,500)
         #for t in cell_track:
             #cell_tracks.append(t)
-        cell_tracks.append(cell_track[-1])
+        cell_tracks = cell_track[1:]
+    print(cell_tracks)
     for i,track in enumerate(cell_tracks):
-        newtrack = handle_boundaries(track)
+        print(i)
+        #newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
-        fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FIT_speedy_PRFDR/150_single6/CELL'+fname+'.txt',newtrack)
-    print('computed : ',params, 'in ',time.time() - t1)
+        fname = "150V_DENS"  +str(density) + "/CELL_" + str(i) + "iter" + str(iter)
+        np.savetxt('../data/increase_DENS_ACT/'+fname+'.txt',track)
+        print('saved track',i)
+    print('computed : ',density, 'in ',time.time() - t1)
+
 
 
 def gridsearch():
@@ -162,18 +173,17 @@ def gridsearch():
     # input : 
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
     #l_act = np.array([500,750,1000,2000,3000,4000,5000])
-    l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
-    #l_act = np.linspace(3000,4000,11)
+    #l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
     max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
-    #max_act = np.linspace(.7,.85,16)
-    inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
+    #max_act = np.array([0.8,0.9])
+    #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
     cpus = 10 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
-    output = np.array(p.map(run_grid_point,inputs))
+    output = np.array(p.map(run_grid_point,max_act))
     p.close()
     p.join()
 
@@ -183,3 +193,5 @@ if __name__ == "__main__":
     #cell_track = runsim(sim,500)
 
     gridsearch()
+    #run_grid_point(0.1)
+

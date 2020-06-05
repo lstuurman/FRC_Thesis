@@ -60,7 +60,7 @@ def setup(dens):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1500) #8600
-    simulation.set_constraints(cell_type = 2, lambda_persistence = 3500, persistence_diffusion = .81,persistence_time = 15) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 2, lambda_persistence = 3400, persistence_diffusion = .81,persistence_time = 15) # 2500, max_act = 42
     # adhesion ; 
     simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
     simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 10)

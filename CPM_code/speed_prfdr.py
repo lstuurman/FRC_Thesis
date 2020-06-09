@@ -56,8 +56,8 @@ def setup(l_act,m_act):
 
     simulation = cpm.Cpm3d(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
-    simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1500) #8600
+    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=50)
+    simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1200) #8600
     simulation.set_constraints(cell_type = 1, lambda_persistence = l_act, persistence_diffusion = m_act,persistence_time = 15) # 2500, max_act = 42
     # adhesion ; 
     #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
@@ -112,7 +112,7 @@ def runsim(simulation,steps):
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
-        simulation.run(19)
+        simulation.run(40)
         cell_sizes = []
         #centers = simulation.get_centroids()
         #print(centers)
@@ -152,7 +152,7 @@ def run_grid_point(params):
         newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FIT_speedy_PRFDR/150_single6/CELL'+fname+'.txt',newtrack)
+        np.savetxt('../data/FIT_speedy_PRFDR/150_single7/CELL'+fname+'.txt',newtrack)
     print('computed : ',params, 'in ',time.time() - t1)
 
 

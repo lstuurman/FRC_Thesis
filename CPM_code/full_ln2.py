@@ -87,14 +87,14 @@ def setup(l_act,m_act):
     # params suitable for single cell in empty space
     dimension = 64
     number_of_types = 2
-    temperature = 200
+    temperature = 20
 
     # initialize : 
 
     simulation = cpm.Cpm3d(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
-    simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1500) #8600
+    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=50)
+    simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1200) #8600
     simulation.set_constraints(cell_type = 1, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
     # adhesion ; 
     #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
@@ -156,7 +156,7 @@ def runsim(simulation,steps):
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
-        simulation.run(20)
+        simulation.run(40)
         cell_sizes = []
         #centroids = sim.get_centroids()
         #print(centroids)

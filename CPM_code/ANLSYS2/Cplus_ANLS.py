@@ -85,7 +85,7 @@ def local_order(tracks,vec_tracks,bins = 5):
             if len(vecs_n_bin) < 2:
                 continue
             # sum 
-            norm_bin = norm(sum(vecs_n_bin))
+            norm_bin = norm(sum(vecs_n_bin))/len(indcs)
             orders.append(norm_bin)
     return orders
 

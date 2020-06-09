@@ -48,7 +48,7 @@ def roseplot(track):
         bar.set_alpha(0.5)
     plt.show()
 
-def new_auto(cell_track): 
+def new_auto1(cell_track): 
     averages = []
     for dt in range(0,len(cell_track)):
         # angles per dt: 
@@ -77,6 +77,41 @@ def new_auto(cell_track):
             averages.append(np.average(cosines))
     #print('computed AC one track')
     return averages
+
+def new_auto(cell_track):
+    dts = len(cell_track)
+    dots_for_dts = [[] for i in range(dts)]
+    for dt in range(0,dts):
+        dots = []
+        for i in range(len(cell_track) - 1 - dt):
+            point1 = cell_track[i]
+            point2 = cell_track[i + 1]
+            point3 = cell_track[i + dt]
+            point4 = cell_track[i + dt + 1]
+            v1 = point2 - point1
+            v2 = point4 - point3
+            dot = np.dot(v1,v2)/(norm(v1) * norm(v2))
+            dots.append(dot)
+        dots_for_dts[dt].extend(dots)
+
+    averages = [np.mean(i) for i in dots_for_dts]
+    return averages
+
+def auto_cor_pooled(cell_track, dots_for_dts, dts): 
+    for dt in range(0,dts):
+        dots = []
+        for i in range(len(cell_track) - 1 - dt):
+            point1 = cell_track[i]
+            point2 = cell_track[i + 1]
+            point3 = cell_track[i + dt]
+            point4 = cell_track[i + dt + 1]
+            v1 = point2 - point1
+            v2 = point4 - point3
+            dot = np.dot(v1,v2)/(norm(v1) * norm(v2))
+            if (norm(v1) * norm(v2)) == 0.:
+                continue
+            dots.append(dot)
+        dots_for_dts[dt].extend(dots)
 
 def all_autos(path):
     files = glob.glob(path)

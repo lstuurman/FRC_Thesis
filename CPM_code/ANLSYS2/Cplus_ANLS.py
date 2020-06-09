@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d 
 sys.path.insert(0,'../')
 from OrderNpersist import Persist_tracks,Order_tracks2,order_radius,to_vecs
-from analyse_tracks import new_auto
+from analyse_tracks import new_auto,auto_cor_pooled
 from CPM_helpers1 import plot_celltrack
 
 def save_track(cell_track,prms1,prms2,i):
@@ -118,6 +118,17 @@ def build_csv(path):
         std_speed = np.std(speeds)
         print('Speed calculated')
         #peristance : 
+        # pooled persistance : 
+        dts = 100
+        dots_for_dts = [[] for i in range(dts)]
+        pooled_dts = [auto_cor_pooled(t,dots_for_dts,dts) for t in tracks]
+        averages = [np.mean(i) for i in dots_for_dts]
+        pooled_pers = Persist_tracks([averages])
+        if len(pooled_pers) == 0:
+            pooled_pers = np.nan
+        else:
+            pooled_pers = pooled_pers[0]
+
         autocors = [] #[new_auto(t) for t in tracks]
         for ti,t in enumerate(tracks):
             autocors.append(new_auto(t))
@@ -136,16 +147,16 @@ def build_csv(path):
         lcl_ordr = np.average(lcl_ordrs)
         std_lcl = np.std(lcl_ordrs)
 
-        rows.append([prms[0],prms[1],speed,ht,ordr1,ordr2,lcl_ordr])
+        rows.append([prms[0],prms[1],speed,ht,pooled_pers,ordr1,ordr2,lcl_ordr])
         deviation_rows.append([prms[0],prms[1],std_speed,std_ht,std_ordr2,std_lcl])
         print(rows[-1])
 
     df1 = pd.DataFrame(data = rows,
-        columns = ['Lambda', 'Max_act','speed','persistance','sum_order','global_order','lcl_order'])
-    df1.to_csv('single_PRFDR6.csv')
+        columns = ['Lambda', 'Max_act','speed','persistance','pooled_pers','sum_order','global_order','lcl_order'])
+    df1.to_csv('single_cell/single_PRFDR7.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('single_PRFDR6_std.csv')
+    df2.to_csv('single_cell/single_PRFDR7_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/FIT_speedy_PRFDR/150_single6/*')
+    build_csv('../../data/FIT_speedy_PRFDR/150_single7/*')

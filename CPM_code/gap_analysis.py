@@ -36,7 +36,7 @@ def net_to_cube(g_type = 'ER',dim = 256):
         g = nx.powerlaw_cluster_graph(4500,m,p)
         g = fruchterman_reingold(g,25)
     elif g_type == 'GM':
-        r = 20/256 # 20microns
+        r = 40/256 # 20microns
         g = nx.random_geometric_graph(4500,r,dim = 3)
     # extract positions from nx graph object : 
     positions = []
@@ -56,22 +56,22 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
     # generate graph of given type:
     print('Generating graph')
     if g_type == 'ER':
-        p = ER_p_value(700,.25)
-        g = nx.erdos_renyi_graph(700,p)
-        g = fruchterman_reingold(g,25)
+        p = ER_p_value(2400,.25)
+        g = nx.erdos_renyi_graph(2400,p)#7000
+        g = fruchterman_reingold(g,20)
     elif g_type == 'BA':
-        g = nx.barabasi_albert_graph(700,4)
-        g = fruchterman_reingold(g,25)
+        g = nx.barabasi_albert_graph(2400,4)#700
+        g = fruchterman_reingold(g,20)
     elif g_type == 'WS':
-        k = WS_K_value(2000,.25)
+        k = WS_K_value(6000,.25)
         p = 0.027825594022071243
-        g = nx.watts_strogatz_graph(2000,k,p)
+        g = nx.watts_strogatz_graph(6000,k,p)#1000
         g = fruchterman_reingold(g,20)
     elif g_type == 'PW':
-        m = M_power_cluster(700,.25)
+        m = M_power_cluster(4000,.25)
         p = 0.666666666666666
-        g = nx.powerlaw_cluster_graph(700,m,p)
-        g = fruchterman_reingold(g,25)
+        g = nx.powerlaw_cluster_graph(4000,m,p)# 700
+        g = fruchterman_reingold(g,20)
     elif g_type == 'GM':
         r = 20/dim # 20microns
         g = nx.random_geometric_graph(9000,r,dim = 3)#4500
@@ -101,7 +101,7 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
         
 
 def save_cubes():
-    g_types = ['GM'] #, 'WS', 'PW', 'GM']
+    g_types = ['ER'] #['ER','BA', 'WS', 'PW', 'GM']
     for graph_type in g_types: 
         cube = net_to_cube_adapted(g_type = graph_type,dim = 256)
         fname = '../data/cubes2/adjusted_' + graph_type + '.pkl'

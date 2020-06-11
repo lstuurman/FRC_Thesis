@@ -48,7 +48,7 @@ def roseplot(track):
         bar.set_alpha(0.5)
     plt.show()
 
-def new_auto1(cell_track): 
+def new_auto(cell_track): 
     averages = []
     for dt in range(0,len(cell_track)):
         # angles per dt: 
@@ -78,7 +78,7 @@ def new_auto1(cell_track):
     #print('computed AC one track')
     return averages
 
-def new_auto(cell_track):
+def new_auto1(cell_track):
     dts = len(cell_track)
     dots_for_dts = [[] for i in range(dts)]
     for dt in range(0,dts):

@@ -134,7 +134,7 @@ def build_csv(path):
             autocors.append(new_auto(t))
             #plt.plot(autocors[-1],range(len(autocors[-1])))
             #plt.savefig('../../results/ACT_CHECKS/AC4/' + prms[0] + prms[1] + 'Single500LowE_' + str(ti) +'.png')
-            print(ti)
+            #print(ti)
         half_times = Persist_tracks(autocors)
         ht = np.average(half_times)
         std_ht = np.std(half_times)
@@ -153,10 +153,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','persistance','pooled_pers','sum_order','global_order','lcl_order'])
-    df1.to_csv('single_cell/single_PRFDR7.csv')
+    df1.to_csv('single_cell/single_PRFDR8.csv')
     df2 = pd.DataFrame(data = deviation_rows,
         columns = ['Lambda', 'Max_act','speed','persistance','global_order','lcl_order'])
-    df2.to_csv('single_cell/single_PRFDR7_std.csv')
+    df2.to_csv('single_cell/single_PRFDR8_std.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/FIT_speedy_PRFDR/150_single7/*')
+    build_csv('../../data/FIT_speedy_PRFDR/150_single8/*')

@@ -51,7 +51,7 @@ def run_sim(params):
     # iterate 5 times : 
     cell_tracks = []
     for _ in range(10):
-        sim = setup(lambda_act,int(max_act))
+        sim = setup(lambda_act,max_act)
         # run : 
         cell_track = runsim(sim,500)
         #for t in cell_track:
@@ -61,7 +61,7 @@ def run_sim(params):
         newtrack = handle_boundaries2(track)
         #cell_tracks[i] = newtrack
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FIT_speedy2/single_7ZOOM/CELL'+fname+'.txt',newtrack)
+        np.savetxt('../data/FIT_speedy2/150V_single/CELL'+fname+'.txt',newtrack)
     print('computed : ',params, 'in ',time.time() - t1)
 
     #return data
@@ -74,16 +74,10 @@ def gridsearch():
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
     #l_act = np.array([500,750,1000,2000,3000,4000,5000])
     #l_act = np.array([500,1000,2500,5000,10000])
-    l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,1500,2000])
-    max_act = np.linspace(40,80,21)
-    #l_act = np.linspace(2500,5000,11)
-    #l_act = np.array([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2500, 5000, 10000, 20000])
-    #max_act = np.array([10,20,30,40,50,60,70,80,90,100,110,120,130,140,150])
-    #max_act = np.linspace(100,250,11)
+    l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
+    #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
-    #max_act = np.linspace(100,1000,10)
-    #max_act = np.linspace(10,250,25)
-    print(l_act,max_act)
+    #max_act = np.array([10,20,30,40,50,60,70,80,90,100,125,150,200])
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
     cpus = 10 #.cpu_count() - 15
@@ -93,7 +87,7 @@ def gridsearch():
     p.close()
     p.join()
     # save data :
-   #pickle.dump(output,open('testdat/raw_nofrc.pkl','wb'))
+    #pickle.dump(output,open('testdat/raw_nofrc.pkl','wb'))
 
 # data = #{'Motility':[],'Persistance':[],'Scanned_volume':[],'Lambda_act':[],'Max_act':[]}
     # for i,tup in enumerate(inputs):

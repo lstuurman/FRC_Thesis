@@ -87,13 +87,13 @@ def setup(l_act,m_act):
     # params suitable for single cell in empty space
     dimension = 64
     number_of_types = 2
-    temperature = 20
+    temperature = 200
 
     # initialize : 
 
     simulation = cpm.Cpm3d(dimension, number_of_types, temperature)
     # LAmbdas ; 
-    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=50)
+    simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1200) #8600
     simulation.set_constraints(cell_type = 1, lambda_act = l_act, max_act = m_act) # 2500, max_act = 42
     # adhesion ; 

@@ -56,8 +56,8 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
     # generate graph of given type:
     print('Generating graph')
     if g_type == 'ER':
-        p = ER_p_value(2400,.25)
-        g = nx.erdos_renyi_graph(2400,p)#7000
+        p = ER_p_value(2500,.25)
+        g = nx.erdos_renyi_graph(2500,p)#7000
         g = fruchterman_reingold(g,20)
     elif g_type == 'BA':
         g = nx.barabasi_albert_graph(2400,4)#700
@@ -152,7 +152,7 @@ def fill_circles(M):
     dist_frames = []
     frames = []
     
-    while max_radius > 2:
+    while max_radius > 4:
         # place largest possible circle at possition with max distance 
         mask = (x_axis[np.newaxis,:]-cy[0])**2 + (y_axis[:,np.newaxis]-cx[0])**2 < max_radius**2
         indeces = np.where(mask)
@@ -190,17 +190,17 @@ def main():
         gtype = f[-6:-4]
         for i in range(5):
             M = take_random_slices(cube)
-            plt.imshow(M)
-            plt.show()
+            #plt.imshow(M)
+            #plt.show()
             M,radii = fill_circles(M)
             for r in radii:
                 radii_data.append([r,i,gtype])
             plt.imshow(M)
             #plt.show()
-            plt.savefig('../data/cubes/adjusted' + gtype + str(i) + '.png')
+            plt.savefig('../data/cubes/adjusted3' + gtype + str(i) + '.png')
             print('../data/cubes/' + gtype + str(i) + '.png')
             print('finished gap analysis : ',gtype,' ' + str(i))
-    dfile = '../data/cubes/radii/adjusted.csv'
+    dfile = '../data/cubes/radii/adjusted3.csv'
     df = pd.DataFrame(radii_data)
     df.columns = ['Radius','iter','type']
     print(df.head())

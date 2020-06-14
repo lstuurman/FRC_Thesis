@@ -162,12 +162,12 @@ def gridsearch():
     # input : 
     #l_act = np.linspace(1000,5000,num=10,dtype=int)
     #l_act = np.array([500,750,1000,2000,3000,4000,5000])
-    l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
-    #l_act = np.linspace(3000,4000,11)
+    #l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
+    l_act = np.linspace(2000,4000,11)
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
-    max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
-    #max_act = np.linspace(.7,.85,16)
+    #max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
+    max_act = np.linspace(.75,.95,21)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
     cpus = 10 #.cpu_count() - 15

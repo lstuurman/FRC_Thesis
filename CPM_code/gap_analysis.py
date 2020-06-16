@@ -182,7 +182,7 @@ def fill_circles(M):
 
 def main():
     #save_cubes()
-    files = glob.glob('../data/cubes/adjusted*.pkl')
+    files = glob.glob('../data/cubes2/adjusted*.pkl')
     radii_data = []
     for f in files:
         cube = pickle.load(open(f,'rb'))
@@ -197,10 +197,10 @@ def main():
                 radii_data.append([r,i,gtype])
             plt.imshow(M)
             #plt.show()
-            plt.savefig('../data/cubes/adjusted3' + gtype + str(i) + '.png')
+            plt.savefig('../data/cubes2/adjusted_thin' + gtype + str(i) + '.png')
             print('../data/cubes/' + gtype + str(i) + '.png')
             print('finished gap analysis : ',gtype,' ' + str(i))
-    dfile = '../data/cubes/radii/adjusted3.csv'
+    dfile = '../data/cubes2/radii/adjusted_thin.csv'
     df = pd.DataFrame(radii_data)
     df.columns = ['Radius','iter','type']
     print(df.head())
@@ -210,5 +210,5 @@ def main():
 
 
 if __name__ == "__main__":
-    #main()
-    save_cubes()
+    main()
+    #save_cubes()

@@ -57,8 +57,8 @@ def setup(dens):
     simulation = cpm.Cpm3d(dimension, number_of_types, temperature)
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 1,target_area = 150, lambda_area=25)
-    simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1500) #8600
-    simulation.set_constraints(cell_type = 1, lambda_act = 3500, max_act = 160)
+    simulation.set_constraints(cell_type = 1, lambda_perimeter = .2, target_perimeter = 1200) #8600
+    simulation.set_constraints(cell_type = 1, lambda_act = 1100, max_act = 44)
     # adhesion ; 
     #simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
     simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
@@ -112,7 +112,7 @@ def runsim(simulation,steps):
     #cell_sizes = []
     t0 = time.time()
     for i in range(iters):
-        simulation.run(20)
+        simulation.run(40)
         cell_sizes = []
         #centers = simulation.get_centroids()
         #print(centers)
@@ -148,7 +148,7 @@ def run_grid_point(density):
     #lambda_act,max_act = params
     # iterate 5 times : 
     cell_tracks = []
-    for iter in range(3):
+    for iter in range(1):
         sim = setup(density)
         # run : 
         cell_track = runsim(sim,500)
@@ -160,7 +160,7 @@ def run_grid_point(density):
         print(i)
         #newtrack = handle_boundaries(track)
         #cell_tracks[i] = newtrack
-        fname = "150V_DENS"  +str(density) + "/CELL_" + str(i) + "iter" + str(iter)
+        fname = "150V_DENS"  +str(density) + "/CELL_" + str(i) + "iter2"
         np.savetxt('../data/increase_DENS_ACT/'+fname+'.txt',track)
         print('saved track',i)
     print('computed : ',density, 'in ',time.time() - t1)
@@ -176,16 +176,16 @@ def gridsearch():
     #l_act = np.array([50,100,200,300,400,500,600,700,800,900,1000,2500,5000,10000,20000])
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
-    max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
+    max_act = np.array([.6,.7,.8,.9,1.0])
     #max_act = np.array([0.8,0.9])
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
-    cpus = 10 #.cpu_count() - 15
+    cpus = 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_grid_point,max_act))
     p.close()
-    p.join()
+    #p.join()
 
 if __name__ == "__main__":
     #sim = setup(2000,20)

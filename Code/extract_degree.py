@@ -10,7 +10,7 @@ def extract_degrees(path):
     degrees = []
     for f in files:
         print('loading data ',f)
-        pattern = '176N_0.3125V/E'
+        pattern = '176N_0.25V/E'
         dict = pickle.load(open(f,'rb'))
         #print(dict.keys())
         name = f.split('_')[-1][:-4]
@@ -25,7 +25,7 @@ def extract_degrees(path):
     df = pd.DataFrame(degrees)
     df.columns = ['Degree','iter','type']
     print(df.head())
-    df.to_csv('../results/degrees2.csv')
+    df.to_csv('../results/degrees3.csv')
 
 
 extract_degrees('../data/exp1/exp1*.pkl')

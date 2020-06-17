@@ -125,7 +125,7 @@ def local_order1(tracks,vec_tracks,bins = 5):
             orders.append(norm_bin)
     return orders
 
-def local_order(tracks,vec_tracks,bins = 3):
+def local_order(tracks,vec_tracks,bins = 4):
     # find smallest track : 
     min_length = min([len(t) for t in vec_tracks])
     print('smallest track : ',min_length)
@@ -180,7 +180,7 @@ def build_csv(path):
         tracks = [np.loadtxt(f) for f in files]
         vec_tracks = np.array([to_vecs(t) for t in tracks])
         # lcl order :
-        lcl_ordrs = local_order(tracks,vec_tracks)
+        lcl_ordrs = local_order(tracks,vec_tracks,4)
         lcl_ordr = np.average(lcl_ordrs)
         std_lcl = np.std(lcl_ordrs)
         

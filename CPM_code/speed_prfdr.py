@@ -167,7 +167,7 @@ def gridsearch():
     #max_act = np.array([10,50,75,100,150,200,500])
     #max_act = np.linspace(1000,5000,num = 5,dtype=int)
     #max_act = np.array([0.1,0.2,0.3,0.4,.5,.6,.7,.8,.9,1.0])
-    max_act = np.linspace(.75,.95,21)
+    max_act = np.linspace(10,100,10)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # run in parallel : 
     cpus = 10 #.cpu_count() - 15
@@ -181,5 +181,5 @@ if __name__ == "__main__":
     #sim = setup(2000,20)
     # run : 
     #cell_track = runsim(sim,500)
-
+    
     gridsearch()

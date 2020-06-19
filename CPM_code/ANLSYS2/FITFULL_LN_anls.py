@@ -10,6 +10,8 @@ sys.path.insert(0,'../')
 from OrderNpersist import Persist_tracks,to_vecs
 from analyse_tracks import new_auto,auto_cor_pooled
 from ANLS_DENS import OrderAt_T,local_order
+from random import sample
+import time
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -41,9 +43,12 @@ def build_csv(path):
     deviation_rows = []
     for i,prms in enumerate(params):
         print(prms)
+        t1 = time.time()
         files = [f for f in all_files if '_' + prms[0] + 'M' in f and 'X' + prms[1] + '_' in f]
         #files = [f for f in files if int(re.findall(num_ptrn,f)[-1]) > 1]
         files.sort(reverse = True,key = lambda x: int(re.findall(num_ptrn,x)[-1]))
+        # only take first 100 cells for faster analysis :
+        #files = files[:100]
         # extract tracks from files :
         tracks = [np.loadtxt(f) for f in files]
         tracks = [handle_boundaries(t) for t in tracks]
@@ -69,11 +74,12 @@ def build_csv(path):
 
         rows.append([prms[0],prms[1],speed,std_speed,pooled_pers])
         print(rows[-1])
+        print('computing time :',time.time() - t1)
 
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','speed_std','persistance'])
-    df1.to_csv('FITFULL/ACT1.csv')
+    df1.to_csv('FITFULL/ACT1_all.csv')
 
 
 if __name__ == "__main__":
-    build_csv('../../data/FITFULL_ACT_FRC/thin44_1/*')
+    build_csv('../../data/FITFULL_ACT_FRC/thin64_1/*')

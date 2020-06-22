@@ -47,7 +47,7 @@ def setup(l_act,m_act):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1200) #8600
-    simulation.set_constraints(cell_type = 1, lambda_persistence = 2000, persistence_diffusion = .87,persistence_time = 15)
+    simulation.set_constraints(cell_type = 1, lambda_persistence = l_act, persistence_diffusion = m_act,persistence_time = 15)
     #simulation.set_constraints(cell_type = 2, lambda_act = int(l_act), max_act = int(m_act)) # 2500, max_act = 42
     # adhesion ; 
     simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
@@ -83,7 +83,7 @@ def setup(l_act,m_act):
     n_cells = np.unique(celltypes)
 
     # little warmup run 
-    simulation.run(50)
+    simulation.run(40)
 
     for n in n_cells:
         #print(n)
@@ -145,8 +145,8 @@ def run_grid_point(params):
 def gridsearch():
     ### runn multi T-cell simulations for with different combinations of params
     ### to find some good parameters for cell track autocorrelation
-    l_act = np.linspace(2000,4000,11)
-    max_act = np.linspace(10,100,10)
+    l_act = np.linspace(500,3000,6)
+    max_act = np.linspace(0.1,1,10)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     
     #for inp in inputs[-1:]:

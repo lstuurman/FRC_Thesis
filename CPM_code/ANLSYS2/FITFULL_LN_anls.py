@@ -62,11 +62,14 @@ def build_csv(path):
         print('Speed calculated')
         #peristance : 
         # pooled persistance : 
+        t2 = time.time()
         dts = 100
         dots_for_dts = [[] for i in range(dts)]
         pooled_dts = [auto_cor_pooled(t,dots_for_dts,dts) for t in tracks]
         averages = [np.mean(i) for i in dots_for_dts]
+        t3 = time.time()
         pooled_pers = Persist_tracks([averages])
+        t4 = time.time()
         if len(pooled_pers) == 0:
             pooled_pers = np.nan
         else:
@@ -75,11 +78,12 @@ def build_csv(path):
         rows.append([prms[0],prms[1],speed,std_speed,pooled_pers])
         print(rows[-1])
         print('computing time :',time.time() - t1)
-
+        print('dots per dts time : ',t3 - t2)
+        print('half time :',t4 - t3)
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','speed','speed_std','persistance'])
-    df1.to_csv('FITFULL/ACT1_all.csv')
+    df1.to_csv('FITFULL/PRFDR1_all.csv')
 
 
 if __name__ == "__main__":
-    build_csv('../../data/FITFULL_ACT_FRC/thin64_1/*')
+    build_csv('../../data/FITFULL_PRFDR_FRC/thin64_1/*')

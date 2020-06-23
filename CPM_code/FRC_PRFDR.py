@@ -138,7 +138,7 @@ def run_grid_point(params):
     cell_track = runsim(sim,200)
     for i,track in enumerate(cell_track):
         fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FITFULL_ACT_PRFDR/thin64_1/CELL'+fname+'.txt',track)
+        np.savetxt('../data/FITFULL_PRFDR_FRC/thin64_1/CELL'+fname+'.txt',track)
     print('computed : ',params, 'in ',time.time() - t1)
 
 

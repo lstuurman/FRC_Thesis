@@ -10,65 +10,32 @@ import networkx as nx
 from itertools import product
 from multiprocessing import Pool
 from Bresenheim import nodesInCube,fill_cube,adjust_thickness
-from Generate_graphs import ER_p_value,WS_K_value,M_power_cluster,E_M_relation
-from graph_drawing_algs import fruchterman_reingold,normalize_postions
-
 # Fit act model fully pupulated with FRC structure : 
 
-def setup_frc(D,g_type):
+def setup_frc(D):
     # set dimension for grid : 
     D = 64
     r = 20/64# 20microns
 
-    print('Generating graph')
-    if g_type == 'ER':
-        p = ER_p_value(270,.25)
-        g = nx.erdos_renyi_graph(270,p)#7000
-        g = fruchterman_reingold(g,20)
-    elif g_type == 'BA':
-        g = nx.barabasi_albert_graph(220,4)#700
-        g = fruchterman_reingold(g,20)
-    elif g_type == 'WS':
-        k = WS_K_value(600,.25)
-        p = 0.027825594022071243
-        g = nx.watts_strogatz_graph(600,k,p)#1000
-        g = fruchterman_reingold(g,20)
-    elif g_type == 'PW':
-        m = M_power_cluster(310,.25)
-        p = 0.666666666666666
-        g = nx.powerlaw_cluster_graph(310,m,p)# 700
-        g = fruchterman_reingold(g,20)
-    elif g_type == 'GM':
-        r = 20/dim # 20microns
-        g = nx.random_geometric_graph(170,r,dim = 3)#4500
-    
+    # create graphs with positions : 
+    g = nx.random_geometric_graph(170,r,dim = 3)
     positions = []
     for n,data in g.nodes(data = True):
         positions.append(data['pos'])
 
-    positions = normalize_postions(positions)
-    print('Filling cube with graph') 
-    if g_type == 'GM' or g_type == 'WS':
-        g,_ = nodesInCube(g,positions,D)
-        c = fill_cube(D,g)
-        #adjust thickness so that it fills +- 17% of cube : 
-        cube = adjust_thickness(c,1)
-    else:
-        g,_ = nodesInCube(g,positions,4 * D)
-        c = fill_cube(4 * D,g)
-        #adjust thickness so that it fills +- 17% of cube : 
-        thicckk = adjust_thickness(c,1)
-        cube = thicckk[96:-96,96:-96,96:-96]
+    # bin possitions and place in grid : 
+    g,_ = nodesInCube(g,positions,D)
+    c = fill_cube(D,g)
+    cube = adjust_thickness(c,1)
 
 
     print('percentage of volume occupied by frc',(np.sum(cube)/D**3)*100)
 
     # save as pickle :
-    dfile = '../data/FRCs/' + g_type + '64_diam3.pkl'
-    pickle.dump(cube.astype(np.uint32),open(dfile,'wb'))
+    pickle.dump(cube.astype(np.uint32),open('../data/FRCs/GM64_diam3.pkl','wb'))
 
 
-def setup(g_type):
+def setup(l_act,m_act):
         ### SET UP CPM ###
     dimension = 64
     number_of_types = 3
@@ -80,7 +47,7 @@ def setup(g_type):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1200) #8600
-    simulation.set_constraints(cell_type = 2, lambda_act = 3000, max_act = 40) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 2, lambda_act = int(l_act), max_act = int(m_act)) # 2500, max_act = 42
     # adhesion ; 
     simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
     simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
@@ -88,8 +55,7 @@ def setup(g_type):
 
 
     #print('Creating FRC')
-    dfile = '../data/FRCs/' + g_type + '64_diam3.pkl'
-    frc_in_cube = pickle.load(open(dfile,'rb'))
+    frc_in_cube = pickle.load(open('../data/FRCs/GM64_diam3.pkl','rb'))
     #print('Loading into simulation : ')
     simulation.initialize_from_array(frc_in_cube,1)
     #print('Done')
@@ -162,32 +128,31 @@ def runsim(simulation,steps):
         print(ind,i)
     return cofmass_track
 
-def run_grid_point(gtype):
+def run_grid_point(params):
     t1 = time.time()
-    #print(params)
-    #lambda_act,max_act = params
-    for iter in range(1):
-        sim = setup(gtype)
+    print(params)
+    lambda_act,max_act = params
+    sim = setup(lambda_act,max_act)
     # run : 
-        cell_track = runsim(sim,200)
-        for i,track in enumerate(cell_track):
-            fname = 'CELL' + str(i) +  gtype + str(iter)
-            np.savetxt('../data/STROMAL_ACT/'+fname+'.txt',track)
+    cell_track = runsim(sim,200)
+    for i,track in enumerate(cell_track):
+        fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
+        np.savetxt('../data/FITFULL_ACT_FRC/thin64_1/CELL'+fname+'.txt',track)
     print('computed : ',params, 'in ',time.time() - t1)
 
 
 def gridsearch():
     ### runn multi T-cell simulations for with different combinations of params
     ### to find some good parameters for cell track autocorrelation
-    #l_act = np.linspace(2000,4000,11)
-    #max_act = np.linspace(10,100,10)
-    #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
-    inputs = ['ER','BA','WS','PW','GM']
+    l_act = np.linspace(2000,4000,11)
+    max_act = np.linspace(10,100,10)
+    inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
+    
     #for inp in inputs[-1:]:
     #    run_grid_point(inp)
 
     # run in parallel : 
-    cpus = 5 #.cpu_count() - 15
+    cpus = 16 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_grid_point,inputs))
@@ -198,9 +163,7 @@ if __name__ == "__main__":
     #sim = setup(2000,20)
     # run : 
     #cell_track = runsim(sim,500)
-    #g_types = ['ER', 'WS'] # 'BA'
-    #for graph_type in g_types: 
-    #    setup_frc(64,graph_type)
+
     gridsearch()
     #setup_frc(64)
 

@@ -10,6 +10,7 @@ sys.path.insert(0,'../')
 from OrderNpersist import Persist_tracks,Order_tracks2,order_radius,to_vecs
 from analyse_tracks import new_auto,auto_cor_pooled
 from ANLS_DENS import OrderAt_T,local_order
+import time
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -35,13 +36,15 @@ def build_csv(path):
     num_ptrn = '[-+]?\d*\.\d+|\d+'
     gtypes = ['ER','BA', 'WS', 'PW','GM']
     folder = glob.glob(path)
-    files = glob.glob(foldr+ '/*')
+    files = glob.glob(path+ '/*')
     params = set([s.split(re.findall(num_ptrn,s)[-2])[-1] for s in files])
-
+    params = {p for p in params if p != '.txt'}
+    print(params)
     ind_rows = []
     global_rows = []
     for gt in params:
-        files = glob.glob(foldr+ '/*' + gt)
+        t1 = time.time()
+        files = glob.glob(path+ '/*' + gt)
         #print(files)
         print(gt)
         Type = gt[:2]
@@ -50,6 +53,9 @@ def build_csv(path):
         files.sort(reverse = True,key = lambda x: int(re.findall(num_ptrn,x)[-1]))
         # extract tracks from files :
         tracks = [np.loadtxt(f) for f in files]
+        print('unfiltered cells ',len(tracks))
+        tracks = [t for t in tracks if len(t) == 200]
+        print(len(tracks))
         vec_tracks = np.array([to_vecs(t) for t in tracks])
         # lcl order :
         lcl_ordrs = local_order(tracks,vec_tracks,4)
@@ -73,7 +79,7 @@ def build_csv(path):
             pooled_pers = pooled_pers[0]
 
 
-        global_rows.append([Type,itr,pooled_pers,ordr2,std_ordr2,lcl_ordr,std_lcl])
+        global_rows.append([Type,int(itr),pooled_pers,ordr2,std_ordr2,lcl_ordr,std_lcl])
         print('number of cells for paramset : ',len(tracks))
         # speed : 
         vec_tracks = np.array([to_vecs(t) for t in tracks])
@@ -94,6 +100,7 @@ def build_csv(path):
 #        global_rows.append([dens,pooled_pers,ordr1,ordr2,std_ordr2,lcl_ordr,std_lcl])
         print(np.average(speeds),global_rows[-1])
         print(ind_rows[-1])
+        print('cumputed '+ gt + ' in',time.time() - t1)
 
     df1 = pd.DataFrame(data = ind_rows,
         columns = ['type','iter','cell_id','speed','persist'])
@@ -103,4 +110,4 @@ def build_csv(path):
     df2.to_csv('STROMAL/ACT_glob.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/STROMAL_ACT/*')
+    build_csv('../../data/STROMAL_ACT')

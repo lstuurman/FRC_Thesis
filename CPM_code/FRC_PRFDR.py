@@ -47,7 +47,7 @@ def setup(l_act,m_act):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1200) #8600
-    simulation.set_constraints(cell_type = 1, lambda_persistence = l_act, persistence_diffusion = m_act,persistence_time = 15)
+    simulation.set_constraints(cell_type = 2, lambda_persistence = l_act, persistence_diffusion = m_act,persistence_time = 15)
     #simulation.set_constraints(cell_type = 2, lambda_act = int(l_act), max_act = int(m_act)) # 2500, max_act = 42
     # adhesion ; 
     simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)

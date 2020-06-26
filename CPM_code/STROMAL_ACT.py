@@ -166,7 +166,7 @@ def run_grid_point(gtype):
     t1 = time.time()
     #print(params)
     #lambda_act,max_act = params
-    for iter in range(1):
+    for iter in range(1,5):
         sim = setup(gtype)
     # run : 
         cell_track = runsim(sim,200)
@@ -187,7 +187,7 @@ def gridsearch():
     #    run_grid_point(inp)
 
     # run in parallel : 
-    cpus = 5 #.cpu_count() - 15
+    cpus = 10 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_grid_point,inputs))

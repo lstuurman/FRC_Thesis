@@ -132,12 +132,14 @@ def run_grid_point(params):
     t1 = time.time()
     print(params)
     lambda_act,max_act = params
-    sim = setup(lambda_act,max_act)
-    # run : 
-    cell_track = runsim(sim,200)
-    for i,track in enumerate(cell_track):
-        fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i)
-        np.savetxt('../data/FITFULL_ACT_FRC/thin64_1/CELL'+fname+'.txt',track)
+    for iter in range(2):
+
+        sim = setup(lambda_act,max_act)
+        # run : 
+        cell_track = runsim(sim,200)
+        for i,track in enumerate(cell_track):
+            fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i) + 'iter' + str(iter)
+            np.savetxt('../data/FITFULL_ACT_FRC/thin64_1/CELL'+fname+'.txt',track)
     print('computed : ',params, 'in ',time.time() - t1)
 
 
@@ -152,7 +154,7 @@ def gridsearch():
     #    run_grid_point(inp)
 
     # run in parallel : 
-    cpus = 16 #.cpu_count() - 15
+    cpus = 6 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_grid_point,inputs))

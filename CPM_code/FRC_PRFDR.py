@@ -153,7 +153,7 @@ def gridsearch():
     #    run_grid_point(inp)
 
     # run in parallel : 
-    cpus = 12 #.cpu_count() - 15
+    cpus = 24 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_grid_point,inputs))

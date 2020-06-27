@@ -167,13 +167,13 @@ def run_grid_point(gtype):
     t1 = time.time()
     #print(params)
     #lambda_act,max_act = params
-    for iter in range(1,5):
+    for iter in range(0,5):
         sim = setup(gtype)
     # run : 
         cell_track = runsim(sim,200)
         for i,track in enumerate(cell_track):
             fname = 'CELL' + str(i) +  gtype + str(iter)
-            np.savetxt('../data/STROMAL_ACT/'+fname+'.txt',track)
+            np.savetxt('../data/STROMAL_PRFDR/'+fname+'.txt',track)
     print('computed : ',params, 'in ',time.time() - t1)
 
 

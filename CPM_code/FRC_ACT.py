@@ -146,7 +146,7 @@ def run_grid_point(params):
 def gridsearch():
     ### runn multi T-cell simulations for with different combinations of params
     ### to find some good parameters for cell track autocorrelation
-    l_act = np.linspace(2000,4000,11)
+    l_act = np.linspace(0,2000,6)[1:]
     max_act = np.linspace(10,100,10)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     
@@ -154,7 +154,7 @@ def gridsearch():
     #    run_grid_point(inp)
 
     # run in parallel : 
-    cpus = 6 #.cpu_count() - 15
+    cpus = 12 #.cpu_count() - 15
     print('Using ',cpus,'cores')
     p = Pool(cpus)
     output = np.array(p.map(run_grid_point,inputs))

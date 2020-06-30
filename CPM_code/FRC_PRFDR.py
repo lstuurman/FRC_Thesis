@@ -83,7 +83,7 @@ def setup(l_act,m_act):
     n_cells = np.unique(celltypes)
 
     # little warmup run 
-    simulation.run(40)
+    simulation.run(50)
 
     for n in n_cells:
         #print(n)
@@ -146,8 +146,8 @@ def run_grid_point(params):
 def gridsearch():
     ### runn multi T-cell simulations for with different combinations of params
     ### to find some good parameters for cell track autocorrelation
-    l_act = np.linspace(500,3000,6)
-    max_act = np.linspace(0.1,1,10)
+    l_act = np.linspace(0,1000,6)[1:]
+    max_act = np.linspace(0,.3,6)[1:]
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     
     #for inp in inputs[-1:]:

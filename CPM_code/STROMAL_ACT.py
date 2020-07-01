@@ -15,7 +15,7 @@ from graph_drawing_algs import fruchterman_reingold,normalize_postions
 
 # Fit act model fully pupulated with FRC structure : 
 
-def setup_frc(D,g_type):
+def setup_frc(D,g_type,i):
     # set dimension for grid : 
     D = 64
     r = 20/64# 20microns
@@ -29,18 +29,18 @@ def setup_frc(D,g_type):
         g = nx.barabasi_albert_graph(220,4)#700
         g = fruchterman_reingold(g,20)
     elif g_type == 'WS':
-        k = WS_K_value(600,.25)
+        k = WS_K_value(620,.25)
         p = 0.027825594022071243
-        g = nx.watts_strogatz_graph(600,k,p)#1000
+        g = nx.watts_strogatz_graph(620,k,p)#1000
         g = fruchterman_reingold(g,20)
     elif g_type == 'PW':
-        m = M_power_cluster(310,.25)
+        m = M_power_cluster(320,.25)
         p = 0.666666666666666
-        g = nx.powerlaw_cluster_graph(310,m,p)# 700
+        g = nx.powerlaw_cluster_graph(320,m,p)# 700
         g = fruchterman_reingold(g,20)
     elif g_type == 'GM':
-        r = 20/dim # 20microns
-        g = nx.random_geometric_graph(170,r,dim = 3)#4500
+        r = 20/D # 20microns
+        g = nx.random_geometric_graph(160,r,dim = 3)#4500
     
     positions = []
     for n,data in g.nodes(data = True):
@@ -64,8 +64,10 @@ def setup_frc(D,g_type):
     print('percentage of volume occupied by frc',(np.sum(cube)/D**3)*100)
 
     # save as pickle :
-    dfile = '../data/FRCs/' + g_type + '64_diam3.pkl'
+    dfile = '../data/FRCs/' + str(i) + g_type + '64_diam3.pkl'
     pickle.dump(cube.astype(np.uint32),open(dfile,'wb'))
+    dfile2 =  '../data/FRCs/GRAPH'+ str(i) + g_type + '64_diam3.pkl'
+    return (np.sum(cube)/D**3)*100
 
 
 def setup(g_type):
@@ -198,9 +200,15 @@ if __name__ == "__main__":
     #sim = setup(2000,20)
     # run : 
     #cell_track = runsim(sim,500)
-    #g_types = ['ER', 'WS'] # 'BA'
-    #for graph_type in g_types: 
-    #    setup_frc(64,graph_type)
-    gridsearch()
+    pers_fil_file = open('persentages_FRC.txt','w')
+    g_types = ['ER','BA','PW','WS','GM'] # 'BA'
+    for graph_type in g_types: 
+        for i in range(10):
+            persntg = setup_frc(64,graph_type,i)
+            pers_fil_file.write(graph_type + '\t' + str(persntg))
+            pers_fil_file.write('\n')
+
+    pers_fil_file.close()
+    #gridsearch()
     #setup_frc(64)
 

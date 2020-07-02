@@ -47,6 +47,10 @@ def setup_frc(D,g_type,i):
         positions.append(data['pos'])
 
     positions = normalize_postions(positions)
+
+    for j,(n,data) in enumerate(g.nodes(data = True)):
+        data['pos'] = positions[j]
+
     print('Filling cube with graph') 
     if g_type == 'GM' or g_type == 'WS':
         g,_ = nodesInCube(g,positions,D)
@@ -67,6 +71,7 @@ def setup_frc(D,g_type,i):
     dfile = '../data/FRCs/' + str(i) + g_type + '64_diam3.pkl'
     pickle.dump(cube.astype(np.uint32),open(dfile,'wb'))
     dfile2 =  '../data/FRCs/GRAPH'+ str(i) + g_type + '64_diam3.pkl'
+    pickle.dump(g,open(dfile2,'wb'))
     return (np.sum(cube)/D**3)*100
 
 

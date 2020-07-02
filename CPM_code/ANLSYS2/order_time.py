@@ -7,6 +7,7 @@ import sys
 sys.path.insert(0,'../')
 from OrderNpersist import to_vecs
 import time
+from STROMAL_ANLS import handle_boundaries
 
 def OrderAt_T(vec_tracks):
     # find smallest track : 
@@ -50,17 +51,17 @@ def order_time(path):
         Type = gt[:2]
         itr = gt[2]
         tracks = [np.loadtxt(f) for f in files]
-        tracks = [t for t in tracks if len(t) == 200] # filter out old short tryout files
+        tracks = [handle_boundaries(t) for t in tracks if len(t) == 200] # filter out old short tryout files
         vec_tracks = np.array([to_vecs(t) for t in tracks])
         n_cells = len(vec_tracks)
         orders = OrderAt_T(vec_tracks)
         for i,ordr in enumerate(orders):
-            data_rows.append([i,itr,Type,ordr[0],ordr[1],ordr[2],n_cells])
+            data_rows.append([i,itr,Type,ordr[0],ordr[1],ordr[2],tracks[i][0],tracks[i][1],tracks[i][2],n_cells])
 
-    df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','x','y','z','n_cells'])
-    df.to_csv('STROMAL/PRFDR_ordr_T.csv')
+    df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','v_x','v_y','v_z','x','y','z','n_cells'])
+    df.to_csv('STROMAL/ACT_ordr_T.csv')
 
 if __name__ == "__main__":
-    order_time('../../data/STROMAL_PRFDR')
+    order_time('../../data/STROMAL_ACT')
 
 

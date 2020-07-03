@@ -8,7 +8,8 @@ import sys
 sys.path.insert(0,'../')
 from OrderNpersist import to_vecs
 import pickle
-
+import glob 
+import re
 #### Quantify stream formation at spefic sites
 
 def in_radius(point,cntr,radius):
@@ -22,13 +23,37 @@ def find_cntrs(FRC):
     FRC = FRC == 0
     dist_matrix = edt(FRC)
     # find centers :
-    big_indeces = np.argpartition(dist_matrix,kth = 10,axis = None)[-10:]
-    big_vals = np.take_along_axis(dist_matrix, big_indeces, axis=None) 
+    #big_indeces = np.argpartition(dist_matrix,kth = 10,axis = None)[-10:]
+    #big_vals = np.take_along_axis(dist_matrix, big_indeces, axis=None)[:-1]
+    flat_edt = dist_matrix.flatten()
+    #print(flat_edt.shape)
+    big_vals = flat_edt[np.argsort(flat_edt)]
+    vls_at_cntrs = np.array(sorted(list(set(big_vals)))[::-1])
     cntrs = []
-    for val in set(big_vals):
+    count = 0
+    #print(vls_at_cntrs[:10],vls_at_cntrs[-10:])
+    #print('lenght biggest values ; ',vls_at_cntrs)
+    for val in vls_at_cntrs:
         cords = np.where(dist_matrix == val)
-        cntrs += list(zip(*cords))
-
+        cntr_list = list(zip(*cords))
+        if len(cntrs) > 0:
+            for c in cntrs:
+                for c_ in cntr_list:
+                    if not in_radius(np.array(c_),np.array(c),8):
+                        cntrs.append(c_)
+                        continue
+                #cntrs += [c_ for c_ in cntr_list if not in_radius(np.array(c_),np.array(c),8)]
+        elif len(cntrs) > 10:
+            break
+        else:
+            cntrs.append(tuple(cntr_list[0]))
+        print(val)
+        print(cntrs)
+#    for val in vls_at_cntrs[:10]:
+#        print('distance ',val)
+#        cords = np.where(dist_matrix == val)
+#        cntrs += list(zip(*cords))
+#        print(list(zip(*cords)))
     return np.array(cntrs)
 
 def edge_centers(FRC):
@@ -66,8 +91,8 @@ def streams(path):
     print(params)
     ind_rows = []
     global_rows = []
-    for gt in params[:1]:
-        t1 = time.time()
+    for gt in list(params)[:1]:
+        #t1 = time.time()
         files = glob.glob(path+ '/*' + gt)
         #print(files)
         print(gt)
@@ -83,18 +108,22 @@ def streams(path):
         tracks2 = [handle_boundaries(t) for t in tracks]
         vec_tracks = np.array([to_vecs(t) for t in tracks2])
 
-        frc_file = '../data/FRCs/' + str(itr) + Type + '64_diam3.pkl'
-        #frc_gfile =  '../data/FRCs/GRAPH'+ str(itr) + Type + '64_diam3.pkl'
+        frc_file = '../../data/FRCs/' + str(itr) + Type + '64_diam3.pkl'
+        #frc_gfile =  '../../data/FRCs/GRAPH'+ str(itr) + Type + '64_diam3.pkl'
         frc = pickle.load(open(frc_file,'rb'))
         #graph = pickle.load(open(frc_gfile,'rb'))
         cntrs = find_cntrs(frc)
+        print(cntrs)
+        print(len(cntrs))
         cntr_ordrs = stream_order(tracks,vec_tracks,cntrs,4)
-
+        print(cntr_ordrs)
 
     df = pd.DataFrame(data = cntr_ordrs)
     df.to_csv('STROMAL/cntr_ordrs.csv')
 
 
+if __name__ == "__main__":
+    streams('../../data/STROMAL_PRFDR')
 
     #     # find smallest track : 
     # min_length = min([len(t) for t in vec_tracks])

@@ -150,6 +150,7 @@ def gridsearch():
     max_act = np.linspace(10,100,10)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     
+    
     #for inp in inputs[-1:]:
     #    run_grid_point(inp)
 

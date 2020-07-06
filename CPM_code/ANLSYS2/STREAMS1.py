@@ -4,6 +4,7 @@ from numpy.linalg import norm
 from ANLS_DENS import Global_order
 from scipy.ndimage import distance_transform_edt as edt
 from STROMAL_ANLS import handle_boundaries
+from scipy.spatial import distance
 import sys 
 sys.path.insert(0,'../')
 from OrderNpersist import to_vecs
@@ -85,8 +86,50 @@ def fill_circles(M):
             
     return cntr_list
 
-def edge_centers(FRC):
-    pass
+def edge_centers(g):
+    # create tuples of dist,cntr
+    dsts_cntrs = []
+    for n1,n2 in g.edges():
+        x1,y1,z1 = g.nodes[n1]['pos']
+        x2,y2,z2 = g.nodes[n2]['pos']
+        d = distance.euclidean((x1,y1,z1),(x2,y2,z2))
+        c = [(x1 + x2)/2,(y1 + y2)/2,(z1 + z2)/2]
+        dsts_cntrs.append((d,c))
+    
+    # order on max dist : 
+    dsts_cntrs.sort(key = lambda x:x[0])
+    return [c[1] for c in dsts_cntrs[-10:]]
+
+def edge_centers_adjstd(g):
+    
+    dsts_cntrs = []
+    for n1,n2 in g.edges():
+        x1,y1,z1 = g.nodes[n1]['pos']
+        x2,y2,z2 = g.nodes[n2]['pos']
+        coords = [x1,y1,z1,x2,y2,z2]
+        # truncate coordinates to be withing bounds :
+        #coords = coords - 96 
+        print(coords)
+        for i in range(len(coords)):
+            coords[i] = coords[i] - 96
+            if coords[i] < 0:
+                coords[i] = 0
+            if coords[i] > 64:
+                coords[i] = 64
+
+        x1,y1,z1,x2,y2,z2 = coords
+        #print(coords)
+        d = distance.euclidean((x1,y1,z1),(x2,y2,z2))
+        c = [(x1 + x2)/2,(y1 + y2)/2,(z1 + z2)/2]
+        #print(d,c)
+        #exit()
+        dsts_cntrs.append((d,c))
+    #print(dsts_cntrs)
+    # order on max dist : 
+    dsts_cntrs.sort(key = lambda x:x[0])
+    print(dsts_cntrs[-10:])
+    return [c[1] for c in dsts_cntrs[-10:]] 
+ 
 
 
 def stream_order(tracks,vec_tracks,centers,radius):
@@ -119,8 +162,8 @@ def streams(path):
     params = set([s.split(re.findall(num_ptrn,s)[-2])[-1] for s in files])
     params = {p for p in params if p != '.txt'}
     print(params)
-    ind_rows = []
-    global_rows = []
+    edge_rows = []
+    gap_rows = []
     for gt in list(params)[:1]:
         #t1 = time.time()
         files = glob.glob(path+ '/*' + gt)
@@ -139,19 +182,32 @@ def streams(path):
         vec_tracks = np.array([to_vecs(t) for t in tracks2])
 
         frc_file = '../../data/FRCs/' + str(itr) + Type + '64_diam3.pkl'
-        #frc_gfile =  '../../data/FRCs/GRAPH'+ str(itr) + Type + '64_diam3.pkl'
+        frc_gfile =  '../../data/FRCs/GRAPH'+ str(itr) + Type + '64_diam3.pkl'
         frc = pickle.load(open(frc_file,'rb'))
-        #graph = pickle.load(open(frc_gfile,'rb'))
-        #cntrs = find_cntrs(frc)
+        g = pickle.load(open(frc_gfile,'rb'))
+        if Type == 'GM' or Type == 'WS':
+            edge_cntrs = edge_centers(g)
+        else:
+            edge_cntrs = edge_centers_adjstd(g)
+        print(edge_cntrs)
         cntrs = fill_circles(frc)
         #print(cntrs)
         #print(len(cntrs))
-        cntr_ordrs = stream_order(tracks,vec_tracks,cntrs,4)
-        print(cntr_ordrs.shape)
-        print(np.mean(cntr_ordrs))
+        gap_ordrs = stream_order(tracks,vec_tracks,cntrs,4)
+        edge_ordrs = stream_order(tracks,vec_tracks,edge_cntrs,4)
+        for t,gaps in enumerate(gap_ordrs):
+            for c,gp in enumerate(gaps):
+                gap_rows.append([t,c,gp,Type,itr])
+                edge_rows.append([t,c,edge_ordrs[t,c],Type,itr])
+        print(edge_ordrs.shape)
+        print(np.mean(gap_ordrs))
+        print(np.mean(edge_ordrs))
 
-    df = pd.DataFrame(data = cntr_ordrs)
-    df.to_csv('STROMAL/cntr_ordrs.csv')
+    df = pd.DataFrame(data = gap_rows,columns = ['time','center','order','type','iter'])
+    df.to_csv('STROMAL/gap_ordrs.csv')
+    df = pd.DataFrame(data = edge_rows,columns = ['time','center','order','type','iter'])
+    df.to_csv('STROMAL/edge_ordrs.csv')
+
 
 
 if __name__ == "__main__":

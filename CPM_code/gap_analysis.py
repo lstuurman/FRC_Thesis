@@ -129,7 +129,7 @@ def fill_circles(M):
     width,height = M.shape
     # blueprint for circular masks :
     x_axis = np.arange(width)
-    y_axis = np.arange(height)
+    y_axis = np.arange(height) 
     
     # negative of image to calculate maximim dists
     negative = M == 0.

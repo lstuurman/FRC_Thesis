@@ -20,16 +20,18 @@ def OrderAt_T(vec_tracks):
                    
     #print(vt2.shape)
     orders = []
+    variances = []
     for i in range(min_length):
         vecs_at_t = vt2[:,i]
         ordr = 0
         for v in vecs_at_t:
             ordr += v
         orders.append(ordr)
+        variances.append(np.var(vecs_at_t))
     #print('lenght of order shoulde be min_lenght. Min_lenght',min_length,'==',len(orders))
     #av_ordr = [norm(v) for v in orders]
         
-    return orders
+    return orders,variances
 
 def order_time(path):
     # regex for finding correct files:
@@ -54,11 +56,11 @@ def order_time(path):
         tracks = [handle_boundaries(t) for t in tracks if len(t) == 200] # filter out old short tryout files
         vec_tracks = np.array([to_vecs(t) for t in tracks])
         n_cells = len(vec_tracks)
-        orders = OrderAt_T(vec_tracks)
+        orders,variances = OrderAt_T(vec_tracks)
         for i,ordr in enumerate(orders):
-            data_rows.append([i,itr,Type,ordr[0],ordr[1],ordr[2],tracks[i][0],tracks[i][1],tracks[i][2],n_cells])
+            data_rows.append([i,itr,Type,ordr[0],ordr[1],ordr[2],tracks[i][0],tracks[i][1],tracks[i][2],variances[i],n_cells])
 
-    df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','v_x','v_y','v_z','x','y','z','n_cells'])
+    df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','v_x','v_y','v_z','x','y','z','variance','n_cells'])
     df.to_csv('STROMAL/ACT_ordr_T.csv')
 
 if __name__ == "__main__":

@@ -87,9 +87,9 @@ def setup(g_type):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1200) #8600
-    simulation.set_constraints(cell_type = 2, lambda_act = 3000, max_act = 40) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 2, lambda_act = 800, max_act = 30) # 2500, max_act = 42
     # adhesion ; 
-    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
+    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = 10)
     simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
     simulation.set_constraints(cell_type = 0,other_cell_type = 1,adhesion = 0)
 
@@ -178,8 +178,8 @@ def run_grid_point(gtype):
     # run : 
         cell_track = runsim(sim,200)
         for i,track in enumerate(cell_track):
-            fname = 'CELL' + str(i) +  gtype + str(iter)
-            np.savetxt('../data/STROMAL_ACT/'+fname+'.txt',track)
+            fname = 'CELL' + str(i) +  gtype[1:] + str(iter)
+            np.savetxt('../data/STROMAL_ACT3/'+fname+'.txt',track)
     print('computed : ',params, 'in ',time.time() - t1)
 
 
@@ -189,7 +189,7 @@ def gridsearch():
     #l_act = np.linspace(2000,4000,11)
     #max_act = np.linspace(10,100,10)
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
-    inputs = ['ER','BA','WS','PW','GM']
+    inputs = ['5ER','4BA','5WS','2PW','0GM']
     #for inp in inputs[-1:]:
     #    run_grid_point(inp)
 
@@ -205,15 +205,15 @@ if __name__ == "__main__":
     #sim = setup(2000,20)
     # run : 
     #cell_track = runsim(sim,500)
-    pers_fil_file = open('persentages_FRC.txt','w')
-    g_types = ['ER','BA','PW','WS','GM'] # 'BA'
-    for graph_type in g_types: 
-        for i in range(10):
-            persntg = setup_frc(64,graph_type,i)
-            pers_fil_file.write(graph_type + '\t' + str(persntg))
-            pers_fil_file.write('\n')
+    #pers_fil_file = open('persentages_FRC.txt','w')
+    #g_types = ['ER','BA','PW','WS','GM'] # 'BA'
+    #for graph_type in g_types: 
+    #    for i in range(10):
+    #        persntg = setup_frc(64,graph_type,i)
+    #        pers_fil_file.write(graph_type + '\t' + str(persntg))
+    #        pers_fil_file.write('\n')
 
-    pers_fil_file.close()
-    #gridsearch()
+    #pers_fil_file.close()
+    gridsearch()
     #setup_frc(64)
 

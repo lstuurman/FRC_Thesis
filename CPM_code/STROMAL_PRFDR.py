@@ -81,9 +81,9 @@ def setup(g_type):
     simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1200) #8600
     #simulation.set_constraints(cell_type = 2, lambda_act = 3000, max_act = 40) # 2500, max_act = 42
-    simulation.set_constraints(cell_type = 2, lambda_persistence = 500, persistence_diffusion = .8,persistence_time = 15)
+    simulation.set_constraints(cell_type = 2, lambda_persistence = 800, persistence_diffusion = .06,persistence_time = 15)
     # adhesion ; 
-    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
+    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = 10)
     simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
     simulation.set_constraints(cell_type = 0,other_cell_type = 1,adhesion = 0)
 
@@ -172,8 +172,8 @@ def run_grid_point(gtype):
     # run : 
         cell_track = runsim(sim,200)
         for i,track in enumerate(cell_track):
-            fname = 'CELL' + str(i) +  gtype + str(iter)
-            np.savetxt('../data/STROMAL_PRFDR/'+fname+'.txt',track)
+            fname = 'CELL' + str(i) +  gtype[1:] + str(iter)
+            np.savetxt('../data/STROMAL_PRFDR3/'+fname+'.txt',track)
     print('computed : ',params, 'in ',time.time() - t1)
 
 
@@ -183,7 +183,7 @@ def gridsearch():
     #l_act = np.linspace(2000,4000,11)
     #max_act = np.linspace(10,100,10)
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
-    inputs = ['ER','BA','WS','PW','GM']
+    inputs = ['5ER','4BA','5WS','2PW','0GM']
     #for inp in inputs[-1:]:
     #    run_grid_point(inp)
 

@@ -97,15 +97,17 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
         thicckk = adjust_thickness(c,1)
         thickk = thicckk[384:-384,384:-384,384:-384]
         print('percentage of volume occupied by frc',(np.sum(thickk)/dim**3)*100)
-        return thickk
+        return thickk,g
         
 
 def save_cubes():
-    g_types = ['ER'] #['ER','BA', 'WS', 'PW', 'GM']
+    g_types = ['ER','BA', 'WS', 'PW', 'GM']
     for graph_type in g_types: 
-        cube = net_to_cube_adapted(g_type = graph_type,dim = 256)
-        fname = '../data/cubes2/adjusted_' + graph_type + '.pkl'
+        cube,g = net_to_cube_adapted(g_type = graph_type,dim = 256)
+        fname = '../data/FRCs/256_' + graph_type + '.pkl'
         pickle.dump(cube,open(fname,'wb'))
+        fname = '../data/FRCs/256GRAPH__' + graph_type + '.pkl'
+        pickle.dump(g,open(fname,'wb'))
         print('created cube with ',graph_type, ' graph')
 
 def take_random_slices(cube,scaling_f = 4):
@@ -181,7 +183,7 @@ def fill_circles(M):
     return M,radii_list
 
 def main():
-    #save_cubes()
+    save_cubes()
     files = glob.glob('../data/cubes2/adjusted*.pkl')
     radii_data = []
     for f in files:
@@ -197,10 +199,10 @@ def main():
                 radii_data.append([r,i,gtype])
             plt.imshow(M)
             #plt.show()
-            plt.savefig('../data/cubes2/adjusted_thin' + gtype + str(i) + '.png')
+            plt.savefig('../data/cubes2/adjusted2_thin' + gtype + str(i) + '.png')
             print('../data/cubes/' + gtype + str(i) + '.png')
             print('finished gap analysis : ',gtype,' ' + str(i))
-    dfile = '../data/cubes2/radii/adjusted_thin.csv'
+    dfile = '../data/cubes2/radii/adjusted2_thin.csv'
     df = pd.DataFrame(radii_data)
     df.columns = ['Radius','iter','type']
     print(df.head())

@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0,'../')
 from OrderNpersist import to_vecs
 import time
-
+from FITFULL_LN_anls import handle_boundaries
 def save_angles(path):
     # regex for finding correct files:
     num_ptrn = '[-+]?\d*\.\d+|\d+'
@@ -29,7 +29,7 @@ def save_angles(path):
         Type = gt[:2]
         itr = gt[2]
         tracks = [np.loadtxt(f) for f in files]
-        tracks = [t for t in tracks if len(t) == 200] # filter out old short tryout files
+        tracks = [handle_boundaries(t) for t in tracks if len(t) == 200] # filter out old short tryout files
         vec_tracks = np.array([to_vecs(t) for t in tracks])
         #print('vec_tracks.shape : ',vec_tracks.shape)
         # loop over vector tracks per cell per timestep:
@@ -52,9 +52,9 @@ def save_angles(path):
         #break
         print('paramset in :',time.time() - t1)
     df = pd.DataFrame(data = data_rows,columns = ['time','iter','cell_id','type','angle'])
-    df.to_csv('STROMAL/PRFDR_angles.csv')
+    df.to_csv('STROMAL/ACT_angles.csv')
     df2 = pd.DataFrame(data = relative_rows,columns = ['time','iter','cell_id','type','angle'])
-    df2.to_csv('STROMAL/PRFDR_relangles.csv')
+    df2.to_csv('STROMAL/ACT_relangles.csv')
 
 if __name__ == "__main__":
-    save_angles('../../data/STROMAL_PRFDR')
+    save_angles('../../data/STROMAL_ACT')

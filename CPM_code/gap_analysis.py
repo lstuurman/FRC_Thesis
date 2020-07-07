@@ -89,7 +89,7 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
         #adjust thickness so that it fills +- 17% of cube : 
         thicckk = adjust_thickness(c,1)
         print('percentage of volume occupied by frc',(np.sum(thicckk)/dim**3)*100)
-        return thicckk
+        return thicckk,g
     else:
         g,_ = nodesInCube(g,positions,4 * dim)
         c = fill_cube(4 * dim,g)
@@ -101,7 +101,7 @@ def net_to_cube_adapted(g_type = 'ER',dim = 256):
         
 
 def save_cubes():
-    g_types = ['ER','BA', 'WS', 'PW', 'GM']
+    g_types = ['WS', 'PW', 'GM']
     for graph_type in g_types: 
         cube,g = net_to_cube_adapted(g_type = graph_type,dim = 256)
         fname = '../data/FRCs/256_' + graph_type + '.pkl'

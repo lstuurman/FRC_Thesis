@@ -127,8 +127,8 @@ def build_csv(path):
         print('half time :',t4 - t3)
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','iter','speed','speed_std','persistance','std_persit'])
-    df1.to_csv('FITFULL/ACT6_all.csv')
+    df1.to_csv('FITFULL/2PRFDR_all.csv')
 
 
 if __name__ == "__main__":
-    build_csv('../../data/FITFULL_ACT_FRC/thin64_1/*')
+    build_csv('../../data/FITFULL_PRFDR_FRC2/thin64_1/*')

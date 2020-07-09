@@ -87,7 +87,7 @@ def setup(g_type):
     simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
     simulation.set_constraints(cell_type = 0,other_cell_type = 1,adhesion = 0)
 
-
+    sim.set_constraints(cell_type = 1, fixed=1)
     #print('Creating FRC')
     dfile = '../data/FRCs/' + g_type + '64_diam3.pkl'
     frc_in_cube = pickle.load(open(dfile,'rb'))

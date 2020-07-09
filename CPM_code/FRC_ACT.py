@@ -9,6 +9,7 @@ import random
 import networkx as nx
 from itertools import product
 from multiprocessing import Pool
+import multiprocessing
 from Bresenheim import nodesInCube,fill_cube,adjust_thickness
 # Fit act model fully pupulated with FRC structure : 
 
@@ -49,13 +50,13 @@ def setup(l_act,m_act):
     simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1200) #8600
     simulation.set_constraints(cell_type = 2, lambda_act = int(l_act), max_act = int(m_act)) # 2500, max_act = 42
     # adhesion ; 
-    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = -5)
-    simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
-    simulation.set_constraints(cell_type = 0,other_cell_type = 1,adhesion = 0)
-
+    simulation.set_constraints(cell_type = 2,other_cell_type = 1,adhesion = -5)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 10)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 0)
+    simulation.set_constraints(cell_type = 1, fixed=1)
 
     #print('Creating FRC')
-    frc_in_cube = pickle.load(open('../data/FRCs/GM64_diam3.pkl','rb'))
+    frc_in_cube = pickle.load(open('../data/FRCs/0GM64_diam3.pkl','rb'))
     #print('Loading into simulation : ')
     simulation.initialize_from_array(frc_in_cube,1)
     #print('Done')
@@ -139,9 +140,8 @@ def run_grid_point(params):
         cell_track = runsim(sim,200)
         for i,track in enumerate(cell_track):
             fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i) + 'iter' + str(iter)
-            np.savetxt('../data/FITFULL_ACT_FRC/thin64_1/CELL'+fname+'.txt',track)
+            np.savetxt('../data/FITFULL_ACT_FRC2/thin64_1/CELL'+fname+'.txt',track)
     print('computed : ',params, 'in ',time.time() - t1)
-
 
 def gridsearch():
     ### runn multi T-cell simulations for with different combinations of params
@@ -167,6 +167,25 @@ if __name__ == "__main__":
     # run : 
     #cell_track = runsim(sim,500)
 
-    gridsearch()
+    #gridsearch()
     #setup_frc(64)
-
+    l_act = np.linspace(0,2000,6)[1:]
+    max_act = np.linspace(10,100,10)
+    inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
+    # filter out sim already rann :
+    don = [(1200.,40.),(1600.,100.),(800.,80.)]
+    inputs = [x for x in inputs if x not in don]
+    #jobs = []
+    print(len(inputs))
+    #exit()
+    for i in range(5):
+        jobs = []
+        inpts = inputs[i*10:(i+1)*10]
+        #print(i*10,(i+1)*10-1)
+        print(len(inpts))
+        for inpt in inpts:
+            p = multiprocessing.Process(target = run_grid_point,args = (inpt,))
+            jobs.append(p)
+            p.start()
+        for p in jobs:
+            p.join()

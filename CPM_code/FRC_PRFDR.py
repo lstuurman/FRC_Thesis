@@ -111,7 +111,7 @@ def runsim(simulation,steps):
     print([i for i in range(n_cells[-1]) if i not in n_cells])
     t0 = time.time()
     for i in range(iters):
-        simulation.run(50)
+        simulation.run(100)
         cell_sizes = []
         for ind,n in enumerate(n_cells[2:]):
             cell = state % 2**24 == n
@@ -140,7 +140,7 @@ def run_grid_point(params):
         cell_track = runsim(sim,200)
         for i,track in enumerate(cell_track):
             fname = 'LAMBDA_'+str(lambda_act) +'MAX'+str(max_act)+'_' + str(i) + 'iter' + str(iter)
-            np.savetxt('../data/FITFULL_PRFDR_FRC2/thin64_1/CELL'+fname+'.txt',track)
+            np.savetxt('../data/FITFULL_PRFDR_FRC3/thin64_1/CELL'+fname+'.txt',track)
     print('computed : ',params, 'in ',time.time() - t1)
 
 

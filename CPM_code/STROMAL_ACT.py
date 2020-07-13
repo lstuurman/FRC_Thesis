@@ -87,19 +87,22 @@ def setup(g_type):
     # LAmbdas ; 
     simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1200) #8600
-    simulation.set_constraints(cell_type = 2, lambda_act = 800, max_act = 30) # 2500, max_act = 42
+    simulation.set_constraints(cell_type = 2, lambda_act = 1200, max_act = 40) # 2500, max_act = 42
     # adhesion ; 
-    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = 10)
-    simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
-    simulation.set_constraints(cell_type = 0,other_cell_type = 1,adhesion = 0)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 1,adhesion = -5)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 10)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 0)
 
-    sim.set_constraints(cell_type = 1, fixed=1)
-    #print('Creating FRC')
-    dfile = '../data/FRCs/' + g_type + '64_diam3.pkl'
-    frc_in_cube = pickle.load(open(dfile,'rb'))
-    #print('Loading into simulation : ')
-    simulation.initialize_from_array(frc_in_cube,1)
-    #print('Done')
+    simulation.set_constraints(cell_type = 1, fixed=1)
+    try:
+        #print('Creating FRC')
+        dfile = '../data/FRCs/' + g_type + '64_diam3.pkl'
+        frc_in_cube = pickle.load(open(dfile,'rb'))
+        #print('Loading into simulation : ')
+        simulation.initialize_from_array(frc_in_cube,1)
+        #print('Done')
+    except:
+        pass
 
     ### fill cube with cells
     # number of cells :
@@ -189,7 +192,7 @@ def gridsearch():
     #l_act = np.linspace(2000,4000,11)
     #max_act = np.linspace(10,100,10)
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
-    inputs = ['5ER','4BA','5WS','2PW','0GM']
+    inputs = ['5ER','4BA','5WS','2PW','0GM','NOFRC']
     #for inp in inputs[-1:]:
     #    run_grid_point(inp)
 

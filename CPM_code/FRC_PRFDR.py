@@ -1,3 +1,5 @@
+#from multiprocessing import set_start_method
+#set_start_method("spawn")
 import cpm
 import numpy as np
 from CPM_helpers1 import real_cofmass

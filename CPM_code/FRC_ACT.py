@@ -170,10 +170,10 @@ if __name__ == "__main__":
     #gridsearch()
     #setup_frc(64)
     l_act = np.linspace(0,2000,6)[1:]
-    max_act = np.linspace(10,100,10)
+    max_act = np.linspace(100,200,11)
     inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
     # filter out sim already rann :
-    don = [(1200.,40.),(1600.,100.),(800.,80.)]
+    don = [] #[(1200.,40.),(1600.,100.),(800.,80.)]
     inputs = [x for x in inputs if x not in don]
     #jobs = []
     print(len(inputs))

@@ -81,19 +81,22 @@ def setup(g_type):
     simulation.set_constraints(cell_type = 2,target_area = 150, lambda_area=25)
     simulation.set_constraints(cell_type = 2, lambda_perimeter = .2, target_perimeter = 1200) #8600
     #simulation.set_constraints(cell_type = 2, lambda_act = 3000, max_act = 40) # 2500, max_act = 42
-    simulation.set_constraints(cell_type = 2, lambda_persistence = 800, persistence_diffusion = .06,persistence_time = 15)
+    simulation.set_constraints(cell_type = 2, lambda_persistence = 600, persistence_diffusion = .9,persistence_time = 15)
     # adhesion ; 
-    simulation.set_constraints(cell_type = 1,other_cell_type = 2,adhesion = 10)
-    simulation.set_constraints(cell_type = 1,other_cell_type = 1,adhesion = 10)
-    simulation.set_constraints(cell_type = 0,other_cell_type = 1,adhesion = 0)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 1,adhesion = -5)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 2,adhesion = 10)
+    simulation.set_constraints(cell_type = 2,other_cell_type = 0,adhesion = 0)
 
-    sim.set_constraints(cell_type = 1, fixed=1)
+    simulation.set_constraints(cell_type = 1, fixed=1)
     #print('Creating FRC')
-    dfile = '../data/FRCs/' + g_type + '64_diam3.pkl'
-    frc_in_cube = pickle.load(open(dfile,'rb'))
-    #print('Loading into simulation : ')
-    simulation.initialize_from_array(frc_in_cube,1)
-    #print('Done')
+    try:
+        dfile = '../data/FRCs/' + g_type + '64_diam3.pkl'
+        frc_in_cube = pickle.load(open(dfile,'rb'))
+        #print('Loading into simulation : ')
+        simulation.initialize_from_array(frc_in_cube,1)
+        #print('Done')
+    except:
+        pass
 
     ### fill cube with cells
     # number of cells :
@@ -144,7 +147,7 @@ def runsim(simulation,steps):
     print([i for i in range(n_cells[-1]) if i not in n_cells])
     t0 = time.time()
     for i in range(iters):
-        simulation.run(50)
+        simulation.run(100)
         cell_sizes = []
         for ind,n in enumerate(n_cells[2:]):
             cell = state % 2**24 == n
@@ -156,7 +159,7 @@ def runsim(simulation,steps):
                 #print('to small')
                 continue
             cofmass_track[ind,i] = np.array(real_cofmass(cell,64,pr = False))
-
+ 
         if i == 0:
             t1 = time.time() - t0
             print('expected computing time : ',t1 * steps)
@@ -183,7 +186,7 @@ def gridsearch():
     #l_act = np.linspace(2000,4000,11)
     #max_act = np.linspace(10,100,10)
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
-    inputs = ['5ER','4BA','5WS','2PW','0GM']
+    inputs = ['5WS','2PW','0GM'] # '5ER','4BA','NOFRC'
     #for inp in inputs[-1:]:
     #    run_grid_point(inp)
 

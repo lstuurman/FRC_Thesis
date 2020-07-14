@@ -10,6 +10,7 @@ sys.path.insert(0,'../')
 from OrderNpersist import Persist_tracks,Order_tracks2,order_radius,to_vecs
 from analyse_tracks import new_auto,auto_cor_pooled
 from ANLS_DENS import OrderAt_T,local_order
+from FITFULL_LN_anls import wrap,normalize,autocor2,pool_ac
 import time
 
 def handle_boundaries(cell_track,pr = False):
@@ -28,6 +29,7 @@ def handle_boundaries(cell_track,pr = False):
 
                 cell_track2[:i + 1,j] += 64
     return cell_track2
+
 
 def build_csv(path):
     """ Path is folder containing all celltracks of all max-lambda combinations.
@@ -68,21 +70,14 @@ def build_csv(path):
 
         ordr2,std_ordr2 = OrderAt_T(vec_tracks)
 
-        dts = 100
-        dots_for_dts = [[] for i in range(dts)]
-        _ = [auto_cor_pooled(t,dots_for_dts,dts) for t in tracks]
-        averages = [np.mean(i) for i in dots_for_dts]
-        pooled_pers = Persist_tracks([averages])
-        if len(pooled_pers) == 0:
-            pooled_pers = np.nan
-        else:
-            pooled_pers = pooled_pers[0]
+        averages2 = pool_ac(np.array([autocor2(t) for t in tracks]))
+        pooled_pers = Persist_tracks([averages2])
 
 
         global_rows.append([Type,int(itr),pooled_pers,ordr2,std_ordr2,lcl_ordr,std_lcl])
         print('number of cells for paramset : ',len(tracks))
         # speed : 
-        vec_tracks = np.array([to_vecs(t) for t in tracks])
+        #vec_tracks = np.array([to_vecs(t) for t in tracks])
         speeds = [np.average([norm(v) for v in vec_track]) for vec_track in vec_tracks]
         print('Speed calculated')
         #peristance : 

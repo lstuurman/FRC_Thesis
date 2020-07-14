@@ -13,6 +13,7 @@ from ANLS_DENS import OrderAt_T,local_order
 from random import sample
 import time
 from itertools import product
+import matplotlib.pyplot as plt
 
 def handle_boundaries(cell_track,pr = False):
     # look for boundary crossings in any
@@ -39,6 +40,19 @@ def wrap(deltas, dimension):
 def normalize(deltas):
     return deltas / np.sqrt(np.sum(deltas ** 2, 1))[:, None]
 
+def autocor2(arr):
+    dimension = 64
+    #arr = np.array(df[["x","y","z"]])
+    arr = np.array(arr)
+    deltas = arr[1:] - arr[:-1]
+    deltas = wrap(deltas, dimension)
+    deltas = normalize(deltas)
+    dot_for_dt = []
+    for delta_x in range(100):
+        dots = np.sum(deltas[delta_x:] * deltas[:len(deltas)-delta_x], 1)
+        dot_for_dt.append(dots) #s
+    return dot_for_dt
+
 def autocor(arr):
     dimension = 64
     #arr = np.array(df[["x","y","z"]])
@@ -50,6 +64,13 @@ def autocor(arr):
         dots = np.sum(deltas[delta_x:] * deltas[:len(deltas)-delta_x], 1)
         dot_for_dt.append(np.mean(dots))
     return dot_for_dt
+
+def pool_ac(averages):
+    dots_list = [[] for i in range(100)]
+    for cell in averages: 
+        for i,dot in enumerate(cell):
+            dots_list[i].extend(dot[~np.isnan(dot)])
+    return np.array([np.mean(x) for x in dots_list])
 
 
 def build_csv(path):
@@ -83,6 +104,7 @@ def build_csv(path):
         #files = files[:100]
         # extract tracks from files :
         tracks = [np.loadtxt(f) for f in files]
+        #print(tracks[:3])
         tracks = [handle_boundaries(t) for t in tracks]
         print('number of cells for paramset : ',len(tracks))
 
@@ -95,7 +117,7 @@ def build_csv(path):
         #peristance : 
         # pooled persistance : 
         t2 = time.time()
-        dts = 100
+        #dts = 100
         #deltas = arr[1:] - arr[:-1]
         #deltas = wrap(deltas, dimension)
         #deltas = normalize(deltas)
@@ -104,15 +126,47 @@ def build_csv(path):
         #    dots = np.sum(deltas[delta_x:] * deltas[:len(deltas)-delta_x], 1)
         #    dot_for_dt.append(np.mean(dots))
         #dots_for_dts = [[] for i in range(dts)]
-        #pooled_dts = [auto_cor_pooled(t,dots_for_dts,dts) for t in tracks]
-        #averages2 = [np.mean(i) for i in dots_for_dts]
-        try:
-            averages = [autocor(t) for t in tracks]
-        except:
-            continue
+        #pooled_dts = [autocor2(t,dots_for_dts) for t in tracks]
+        #averages2 = np.array([np.mean(i) for i in dots_for_dts])
+        #try:
+        #averages = [autocor2(t,dots_for(dts)
+        #print(tracks[:3])
+        #averages = np.array([autocor(t) for t in tracks])
+        averages2 = pool_ac(np.array([autocor2(t) for t in tracks]))
+            #averages = [autocor(tracks)]
+        #except:
+        #    continue
+        #for ac in averages:
+            #print(ac)
+            #plt.plot(ac)
+        #print(averages)
+        #print(len(averages))
+        #print(len(averages2))
+        #print(averages2)
+        #print(len(averages2[0]))
+        #print(len(averages))
+        #for ac in averages:
+            #print(len(ac))
+            #print(len(ac[0]))
+            #plt.plot(ac)
+            #plt.plot(averages)
+        #exit() 
+        #averages = np.array(averages)
+        #rint(averages.shape)
+        #print(averages2.shape)
+        #averages = np.reshape(averages,(1355,100,))
+        #averages = np.average(averages,axis = 1)
+        #plt.show()
+        #plt.plot(averages2)
+        #plt.show()
         t3 = time.time()
         #pers2 = Persist_tracks([averages2])
-        pooled_pers = Persist_tracks(averages)
+        #print(averages)
+        pooled_pers = Persist_tracks([averages2])
+        #print(averages[:3])
+        #print(averages2)
+        #print([new_auto(t) for t in tracks[:3]])
+        #print(pooled_pers[:3])
         t4 = time.time()
         #print(np.mean(pooled_pers),pers2)
         #if len(pooled_pers) == 0:
@@ -127,7 +181,7 @@ def build_csv(path):
         print('half time :',t4 - t3)
     df1 = pd.DataFrame(data = rows,
         columns = ['Lambda', 'Max_act','iter','speed','speed_std','persistance','std_persit'])
-    df1.to_csv('FITFULL/3PRFDR_all.csv')
+    df1.to_csv('FITFULL/4PRFDR_all.csv')
 
 
 if __name__ == "__main__":

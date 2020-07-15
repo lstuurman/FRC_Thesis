@@ -49,8 +49,8 @@ def build_csv(path):
         files = glob.glob(path+ '/*' + gt)
         #print(files)
         print(gt)
-        Type = gt[:2]
-        itr = gt[2]
+        Type = gt[:-5]
+        itr = gt[-5]
         print(Type,itr)
         files.sort(reverse = True,key = lambda x: int(re.findall(num_ptrn,x)[-1]))
         # extract tracks from files :
@@ -74,22 +74,23 @@ def build_csv(path):
         pooled_pers = Persist_tracks([averages2])
 
 
-        global_rows.append([Type,int(itr),pooled_pers,ordr2,std_ordr2,lcl_ordr,std_lcl])
+        global_rows.append([Type,int(itr),pooled_pers[0],ordr2,std_ordr2,lcl_ordr,std_lcl])
         print('number of cells for paramset : ',len(tracks))
         # speed : 
         #vec_tracks = np.array([to_vecs(t) for t in tracks])
         speeds = [np.average([norm(v) for v in vec_track]) for vec_track in vec_tracks]
         print('Speed calculated')
         #peristance : 
-        autocors = [] #[new_auto(t) for t in tracks]
-        for ti,t in enumerate(tracks):
-            autocors.append(new_auto(t))
+        #autocors = [] #[new_auto(t) for t in tracks]
+        #for ti,t in enumerate(tracks):
+            #autocors.append(new_auto(t))
             #print(ti)
-        half_times = Persist_tracks(autocors)
-        print('Length half Times : ',len(half_times))
+        #autocors = pool_ac(np.array([autocor2(t) for t in tracks]))
+        #half_times = Persist_tracks([autocors])
+        #print('Length half Times : ',len(half_times))
         # save individual
-        for i,ht in enumerate(half_times):
-            ind_rows.append([Type,itr,i,speeds[i],ht])
+        for i,spd in enumerate(speeds):
+            ind_rows.append([Type,itr,i,spd])
         print('Persistance calculated')
 
 #        global_rows.append([dens,pooled_pers,ordr1,ordr2,std_ordr2,lcl_ordr,std_lcl])
@@ -98,11 +99,11 @@ def build_csv(path):
         print('cumputed '+ gt + ' in',time.time() - t1)
 
     df1 = pd.DataFrame(data = ind_rows,
-        columns = ['type','iter','cell_id','speed','persist'])
-    df1.to_csv('STROMAL/PRFDR_ind.csv')
+        columns = ['type','iter','cell_id','speed'])
+    df1.to_csv('STROMAL/ACT_ind2.csv')
     df2 = pd.DataFrame(data = global_rows,
         columns = ['type','iter','pooled_persist','global_order','std_glbl_order','lcl_order','std_lcl'])
-    df2.to_csv('STROMAL/PRFDR_glob.csv')
+    df2.to_csv('STROMAL/ACT_glob2.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/STROMAL_PRFDR')
+    build_csv('../../data/STROMAL_ACT3')

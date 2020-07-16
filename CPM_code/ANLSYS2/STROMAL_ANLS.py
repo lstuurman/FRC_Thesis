@@ -100,10 +100,10 @@ def build_csv(path):
 
     df1 = pd.DataFrame(data = ind_rows,
         columns = ['type','iter','cell_id','speed'])
-    df1.to_csv('STROMAL/ACT_ind2.csv')
+    df1.to_csv('STROMAL/3PRFDR_ind.csv')
     df2 = pd.DataFrame(data = global_rows,
         columns = ['type','iter','pooled_persist','global_order','std_glbl_order','lcl_order','std_lcl'])
-    df2.to_csv('STROMAL/ACT_glob2.csv')
+    df2.to_csv('STROMAL/3PRFDR_glob.csv')
 
 if __name__ == "__main__":
-    build_csv('../../data/STROMAL_ACT3')
+    build_csv('../../data/STROMAL_PRFDR3')

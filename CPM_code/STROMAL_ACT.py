@@ -176,7 +176,7 @@ def run_grid_point(gtype):
     t1 = time.time()
     #print(params)
     #lambda_act,max_act = params
-    for iter in range(3,5):
+    for iter in range(4,5):
         sim = setup(gtype)
     # run : 
         cell_track = runsim(sim,200)
@@ -192,7 +192,7 @@ def gridsearch():
     #l_act = np.linspace(2000,4000,11)
     #max_act = np.linspace(10,100,10)
     #inputs = [(x[0],x[1]) for x in product(l_act,max_act)]
-    inputs = ['5ER','4BA'] #'5ER','4BA','5WS','2PW','0GM','NOFRC'
+    inputs = ['5WS'] #'5ER','4BA','5WS','2PW','0GM','NOFRC'
     #for inp in inputs[-1:]:
     #    run_grid_point(inp)
 
@@ -217,6 +217,7 @@ if __name__ == "__main__":
     #        pers_fil_file.write('\n')
 
     #pers_fil_file.close()
-    gridsearch()
+    #gridsearch()
+    run_grid_point('0GM')
     #setup_frc(64)
 

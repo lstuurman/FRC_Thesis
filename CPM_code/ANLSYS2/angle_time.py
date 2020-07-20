@@ -24,10 +24,11 @@ def save_angles(path):
     for gt in params:
         t1 = time.time()
         files = glob.glob(path+ '/*' + gt)
-        print(len(files))
-        print(gt)
-        Type = gt[:2]
-        itr = gt[2]
+        #print(len(files))
+        #print(gt)
+        Type = gt[:-5]
+        itr = gt[-5]
+        print(Type,itr)
         tracks = [np.loadtxt(f) for f in files]
         tracks = [handle_boundaries(t) for t in tracks if len(t) == 200] # filter out old short tryout files
         vec_tracks = np.array([to_vecs(t) for t in tracks])
@@ -52,9 +53,9 @@ def save_angles(path):
         #break
         print('paramset in :',time.time() - t1)
     df = pd.DataFrame(data = data_rows,columns = ['time','iter','cell_id','type','angle'])
-    df.to_csv('STROMAL/2PRFDR_angles.csv')
+    df.to_csv('STROMAL/2ACT_angles.csv')
     df2 = pd.DataFrame(data = relative_rows,columns = ['time','iter','cell_id','type','angle'])
-    df2.to_csv('STROMAL/2PRFDR_relangles.csv')
+    df2.to_csv('STROMAL/2ACT_relangles.csv')
 
 if __name__ == "__main__":
-    save_angles('../../data/STROMAL_PRFDR3')
+    save_angles('../../data/STROMAL_ACT3')

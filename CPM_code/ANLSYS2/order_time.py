@@ -60,10 +60,15 @@ def order_time(path):
         for i,ordr in enumerate(orders):
             data_rows.append([i,itr,Type,ordr[0],ordr[1],ordr[2],tracks[i][0],tracks[i][1],tracks[i][2],variances[i],n_cells])
 
+<<<<<<< HEAD
     df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','v_x','v_y','v_z','x','y','z','variance','n_cells'])
     df.to_csv('STROMAL/ACT_ordr_T.csv')
+=======
+    df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','v_x','v_y','v_z','x','y','z','n_cells'])
+    df.to_csv('STROMAL/2PRFDR_ordr_T.csv')
+>>>>>>> a18753815a406e4c16f4b87292932e014fb8a020
 
 if __name__ == "__main__":
-    order_time('../../data/STROMAL_ACT')
+    order_time('../../data/STROMAL_PRFDR3')
 
 

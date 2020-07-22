@@ -170,7 +170,7 @@ def run_grid_point(gtype):
     t1 = time.time()
     #print(params)
     #lambda_act,max_act = params
-    for iter in range(0,5):
+    for iter in range(1,5):
         sim = setup(gtype)
     # run : 
         cell_track = runsim(sim,200)
@@ -205,6 +205,6 @@ if __name__ == "__main__":
     #g_types = ['ER', 'WS'] # 'BA'
     #for graph_type in g_types: 
     #    setup_frc(64,graph_type)
-    gridsearch()
+    run_grid_point('5WS')
     #setup_frc(64)
 

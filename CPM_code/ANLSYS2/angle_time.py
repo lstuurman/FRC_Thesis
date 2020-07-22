@@ -52,9 +52,9 @@ def save_angles(path):
         #break
         print('paramset in :',time.time() - t1)
     df = pd.DataFrame(data = data_rows,columns = ['time','iter','cell_id','type','angle'])
-    df.to_csv('STROMAL/ACT_angles.csv')
+    df.to_csv('STROMAL/2PRFDR_angles.csv')
     df2 = pd.DataFrame(data = relative_rows,columns = ['time','iter','cell_id','type','angle'])
-    df2.to_csv('STROMAL/ACT_relangles.csv')
+    df2.to_csv('STROMAL/2PRFDR_relangles.csv')
 
 if __name__ == "__main__":
-    save_angles('../../data/STROMAL_ACT')
+    save_angles('../../data/STROMAL_PRFDR3')

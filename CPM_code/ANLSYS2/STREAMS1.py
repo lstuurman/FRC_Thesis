@@ -109,7 +109,7 @@ def edge_centers_adjstd(g):
         coords = [x1,y1,z1,x2,y2,z2]
         # truncate coordinates to be withing bounds :
         #coords = coords - 96 
-        print(coords)
+        #print(coords)
         for i in range(len(coords)):
             coords[i] = coords[i] - 96
             if coords[i] < 0:
@@ -127,13 +127,13 @@ def edge_centers_adjstd(g):
     #print(dsts_cntrs)
     # order on max dist : 
     dsts_cntrs.sort(key = lambda x:x[0])
-    print(dsts_cntrs[-10:])
+    #print(dsts_cntrs[-10:])
     return [c[1] for c in dsts_cntrs[-10:]] 
  
 
 
 def stream_order(tracks,vec_tracks,centers,radius):
-    print(vec_tracks.shape)
+    #print(vec_tracks.shape)
     # go through vectors per timestep :
     order_at_cntrs = np.zeros((len(vec_tracks[0]),len(centers)))
     for i in range(len(vec_tracks[0])):
@@ -164,13 +164,15 @@ def streams(path):
     print(params)
     edge_rows = []
     gap_rows = []
-    for gt in list(params)[:1]:
+    for gt in list(params):
         #t1 = time.time()
         files = glob.glob(path+ '/*' + gt)
         #print(files)
         print(gt)
-        Type = gt[:2]
-        itr = gt[2]
+        Type = gt[:-5]
+        if Type == 'OFRC':
+            continue
+        itr = gt[-5]
         print(Type,itr)
         files.sort(reverse = True,key = lambda x: int(re.findall(num_ptrn,x)[-1]))
         # extract tracks from files :
@@ -181,15 +183,15 @@ def streams(path):
         tracks2 = [handle_boundaries(t) for t in tracks]
         vec_tracks = np.array([to_vecs(t) for t in tracks2])
 
-        frc_file = '../../data/FRCs/' + str(itr) + Type + '64_diam3.pkl'
-        frc_gfile =  '../../data/FRCs/GRAPH'+ str(itr) + Type + '64_diam3.pkl'
+        frc_file = '../../data/FRCs/' + Type + '64_diam3.pkl'
+        frc_gfile =  '../../data/FRCs/GRAPH' + Type + '64_diam3.pkl'
         frc = pickle.load(open(frc_file,'rb'))
         g = pickle.load(open(frc_gfile,'rb'))
         if Type == 'GM' or Type == 'WS':
             edge_cntrs = edge_centers(g)
         else:
             edge_cntrs = edge_centers_adjstd(g)
-        print(edge_cntrs)
+        #print(edge_cntrs)
         cntrs = fill_circles(frc)
         #print(cntrs)
         #print(len(cntrs))
@@ -199,19 +201,19 @@ def streams(path):
             for c,gp in enumerate(gaps):
                 gap_rows.append([t,c,gp,Type,itr])
                 edge_rows.append([t,c,edge_ordrs[t,c],Type,itr])
-        print(edge_ordrs.shape)
+        #print(edge_ordrs.shape)
         print(np.mean(gap_ordrs))
         print(np.mean(edge_ordrs))
 
     df = pd.DataFrame(data = gap_rows,columns = ['time','center','order','type','iter'])
-    df.to_csv('STROMAL/gap_ordrs.csv')
+    df.to_csv('STROMAL/gap_ordrs2.csv')
     df = pd.DataFrame(data = edge_rows,columns = ['time','center','order','type','iter'])
-    df.to_csv('STROMAL/edge_ordrs.csv')
+    df.to_csv('STROMAL/edge_ordrs2.csv')
 
 
 
 if __name__ == "__main__":
-    streams('../../data/STROMAL_PRFDR')
+    streams('../../data/STROMAL_ACT3')
 
     #     # find smallest track : 
     # min_length = min([len(t) for t in vec_tracks])

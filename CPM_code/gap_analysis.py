@@ -149,7 +149,7 @@ def fill_circles(M):
     # list for color values of circles : 
     colors = np.linspace(1,3,max_radius + 1)[::-1]
     # save radii used : 
-    radii_list = []
+    radii_list = [max_radius]
     # frames for animation :
     dist_frames = []
     frames = []

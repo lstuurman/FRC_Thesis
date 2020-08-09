@@ -68,7 +68,7 @@ def Global_order(vec_tracks):
     orders = 0
     for vtrack in vec_tracks:
         for v in vtrack:
-            orders += v
+            orders += v/norm(v)
     return norm(orders)
 
 def OrderAt_T(vec_tracks):

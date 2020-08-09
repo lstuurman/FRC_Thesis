@@ -195,8 +195,8 @@ def streams(path):
         cntrs = fill_circles(frc)
         #print(cntrs)
         #print(len(cntrs))
-        gap_ordrs = stream_order(tracks,vec_tracks,cntrs,4)
-        edge_ordrs = stream_order(tracks,vec_tracks,edge_cntrs,4)
+        gap_ordrs = stream_order(tracks,vec_tracks,cntrs,5)
+        edge_ordrs = stream_order(tracks,vec_tracks,edge_cntrs,5)
         for t,gaps in enumerate(gap_ordrs):
             for c,gp in enumerate(gaps):
                 gap_rows.append([t,c,gp,Type,itr])

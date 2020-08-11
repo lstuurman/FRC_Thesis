@@ -25,7 +25,10 @@ def OrderAt_T(vec_tracks):
         vecs_at_t = vt2[:,i]
         ordr = 0
         for v in vecs_at_t:
-            ordr += v
+            if norm(v) == 0:
+                continue
+            else:
+                ordr += v/norm(v)
         orders.append(ordr)
         variances.append(np.var(vecs_at_t))
     #print('lenght of order shoulde be min_lenght. Min_lenght',min_length,'==',len(orders))
@@ -58,17 +61,15 @@ def order_time(path):
         n_cells = len(vec_tracks)
         orders,variances = OrderAt_T(vec_tracks)
         for i,ordr in enumerate(orders):
-            data_rows.append([i,itr,Type,ordr[0],ordr[1],ordr[2],tracks[i][0],tracks[i][1],tracks[i][2],variances[i],n_cells])
+            data_rows.append([i,itr,Type,ordr[0],ordr[1],ordr[2],norm(ordr),variances[i],n_cells])
 
-<<<<<<< HEAD
-    df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','v_x','v_y','v_z','x','y','z','variance','n_cells'])
-    df.to_csv('STROMAL/ACT_ordr_T.csv')
-=======
-    df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','v_x','v_y','v_z','x','y','z','n_cells'])
-    df.to_csv('STROMAL/2PRFDR_ordr_T.csv')
->>>>>>> a18753815a406e4c16f4b87292932e014fb8a020
+    df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','v_x','v_y','v_z','order','variance','n_cells'])
+    df.to_csv('STROMAL/3ACT_ordr_T.csv')
+
+    #df = pd.DataFrame(data = data_rows,columns = ['time','iter','type','v_x','v_y','v_z','x','y','z','n_cells'])
+    #df.to_csv('STROMAL/3PRFDR_ordr_T.csv')
 
 if __name__ == "__main__":
-    order_time('../../data/STROMAL_PRFDR3')
+    order_time('../../data/STROMAL_ACT3')
 
 

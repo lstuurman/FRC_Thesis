@@ -93,8 +93,11 @@ def OrderAt_T(vec_tracks):
         vecs_at_t = vt2[:,i]
         ordr = 0
         for v in vecs_at_t:
-            ordr += v
-        orders.append(ordr)
+            if norm(v) == 0:
+                continue
+            else:
+                ordr += v/norm(v)
+        orders.append(ordr/len(vecs_at_t))
         vars.append(np.var(vecs_at_t))
     #print('lenght of order shoulde be min_lenght. Min_lenght',min_length,'==',len(orders))
     av_ordr = np.average([norm(v) for v in orders])

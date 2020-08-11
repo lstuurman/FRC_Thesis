@@ -19,6 +19,19 @@ def in_radius(point,cntr,radius):
     else:
         return False
 
+def Global_order(vec_tracks):
+    # sum vec instead of calculating angles : 
+    orders = 0
+    norms = []
+    for vtrack in vec_tracks:
+        for v in vtrack:
+            if norm(v) == 0:
+                continue
+            else:
+                orders += v
+                norms.append(norm(v))
+                #print(len(norms))
+    return norm(orders),len(norms),np.mean(norms)
 
 
 def fill_circles(M):
@@ -137,6 +150,8 @@ def stream_order(tracks,vec_tracks,centers,radius):
     #print(vec_tracks.shape)
     # go through vectors per timestep :
     order_at_cntrs = np.zeros((len(vec_tracks[0]),len(centers)))
+    n_cells_at_cntrs = np.zeros((len(vec_tracks[0]),len(centers)))
+    speed_at_cntrs = np.zeros((len(vec_tracks[0]),len(centers)))
     for i in range(len(vec_tracks[0])):
         # bin according to position :
         vecs_at_t = vec_tracks[:,i]
@@ -146,11 +161,13 @@ def stream_order(tracks,vec_tracks,centers,radius):
         for j,cntr in enumerate(centers):
             #print(cntr)
             VP_at_cntr = [pair[1] for pair in vec_pos if in_radius(pair[0],cntr,radius)]
-            ordr = Global_order(VP_at_cntr)
+            ordr,n_cells,speed = Global_order(VP_at_cntr)
             order_at_cntrs[i,j] = ordr
+            n_cells_at_cntrs[i,j] = n_cells
+            speed_at_cntrs[i,j] = speed
 
 
-    return order_at_cntrs
+    return order_at_cntrs,n_cells_at_cntrs,speed_at_cntrs
 
 
 def streams(path):
@@ -200,22 +217,21 @@ def streams(path):
         edge_lengths = edge_lengths[:len(cntrs)]
         edge_cntrs = edge_cntrs[:len(cntrs)]
         print(len(cntrs),len(radii),len(edge_cntrs),len(edge_lengths))
-        gap_ordrs = stream_order(tracks,vec_tracks,cntrs,5)
-        edge_ordrs = stream_order(tracks,vec_tracks,edge_cntrs,5)
+        gap_ordrs,gap_cells,gap_speeds = stream_order(tracks,vec_tracks,cntrs,5)
+        edge_ordrs,edge_cells,edge_speeds = stream_order(tracks,vec_tracks,edge_cntrs,5.27)
         for t,gaps in enumerate(gap_ordrs):
             for c,gp in enumerate(gaps):
-                gap_rows.append([t,c,cntrs[c],radii[c],gp,Type,itr])
-                edge_rows.append([t,c,edge_cntrs[c],edge_lengths[c],edge_ordrs[t,c],Type,itr])
+                gap_rows.append([t,c,cntrs[c],radii[c],gp,Type,itr,gap_cells[t,c],gap_speeds[t,c]])
+                edge_rows.append([t,c,edge_cntrs[c],edge_lengths[c],edge_ordrs[t,c],Type,itr,edge_cells[t,c],edge_speeds[t,c]])
         #print(edge_ordrs.shape)
         print(len(cntrs))
         print(np.mean(gap_ordrs))
         print(np.mean(edge_ordrs))
-        break
 
-    df = pd.DataFrame(data = gap_rows,columns = ['time','center','coords','radius','order','type','iter'])
-    df.to_csv('STROMAL/PRFDR_gap_ordrs3.csv')
-    df = pd.DataFrame(data = edge_rows,columns = ['time','center','coords','length','order','type','iter'])
-    df.to_csv('STROMAL/PRFDR_edge_ordrs3.csv')
+    df = pd.DataFrame(data = gap_rows,columns = ['time','center','coords','radius','order','type','iter','n_cells','speed'])
+    df.to_csv('STROMAL/PRFDR_gap_ordrs4.csv')
+    df = pd.DataFrame(data = edge_rows,columns = ['time','center','coords','length','order','type','iter','n_cells','speed'])
+    df.to_csv('STROMAL/PRFDR_edge_ordrs4.csv')
 
 
 

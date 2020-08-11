@@ -66,13 +66,16 @@ def save_track(cell_track,prms1,prms2,i):
 def Global_order(vec_tracks):
     # sum vec instead of calculating angles : 
     orders = 0
+    norms = []
     for vtrack in vec_tracks:
         for v in vtrack:
             if norm(v) == 0:
                 continue
             else:
                 orders += v/norm(v)
-    return norm(orders)
+                norms.append(norm(v))
+                #print(len(norms))
+    return norm(orders)/len(norms)
 
 def OrderAt_T(vec_tracks):
     # find smallest track : 
@@ -85,17 +88,19 @@ def OrderAt_T(vec_tracks):
                    
     #print(vt2.shape)
     orders = []
+    vars = []
     for i in range(min_length):
         vecs_at_t = vt2[:,i]
         ordr = 0
         for v in vecs_at_t:
             ordr += v
         orders.append(ordr)
+        vars.append(np.var(vecs_at_t))
     #print('lenght of order shoulde be min_lenght. Min_lenght',min_length,'==',len(orders))
     av_ordr = np.average([norm(v) for v in orders])
-    std_ordr = np.std([norm(v) for v in orders])
-        
-    return av_ordr,std_ordr
+    #std_ordr = np.std([np.norm(v) for v in orders])
+    var_ordr = np.average(vars)
+    return av_ordr,var_ordr
 
 def local_order1(tracks,vec_tracks,bins = 5):
     # find smallest track : 

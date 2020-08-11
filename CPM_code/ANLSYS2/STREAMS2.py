@@ -210,6 +210,7 @@ def streams(path):
         print(len(cntrs))
         print(np.mean(gap_ordrs))
         print(np.mean(edge_ordrs))
+        break
 
     df = pd.DataFrame(data = gap_rows,columns = ['time','center','coords','radius','order','type','iter'])
     df.to_csv('STROMAL/gap_ordrs3.csv')

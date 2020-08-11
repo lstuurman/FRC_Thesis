@@ -131,9 +131,10 @@ def edge_centers_adjstd(g):
             if coords[i] > 64:
                 coords[i] = 64
 
-        x1,y1,z1,x2,y2,z2 = coords
+        #x1,y1,z1,x2,y2,z2 = coords
         #print(coords)
-        d = distance.euclidean((x1,y1,z1),(x2,y2,z2))
+        #d = distance.euclidean((x1,y1,z1),(x2,y2,z2))
+        d = distance.euclidean(coords[:3],coords[3:])
         c = [(x1 + x2)/2,(y1 + y2)/2,(z1 + z2)/2]
         #print(d,c)
         #exit()
@@ -229,14 +230,14 @@ def streams(path):
         print(np.mean(edge_ordrs))
 
     df = pd.DataFrame(data = gap_rows,columns = ['time','center','coords','radius','order','type','iter','n_cells','speed'])
-    df.to_csv('STROMAL/PRFDR_gap_ordrs4.csv')
+    df.to_csv('STROMAL/ACT_gap_ordrs5.csv')
     df = pd.DataFrame(data = edge_rows,columns = ['time','center','coords','length','order','type','iter','n_cells','speed'])
-    df.to_csv('STROMAL/PRFDR_edge_ordrs4.csv')
+    df.to_csv('STROMAL/ACT_edge_ordrs5.csv')
 
 
 
 if __name__ == "__main__":
-    streams('../../data/STROMAL_PRFDR3')
+    streams('../../data/STROMAL_ACT3')
 
     #     # find smallest track : 
     # min_length = min([len(t) for t in vec_tracks])

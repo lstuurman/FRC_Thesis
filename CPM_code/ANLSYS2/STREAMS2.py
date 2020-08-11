@@ -213,14 +213,14 @@ def streams(path):
         break
 
     df = pd.DataFrame(data = gap_rows,columns = ['time','center','coords','radius','order','type','iter'])
-    df.to_csv('STROMAL/gap_ordrs3.csv')
+    df.to_csv('STROMAL/PRFDR_gap_ordrs3.csv')
     df = pd.DataFrame(data = edge_rows,columns = ['time','center','coords','length','order','type','iter'])
-    df.to_csv('STROMAL/edge_ordrs3.csv')
+    df.to_csv('STROMAL/PRFDR_edge_ordrs3.csv')
 
 
 
 if __name__ == "__main__":
-    streams('../../data/STROMAL_ACT3')
+    streams('../../data/STROMAL_PRFDR3')
 
     #     # find smallest track : 
     # min_length = min([len(t) for t in vec_tracks])

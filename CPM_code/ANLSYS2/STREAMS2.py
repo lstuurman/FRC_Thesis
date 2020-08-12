@@ -192,10 +192,10 @@ def streams(path):
         #print(files)
         print(gt)
         Type = gt[:-5]
-        if Type == 'GM': #or Type == 'WS':
-            pass
-        else:
+        if Type == 'OFRC': #or Type == 'WS':
             continue
+        #else:
+        #    continue
         itr = gt[-5]
         print(Type,itr)
         files.sort(reverse = True,key = lambda x: int(re.findall(num_ptrn,x)[-1]))
@@ -214,7 +214,7 @@ def streams(path):
         if Type == 'GM' or Type == 'WS':
             edge_lengths,edge_cntrs = edge_centers(g)
         else:
-            continue
+            #continue
             edge_lengths,edge_cntrs = edge_centers_adjstd(g)
         #print(edge_cntrs)
         radii,cntrs = fill_circles(frc)
@@ -236,14 +236,14 @@ def streams(path):
         print(np.mean(edge_cells))
 
     df = pd.DataFrame(data = gap_rows,columns = ['time','center','coords','radius','order','type','iter','n_cells','speed'])
-    df.to_csv('STROMAL/PRFDR_gap_ordrs6.csv')
+    df.to_csv('STROMAL/ACT_gap_ordrs6_allgraphs.csv')
     df = pd.DataFrame(data = edge_rows,columns = ['time','center','coords','length','order','type','iter','n_cells','speed'])
-    df.to_csv('STROMAL/PRFDR_edge_ordrs6.csv')
+    df.to_csv('STROMAL/ACT_edge_ordrs6_allgraphs.csv')
 
 
 
 if __name__ == "__main__":
-    streams('../../data/STROMAL_PRFDR3')
+    streams('../../data/STROMAL_ACT3')
 
     #     # find smallest track : 
     # min_length = min([len(t) for t in vec_tracks])

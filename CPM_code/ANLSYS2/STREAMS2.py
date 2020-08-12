@@ -225,7 +225,7 @@ def streams(path):
         edge_cntrs = edge_cntrs[:len(cntrs)]
         print(edge_lengths)
         gap_ordrs,gap_cells,gap_speeds = stream_order(tracks,vec_tracks,cntrs,5)
-        edge_ordrs,edge_cells,edge_speeds = stream_order(tracks,vec_tracks,edge_cntrs,7.37)
+        edge_ordrs,edge_cells,edge_speeds = stream_order(tracks,vec_tracks,edge_cntrs,5.74)
         for t,gaps in enumerate(gap_ordrs):
             for c,gp in enumerate(gaps):
                 gap_rows.append([t,c,cntrs[c],radii[c],gp,Type,itr,gap_cells[t,c],gap_speeds[t,c]])

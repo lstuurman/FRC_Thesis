@@ -103,15 +103,18 @@ def fill_circles(M):
 def edge_centers(g):
     # create tuples of dist,cntr
     dsts_cntrs = []
+    d_max = 0
     for n1,n2 in g.edges():
         x1,y1,z1 = g.nodes[n1]['pos']
         x2,y2,z2 = g.nodes[n2]['pos']
         d = distance.euclidean((x1,y1,z1),(x2,y2,z2))
         c = [(x1 + x2)/2,(y1 + y2)/2,(z1 + z2)/2]
         dsts_cntrs.append((d,c))
-    
+        if d > d_max:
+            d_max = d
+    print('longest edge',d_max)
     # order on max dist : 
-    dsts_cntrs.sort(key = lambda x:x[0])
+    dsts_cntrs.sort(key = lambda x:x[0],reverse = True)
     return [c[0] for c in dsts_cntrs],[c[1] for c in dsts_cntrs]
 
 def edge_centers_adjstd(g):
@@ -141,7 +144,7 @@ def edge_centers_adjstd(g):
         dsts_cntrs.append((d,c))
     #print(dsts_cntrs)
     # order on max dist : 
-    dsts_cntrs.sort(key = lambda x:x[0])
+    dsts_cntrs.sort(key = lambda x:x[0],reverse = True)
     #print(dsts_cntrs[-10:])
     return [c[0] for c in dsts_cntrs],[c[1] for c in dsts_cntrs] 
  
@@ -189,7 +192,7 @@ def streams(path):
         #print(files)
         print(gt)
         Type = gt[:-5]
-        if Type == 'GM' or Type == 'WS':
+        if Type == 'GM': #or Type == 'WS':
             pass
         else:
             continue
@@ -220,7 +223,7 @@ def streams(path):
         # make edge lists same size as gap list : 
         edge_lengths = edge_lengths[:len(cntrs)]
         edge_cntrs = edge_cntrs[:len(cntrs)]
-        print(len(cntrs),len(radii),len(edge_cntrs),len(edge_lengths))
+        print(edge_lengths)
         gap_ordrs,gap_cells,gap_speeds = stream_order(tracks,vec_tracks,cntrs,5)
         edge_ordrs,edge_cells,edge_speeds = stream_order(tracks,vec_tracks,edge_cntrs,7.37)
         for t,gaps in enumerate(gap_ordrs):

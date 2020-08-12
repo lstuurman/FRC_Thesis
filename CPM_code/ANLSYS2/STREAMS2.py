@@ -189,7 +189,9 @@ def streams(path):
         #print(files)
         print(gt)
         Type = gt[:-5]
-        if Type == 'OFRC':
+        if Type == 'GM' or Type == 'WS':
+            pass
+        else:
             continue
         itr = gt[-5]
         print(Type,itr)
@@ -209,6 +211,7 @@ def streams(path):
         if Type == 'GM' or Type == 'WS':
             edge_lengths,edge_cntrs = edge_centers(g)
         else:
+            continue
             edge_lengths,edge_cntrs = edge_centers_adjstd(g)
         #print(edge_cntrs)
         radii,cntrs = fill_circles(frc)
@@ -219,25 +222,25 @@ def streams(path):
         edge_cntrs = edge_cntrs[:len(cntrs)]
         print(len(cntrs),len(radii),len(edge_cntrs),len(edge_lengths))
         gap_ordrs,gap_cells,gap_speeds = stream_order(tracks,vec_tracks,cntrs,5)
-        edge_ordrs,edge_cells,edge_speeds = stream_order(tracks,vec_tracks,edge_cntrs,5.27)
+        edge_ordrs,edge_cells,edge_speeds = stream_order(tracks,vec_tracks,edge_cntrs,7.37)
         for t,gaps in enumerate(gap_ordrs):
             for c,gp in enumerate(gaps):
                 gap_rows.append([t,c,cntrs[c],radii[c],gp,Type,itr,gap_cells[t,c],gap_speeds[t,c]])
                 edge_rows.append([t,c,edge_cntrs[c],edge_lengths[c],edge_ordrs[t,c],Type,itr,edge_cells[t,c],edge_speeds[t,c]])
         #print(edge_ordrs.shape)
         print(len(cntrs))
-        print(np.mean(gap_ordrs))
-        print(np.mean(edge_ordrs))
+        print(np.mean(gap_cells))
+        print(np.mean(edge_cells))
 
     df = pd.DataFrame(data = gap_rows,columns = ['time','center','coords','radius','order','type','iter','n_cells','speed'])
-    df.to_csv('STROMAL/ACT_gap_ordrs5.csv')
+    df.to_csv('STROMAL/PRFDR_gap_ordrs6.csv')
     df = pd.DataFrame(data = edge_rows,columns = ['time','center','coords','length','order','type','iter','n_cells','speed'])
-    df.to_csv('STROMAL/ACT_edge_ordrs5.csv')
+    df.to_csv('STROMAL/PRFDR_edge_ordrs6.csv')
 
 
 
 if __name__ == "__main__":
-    streams('../../data/STROMAL_ACT3')
+    streams('../../data/STROMAL_PRFDR3')
 
     #     # find smallest track : 
     # min_length = min([len(t) for t in vec_tracks])

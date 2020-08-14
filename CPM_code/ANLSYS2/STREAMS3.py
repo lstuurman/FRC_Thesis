@@ -218,31 +218,31 @@ def streams(path):
             #continue
             edge_lengths,edge_cntrs = edge_centers_adjstd(g)
         #print(edge_cntrs)
-        radii,cntrs = fill_circles(frc)
+        #radii,cntrs = fill_circles(frc)
         #print(cntrs)
         #print(len(cntrs))
         # make edge lists same size as gap list : 
         # sample random edge centers : 
-        rand_indx = np.random.randint(len(edge_cntrs),size = len(cntrs))
+        rand_indx = np.random.randint(len(edge_cntrs),size = 50)
         print(rand_indx)
         edge_lengths = list(np.array(edge_lengths)[rand_indx])
         edge_cntrs = list(np.array(edge_cntrs)[rand_indx])
         print(edge_lengths)
-        gap_ordrs,gap_cells,gap_speeds = stream_order(tracks,vec_tracks,cntrs,5)
+        #gap_ordrs,gap_cells,gap_speeds = stream_order(tracks,vec_tracks,cntrs,5)
         edge_ordrs,edge_cells,edge_speeds = stream_order(tracks,vec_tracks,edge_cntrs,5.74)
-        for t,gaps in enumerate(gap_ordrs):
+        for t,gaps in enumerate(edge_ordrs):
             for c,gp in enumerate(gaps):
-                gap_rows.append([t,c,cntrs[c],radii[c],gp,Type,itr,gap_cells[t,c],gap_speeds[t,c]])
+                #gap_rows.append([t,c,cntrs[c],radii[c],gp,Type,itr,gap_cells[t,c],gap_speeds[t,c]])
                 edge_rows.append([t,c,edge_cntrs[c],edge_lengths[c],edge_ordrs[t,c],Type,itr,edge_cells[t,c],edge_speeds[t,c]])
         #print(edge_ordrs.shape)
-        print(len(cntrs))
-        print(np.mean(gap_cells))
+        #print(len(cntrs))
+        #print(np.mean(gap_cells))
         print(np.mean(edge_cells))
 
-    df = pd.DataFrame(data = gap_rows,columns = ['time','center','coords','radius','order','type','iter','n_cells','speed'])
-    df.to_csv('STROMAL/PRFDR_gap_ordrs_rand_edges.csv')
+    #df = pd.DataFrame(data = gap_rows,columns = ['time','center','coords','radius','order','type','iter','n_cells','speed'])
+    #df.to_csv('STROMAL/PRFDR_gap_ordrs_rand_edges2.csv')
     df = pd.DataFrame(data = edge_rows,columns = ['time','center','coords','length','order','type','iter','n_cells','speed'])
-    df.to_csv('STROMAL/PRFDR_edge_ordrs_rand_edges.csv')
+    df.to_csv('STROMAL/PRFDR_edge_ordrs_rand_edges2.csv')
 
 
 

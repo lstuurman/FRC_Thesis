@@ -4,7 +4,7 @@ import numpy as np
 
 def calc_omegas(path):
     graph = pickle.load(open(path,'rb'))
-    return nx.omega(graph,niter = 100)
+    return nx.sigma(graph,niter = 100,nrand = 50)
 
 if __name__ == "__main__":
     gnames = ['5WS','2PW','0GM']
@@ -15,5 +15,5 @@ if __name__ == "__main__":
         lines += g + '\t' + str(om) + '\n'
         print(lines)
 
-    with open('STROMAL_omegas.txt4','w') as f:
+    with open('STROMAL_sigma.txt3','w') as f:
         f.write(lines)
